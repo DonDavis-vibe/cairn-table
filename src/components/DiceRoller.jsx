@@ -8,9 +8,6 @@ import {
 } from '../rules/dice.js';
 import { shareRoll, shareSave } from '../utils/discord.js';
 import { DiceStage, DieGlyph } from './DiceKit.jsx';
-import { InfoHint } from './ui.jsx';
-
-const MODES = ['normal', 'adv', 'disadv'];
 
 let rollSeq = 0;
 const nextRollId = () => { rollSeq += 1; return rollSeq; };
@@ -18,7 +15,6 @@ const nextRollId = () => { rollSeq += 1; return rollSeq; };
 export default function DiceRoller({ character, log, pushLog, onEvent = null }) {
   const { t } = useLang();
   const who = character.name || t('app.title');
-  const [mode, setMode] = useState('normal');
   const [dmgDie, setDmgDie] = useState('d6');
   const [dmgMode, setDmgMode] = useState('normal');
   const [attackers, setAttackers] = useState(1);
@@ -26,22 +22,20 @@ export default function DiceRoller({ character, log, pushLog, onEvent = null }) 
   const [stage, setStage] = useState(null);
 
   const save = (attr) => {
-    const r = rollSave(character[attr].current, mode);
-    const modeLabel = r.mode === 'normal' ? '' : ` (${t(`dice.${r.mode}`)})`;
+    const r = rollSave(character[attr].current);
     pushLog({
       kind: r.ok ? 'ok' : 'bad',
-      text: `${t('dice.saveVs', { attr: t(`attr.${attr}`) })}${modeLabel} — W20 ${r.dice.join('/')} ${r.ok ? '≤' : '>'} ${r.target} · ${r.ok ? t('dice.success') : t('dice.fail')}${r.nat1 ? ' ✦' : ''}${r.nat20 ? ' ✗' : ''}`,
+      text: `${t('dice.saveVs', { attr: t(`attr.${attr}`) })} — W20 ${r.d} ${r.ok ? '≤' : '>'} ${r.target} · ${r.ok ? t('dice.success') : t('dice.fail')}${r.nat1 ? ' ✦' : ''}${r.nat20 ? ' ✗' : ''}`,
     });
     setStage({
       id: nextRollId(),
-      label: `${t(`attr.${attr}`)} ${t('dice.saveShort')}${modeLabel}`,
+      label: `${t(`attr.${attr}`)} ${t('dice.saveShort')}`,
       value: r.d,
       max: 20,
       tone: r.ok ? 'ok' : 'bad',
       verdict: `${r.ok ? t('dice.success') : t('dice.fail')}${r.nat1 ? ' ✦' : ''}${r.nat20 ? ' ✗' : ''}`,
-      parts: r.dice.length > 1 ? r.dice.map((d) => ({ value: d, label: 'W20' })) : null,
     });
-    shareSave(who, `${t(`attr.${attr}`)}${r.mode === 'normal' ? '' : ` (${t(`dice.${r.mode}`)})`}`, r.d, r.target, r.ok);
+    shareSave(who, t(`attr.${attr}`), r.d, r.target, r.ok);
     onEvent?.({ kind: 'save', attr, roll: r.d, target: r.target, ok: r.ok });
   };
 
@@ -107,14 +101,6 @@ export default function DiceRoller({ character, log, pushLog, onEvent = null }) 
       <div className="dice-layout">
         <div className="dice-main">
           <div className="dice-group">
-            <div className="dice-row">
-              {MODES.map((m) => (
-                <button key={m} type="button" className={`chip${mode === m ? ' chip-on' : ''}`} onClick={() => setMode(m)}>
-                  {t(`dice.${m}`)}
-                </button>
-              ))}
-              {mode !== 'normal' ? <InfoHint text={t('dice.advHouseRule')} /> : null}
-            </div>
             <div className="dice-row">
               {ATTR_KEYS.map((k) => (
                 <button key={k} type="button" className="btn" onClick={() => save(k)}>

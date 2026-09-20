@@ -69,20 +69,6 @@ describe('rollSave', () => {
     expect(rollSave(10).ok).toBe(false);
   });
 
-  it('adv nimmt den niedrigeren von zwei Wuerfeln', () => {
-    seedRolls([(15 - 0.5) / 20, (4 - 0.5) / 20]);
-    const r = rollSave(10, 'adv');
-    expect(r.dice).toEqual([15, 4]);
-    expect(r.d).toBe(4);
-    expect(r.ok).toBe(true);
-  });
-
-  it('disadv nimmt den hoeheren', () => {
-    seedRolls([(6 - 0.5) / 20, (18 - 0.5) / 20]);
-    const r = rollSave(10, 'disadv');
-    expect(r.d).toBe(18);
-    expect(r.ok).toBe(false);
-  });
 });
 
 describe('rollDamage', () => {

@@ -20,13 +20,13 @@ export function rollAttribute() {
 }
 
 // Rettungswurf: W20. 1 ist immer Erfolg, 20 immer Fehlschlag, sonst Wurf <= Attribut.
-// mode: 'normal' | 'adv' (2W20, niedrigeren nehmen) | 'disadv' (2W20, hoeheren nehmen)
-export function rollSave(attrValue, mode = 'normal') {
-  const a = rollDie(20);
-  const b = mode === 'normal' ? null : rollDie(20);
-  const d = b == null ? a : mode === 'adv' ? Math.min(a, b) : Math.max(a, b);
+// Kein Vorteil/Nachteil: Cairn kennt kein "zweimal wuerfeln" fuer Saves — laut
+// Regelwerk regelt der Warden sowas ueber die Fiktion (angepasster Zielwert,
+// erlassener Save o. Ae.), nicht ueber einen zusaetzlichen Wuerfelwurf.
+export function rollSave(attrValue) {
+  const d = rollDie(20);
   const ok = d === 1 ? true : d === 20 ? false : d <= attrValue;
-  return { d, dice: b == null ? [a] : [a, b], mode, target: attrValue, ok, nat1: d === 1, nat20: d === 20 };
+  return { d, dice: [d], target: attrValue, ok, nat1: d === 1, nat20: d === 20 };
 }
 
 // Cairn-Waffenklassen. "d6+d6" = Doppelwaffe (beide werfen, hoeheren nehmen).
