@@ -282,24 +282,104 @@ export default function CharacterSheet({ character, setCharacter, mp = null, not
         </details>
       </Panel>
 
-      <Panel title={t('sheet.attributes')}>
-        <div className="attr-row">
-          {ATTR_KEYS.map((k) => (
-            <AttributeBox key={k} attrKey={k} data={character[k]} onChange={(p) => setAttr(k, p)} onSave={() => doSave(k)} />
-          ))}
-        </div>
-        <ResourceBar character={character} onChange={patch} />
-        <div className="rest-row">
-          <span>{t('sheet.rest')}:</span>
-          <button type="button" className="btn btn-ghost" onClick={() => rest('short')}>{t('rest.short')}</button>
-          <button type="button" className="btn btn-ghost" onClick={() => rest('night')}>{t('rest.night')}</button>
-          <button type="button" className="btn btn-ghost" onClick={() => rest('week')}>{t('rest.week')}</button>
-        </div>
-      </Panel>
+      {/* Attribute bis Notizen als EIN Grid-Feld (linke Spalte), Schaden &
+          Heilung + Würfel als eigenes Grid-Feld (rechte Spalte, siehe unten):
+          zwei unabhängig fließende Spalten statt paarweiser Grid-Zeilen, sonst
+          zwingt CSS Grid inhaltlich unabhängige Felder auf gleiche Zeilenhöhe
+          und reißt Lücken (z. B. Rest-Knöpfe neben dem hohen Würfel-Feld). */}
+      <div className="sheet-main">
+        <Panel title={t('sheet.attributes')}>
+          <div className="attr-row">
+            {ATTR_KEYS.map((k) => (
+              <AttributeBox key={k} attrKey={k} data={character[k]} onChange={(p) => setAttr(k, p)} onSave={() => doSave(k)} />
+            ))}
+          </div>
+          <ResourceBar character={character} onChange={patch} />
+          <div className="rest-row">
+            <span>{t('sheet.rest')}:</span>
+            <button type="button" className="btn btn-ghost" onClick={() => rest('short')}>{t('rest.short')}</button>
+            <button type="button" className="btn btn-ghost" onClick={() => rest('night')}>{t('rest.night')}</button>
+            <button type="button" className="btn btn-ghost" onClick={() => rest('week')}>{t('rest.week')}</button>
+          </div>
+        </Panel>
 
-      {/* Schaden & Heilung + Würfel als ein Grid-Feld: auf breiten Schirmen
-          stapeln sie sich zusammen in der rechten Spalte statt dass das
-          Würfel-Tool weit unten im linken Fluss landet. */}
+        <Panel title={t('sheet.inventory')}>
+          <DndContext
+            sensors={sensors}
+            collisionDetection={closestCenter}
+            onDragStart={({ active }) => setDragId(active.id)}
+            onDragEnd={handleDragEnd}
+            onDragCancel={() => setDragId(null)}
+          >
+            <InventoryGrid
+              character={character}
+              onAddAt={onAddAt}
+              onRemove={onRemove}
+              onToggleUsage={onToggleUsage}
+              onToggleCleared={onToggleCleared}
+              onAddFatigue={onAddFatigue}
+              onCast={onCast}
+            />
+            <DragOverlay>
+              {dragId && character.items[dragId] ? (
+                <ItemCard item={character.items[dragId]} span={character.items[dragId].size === 2 ? 2 : 1} />
+              ) : null}
+            </DragOverlay>
+          </DndContext>
+          {petty.length ? (
+            <div className="petty-list">
+              <h3 className="inv-h">{t('inv.petty')}</h3>
+              <ul>
+                {petty.map((it) => (
+                  <li key={it.itemId}>
+                    {loc(it.name, lang)}
+                    {it.type === 'scroll' ? (
+                      <button type="button" className="chip chip-small chip-cast" onClick={() => onCast(it.itemId)}>{t('item.useScroll')}</button>
+                    ) : null}
+                    <button type="button" className="item-x" onClick={() => onRemove(it.itemId)} aria-label={t('common.remove')}><X size={12} /></button>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          ) : null}
+        </Panel>
+
+        {mp?.role === 'player' ? (
+          <Panel title={t('stash.title')}>
+            <Stash mp={mp} character={character} setCharacter={setCharacter} pushLog={pushLog} />
+          </Panel>
+        ) : null}
+
+        {mp?.role === 'player' ? (
+          <Panel title={t('party.title')}>
+            <PartyView mp={mp} />
+          </Panel>
+        ) : null}
+
+        {mp?.role === 'player' ? (
+          <Panel title={t('map.title')}>
+            <MapPanel mp={mp} />
+          </Panel>
+        ) : null}
+
+        {character.scars.length ? (
+          <Panel title={t('sheet.scars')}>
+            <ul className="scars-list">
+              {character.scars.map((s, i) => (
+                <li key={i}>
+                  <span className="scar-idx">#{s.index}</span> {s.name}
+                  <button type="button" className="item-x" onClick={() => setCharacter((c) => ({ ...c, scars: c.scars.filter((_, j) => j !== i) }))} aria-label={t('common.remove')}><X size={12} /></button>
+                </li>
+              ))}
+            </ul>
+          </Panel>
+        ) : null}
+
+        <Panel title={t('sheet.notes')}>
+          <textarea className="notes" value={character.notes} onChange={(e) => patch({ notes: e.target.value })} rows={5} />
+        </Panel>
+      </div>
+
       <div className="sheet-side">
         <Panel title={t('sheet.damage')}>
           <DamagePanel
@@ -324,82 +404,6 @@ export default function CharacterSheet({ character, setCharacter, mp = null, not
           <DiceRoller character={character} log={log} pushLog={pushLog} onEvent={onEvent} />
         </Panel>
       </div>
-
-      <Panel title={t('sheet.inventory')}>
-        <DndContext
-          sensors={sensors}
-          collisionDetection={closestCenter}
-          onDragStart={({ active }) => setDragId(active.id)}
-          onDragEnd={handleDragEnd}
-          onDragCancel={() => setDragId(null)}
-        >
-          <InventoryGrid
-            character={character}
-            onAddAt={onAddAt}
-            onRemove={onRemove}
-            onToggleUsage={onToggleUsage}
-            onToggleCleared={onToggleCleared}
-            onAddFatigue={onAddFatigue}
-            onCast={onCast}
-          />
-          <DragOverlay>
-            {dragId && character.items[dragId] ? (
-              <ItemCard item={character.items[dragId]} span={character.items[dragId].size === 2 ? 2 : 1} />
-            ) : null}
-          </DragOverlay>
-        </DndContext>
-        {petty.length ? (
-          <div className="petty-list">
-            <h3 className="inv-h">{t('inv.petty')}</h3>
-            <ul>
-              {petty.map((it) => (
-                <li key={it.itemId}>
-                  {loc(it.name, lang)}
-                  {it.type === 'scroll' ? (
-                    <button type="button" className="chip chip-small chip-cast" onClick={() => onCast(it.itemId)}>{t('item.useScroll')}</button>
-                  ) : null}
-                  <button type="button" className="item-x" onClick={() => onRemove(it.itemId)} aria-label={t('common.remove')}><X size={12} /></button>
-                </li>
-              ))}
-            </ul>
-          </div>
-        ) : null}
-      </Panel>
-
-      {mp?.role === 'player' ? (
-        <Panel title={t('stash.title')}>
-          <Stash mp={mp} character={character} setCharacter={setCharacter} pushLog={pushLog} />
-        </Panel>
-      ) : null}
-
-      {mp?.role === 'player' ? (
-        <Panel title={t('party.title')}>
-          <PartyView mp={mp} />
-        </Panel>
-      ) : null}
-
-      {mp?.role === 'player' ? (
-        <Panel title={t('map.title')}>
-          <MapPanel mp={mp} />
-        </Panel>
-      ) : null}
-
-      {character.scars.length ? (
-        <Panel title={t('sheet.scars')}>
-          <ul className="scars-list">
-            {character.scars.map((s, i) => (
-              <li key={i}>
-                <span className="scar-idx">#{s.index}</span> {s.name}
-                <button type="button" className="item-x" onClick={() => setCharacter((c) => ({ ...c, scars: c.scars.filter((_, j) => j !== i) }))} aria-label={t('common.remove')}><X size={12} /></button>
-              </li>
-            ))}
-          </ul>
-        </Panel>
-      ) : null}
-
-      <Panel title={t('sheet.notes')}>
-        <textarea className="notes" value={character.notes} onChange={(e) => patch({ notes: e.target.value })} rows={5} />
-      </Panel>
     </div>
   );
 }

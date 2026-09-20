@@ -142,14 +142,16 @@ input[type="number"] { font-family: var(--font-body); }
    Einträge (keine Karten — Holzschnitt-Überschrift + freier Fluss)
    =================================================================== */
 .sheet { display: grid; gap: 34px 44px; grid-template-columns: 1fr; }
-/* Schaden & Heilung + Würfel als EIN Grid-Feld (siehe CharacterSheet.jsx):
-   damit landen sie auf breiten Schirmen zusammen in der rechten Spalte,
-   statt dass das Würfel-Tool als eigenes Feld weiter unten in die linke
-   Spalte faellt. Innen einfach untereinander, kein eigener Rahmen. */
-.sheet-side { display: flex; flex-direction: column; gap: 34px; }
+/* Zwei unabhängig fließende Spalten (siehe CharacterSheet.jsx): .sheet-main
+   (Attribute bis Notizen) und .sheet-side (Schaden & Heilung + Würfel) sind
+   je EIN Grid-Feld mit eigenem Flex-Fluss. So bekommt jede Spalte nur ihre
+   eigene Inhaltshöhe — ein einfaches Grid mit vielen einzelnen Panels würde
+   inhaltlich unabhängige Felder auf gemeinsame Zeilenhöhen zwingen und
+   Lücken reißen (z. B. Rest-Knöpfe neben dem hohen Würfel-Feld). */
+.sheet-main, .sheet-side { display: flex; flex-direction: column; gap: 34px; }
 @media (min-width: 900px) {
   .sheet { grid-template-columns: 1fr 1fr; align-items: start; }
-  .sheet > .panel:first-child, .panel-dice { grid-column: 1 / -1; }
+  .sheet > .panel:first-child { grid-column: 1 / -1; }
 }
 .panel { background: transparent; border: 0; }
 .panel-head {
