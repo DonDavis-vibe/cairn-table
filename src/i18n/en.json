@@ -65,6 +65,13 @@
   "mp.discord.rolls": "Send rolls",
   "mp.discord.events": "Send events",
   "mp.discord.share": "Push webhook to all players",
+  "mp.turn.title": "Custom TURN server (optional)",
+  "mp.turn.help": "STUN alone doesn't get through every network — strict firewalls, some corporate or mobile networks need a TURN relay instead. Add your own (self-hosted or a provider); Warden and players should each set the same one for the best chance of connecting. Applies to your next connection.",
+  "mp.turn.url": "TURN URL",
+  "mp.turn.username": "Username",
+  "mp.turn.credential": "Password",
+  "mp.turn.optional": "optional",
+  "mp.turn.invalid": "Must start with turn: or turns:",
 
   "gm.title": "Warden",
   "gm.warden": "Warden",

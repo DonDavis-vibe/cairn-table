@@ -65,6 +65,13 @@
   "mp.discord.rolls": "Würfe senden",
   "mp.discord.events": "Ereignisse senden",
   "mp.discord.share": "Webhook an alle Spieler:innen geben",
+  "mp.turn.title": "Eigener TURN-Server (optional)",
+  "mp.turn.help": "Reines STUN kommt nicht durch jedes Netz — strikte Firewalls, manche Firmen- oder Mobilfunknetze brauchen stattdessen einen TURN-Relay. Trag einen eigenen ein (selbst gehostet oder von einem Anbieter); am besten stellen Warden und Spieler:innen denselben ein, für die beste Verbindungschance. Wirkt ab der nächsten Verbindung.",
+  "mp.turn.url": "TURN-URL",
+  "mp.turn.username": "Benutzername",
+  "mp.turn.credential": "Passwort",
+  "mp.turn.optional": "optional",
+  "mp.turn.invalid": "Muss mit turn: oder turns: beginnen.",
 
   "gm.title": "Warden",
   "gm.warden": "Warden",

@@ -1,13 +1,51 @@
 import { useState } from 'react';
 import {
-  Radio, Users, LogOut, Copy, Check, MessagesSquare, Send,
+  Radio, Users, LogOut, Copy, Check, MessagesSquare, Send, Router,
 } from 'lucide-react';
 import { useLang } from '../i18n/index.jsx';
 import { Modal, Field, TextInput } from './ui.jsx';
-import { GM_WEBHOOK } from '../multiplayer/protocol.js';
+import { GM_WEBHOOK, getTurnServer, setTurnServer } from '../multiplayer/protocol.js';
 import {
   getWebhook, setWebhook, isValidWebhook, getOpts, setOpts, testWebhook,
 } from '../utils/discord.js';
+
+// STUN allein kommt nicht durch jedes Netz (symmetrisches NAT, strikte
+// Firewalls). Diese Einstellung war bisher nur Datenmodell (peerConfig()
+// las sie schon), aber ohne UI nie erreichbar — jetzt nachgerüstet.
+function TurnSettings() {
+  const { t } = useLang();
+  const [server, setServer] = useState(() => getTurnServer() || { urls: '', username: '', credential: '' });
+
+  const save = (patch) => {
+    const next = { ...server, ...patch };
+    setServer(next);
+    const urls = next.urls.trim();
+    if (!urls) { setTurnServer(null); return; }
+    if (!/^turns?:/i.test(urls)) return; // ungueltig: lokal weitertippen lassen, Storage nicht anfassen
+    setTurnServer({ urls, username: next.username.trim(), credential: next.credential });
+  };
+
+  const invalid = server.urls.trim() && !/^turns?:/i.test(server.urls.trim());
+
+  return (
+    <details className="mp-discord">
+      <summary><Router size={15} /> {t('mp.turn.title')}</summary>
+      <div className="mp-discord-body">
+        <p className="hint">{t('mp.turn.help')}</p>
+        <Field label={t('mp.turn.url')}>
+          <TextInput value={server.urls} onChange={(v) => save({ urls: v })} placeholder="turn:turn.example.com:3478" />
+        </Field>
+        {invalid ? <p className="mp-status" style={{ color: 'var(--bad)' }}>{t('mp.turn.invalid')}</p> : null}
+        <Field label={t('mp.turn.username')}>
+          <TextInput value={server.username} onChange={(v) => save({ username: v })} placeholder={t('mp.turn.optional')} />
+        </Field>
+        <Field label={t('mp.turn.credential')}>
+          <TextInput type="password" value={server.credential} onChange={(v) => save({ credential: v })} placeholder={t('mp.turn.optional')} />
+        </Field>
+      </div>
+    </details>
+  );
+}
 
 function DiscordSettings({ mp }) {
   const { t } = useLang();
@@ -131,6 +169,7 @@ export default function MultiplayerModal({ mp, onClose }) {
       )}
 
       <DiscordSettings mp={mp} />
+      <TurnSettings />
     </Modal>
   );
 }
