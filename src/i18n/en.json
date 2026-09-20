@@ -80,6 +80,7 @@
   "gm.party": "Party",
   "gm.noPlayers": "No players connected yet. Share the invite link.",
   "gm.overview": "Overview",
+  "gm.invFull": "Slots full",
   "gm.layoutReset": "Reset layout",
   "gm.dragHandle": "Drag {panel} to rearrange",
   "gm.unnamed": "unnamed",

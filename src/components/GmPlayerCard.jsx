@@ -5,7 +5,9 @@ import {
 import { IconSwords, IconCoins, IconTriangleAlert } from './icons.jsx';
 import { useLang, loc } from '../i18n/index.jsx';
 import { readJSON, writeJSON } from '../utils/storage.js';
-import { ATTR_KEYS, ALL_SLOTS, itemSlotCost } from '../rules/character.js';
+import {
+  ATTR_KEYS, ALL_SLOTS, itemSlotCost, armorOf,
+} from '../rules/character.js';
 import { toW } from '../rules/dice.js';
 import Portrait from './Portrait.jsx';
 import {
@@ -15,14 +17,6 @@ import { shareEvent } from '../utils/discord.js';
 
 const NOTE_KEY = (id) => `cairn-table-gm-note-${id}`;
 
-function armorOf(c) {
-  let a = 0;
-  for (const s of ALL_SLOTS) {
-    const ref = c.slots?.[s];
-    if (ref && !ref.cont) { const it = c.items?.[ref.itemId]; if (it?.armor) a += it.armor; }
-  }
-  return Math.min(3, a);
-}
 function usedSlotsOf(c) {
   let n = 0;
   for (const s of ALL_SLOTS) {

@@ -127,6 +127,16 @@ export function freeSlots(character) {
   return Math.max(0, MAX_SLOTS - usedSlots(character));
 }
 
+// Ruestung aus angelegten Gegenstaenden, gedeckelt bei 3 (Cairn 2e).
+export function armorOf(character) {
+  let a = 0;
+  for (const s of ALL_SLOTS) {
+    const ref = character.slots?.[s];
+    if (ref && !ref.cont) { const it = character.items?.[ref.itemId]; if (it?.armor) a += it.armor; }
+  }
+  return Math.min(3, a);
+}
+
 // Effektive HP-Obergrenze: ein voll belegtes Inventar (alle 10, inkl. Gold-
 // Slots) oder Panik (Procedures -> Panic) druecken die TP auf 0.
 export function effectiveMaxHp(character) {

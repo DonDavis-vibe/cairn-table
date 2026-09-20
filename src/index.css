@@ -832,7 +832,7 @@ textarea.notes {
 .gm-ov-list { display: flex; flex-wrap: wrap; gap: 10px; }
 .gm-ov-card {
   display: flex; flex-direction: column; gap: 4px;
-  flex: 1 1 170px; min-width: 170px; max-width: 240px;
+  flex: 1 1 185px; min-width: 185px; max-width: 260px;
   padding: 8px 12px; border: 1px solid var(--rule); border-radius: 2px; background: var(--inset);
 }
 .gm-ov-name { font-weight: 600; }
@@ -840,6 +840,9 @@ textarea.notes {
 .gm-ov-bar { flex: 1; height: 6px; margin-bottom: 0; }
 .gm-ov-hp-warn .gm-ov-bar span { background: var(--brass); }
 .gm-ov-hp-bad .gm-ov-bar span { background: var(--rust); }
+.gm-ov-attrs { display: flex; flex-wrap: wrap; gap: 2px 8px; font-size: .78rem; color: var(--ink-soft); }
+.gm-ov-attr.lowered { color: var(--brass); }
+.gm-ov-attr.zero { color: var(--rust); }
 .gm-ov-flags { display: flex; gap: 4px; flex-wrap: wrap; }
 .gm-cards { display: grid; grid-template-columns: 1fr; gap: 18px; }
 @media (min-width: 1000px) { .gm-cards { grid-template-columns: 1fr 1fr; } }

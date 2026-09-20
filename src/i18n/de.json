@@ -80,6 +80,7 @@
   "gm.party": "Gruppe",
   "gm.noPlayers": "Noch niemand verbunden. Teile den Einladungslink.",
   "gm.overview": "Überblick",
+  "gm.invFull": "Slots voll",
   "gm.layoutReset": "Anordnung zurücksetzen",
   "gm.dragHandle": "{panel} ziehen, um die Anordnung zu ändern",
   "gm.unnamed": "namenlos",
