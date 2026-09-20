@@ -74,6 +74,27 @@ export const ITEM_CATALOG = {
   trap: { type: 'gear', size: 1, cost: 35, name: { de: 'Falle (W6 STÄ-Schaden)', en: 'Trap (d6 STR damage)' }, effect: { de: '', en: '' } },
   instrument_simple: { type: 'gear', size: 1, cost: 10, name: { de: 'Einfaches Instrument', en: 'Simple Instrument' }, effect: { de: 'Flöte, Laute …', en: 'Pipes, lute …' } },
 
+  // --- Restliche Marketplace-Ausruestung (Cairn 2e, Player's Guide -> Marketplace) ---
+  air_bladder: { type: 'gear', size: 1, cost: 5, name: { de: 'Luftblase', en: 'Air Bladder' }, effect: { de: '', en: '' } },
+  bathing_goods: { type: 'gear', size: 1, cost: 5, name: { de: 'Badezeug', en: 'Bathing Goods' }, effect: { de: 'Seife, Parfüm …', en: 'Soap, perfume …' } },
+  book: { type: 'gear', size: 1, cost: 50, name: { de: 'Buch', en: 'Book' }, effect: { de: '', en: '' } },
+  card_deck: { type: 'gear', size: 1, cost: 5, name: { de: 'Kartenspiel', en: 'Card Deck' }, effect: { de: '', en: '' } },
+  chain: { type: 'gear', size: 1, cost: 10, name: { de: 'Kette (3 m)', en: 'Chain (10ft)' }, effect: { de: '', en: '' } },
+  chest: { type: 'gear', size: 1, cost: 25, name: { de: 'Truhe', en: 'Chest' }, effect: { de: '', en: '' } },
+  chisel: { type: 'gear', size: 1, cost: 5, name: { de: 'Meißel', en: 'Chisel' }, effect: { de: '', en: '' } },
+  instrument_complex: { type: 'gear', size: 1, cost: 50, name: { de: 'Komplexes Instrument', en: 'Complex Instrument' }, effect: { de: 'Dudelsack, Fidel …', en: 'Bagpipes, fiddle …' } },
+  costume_gear: { type: 'gear', size: 1, cost: 15, name: { de: 'Verkleidung', en: 'Costume Gear' }, effect: { de: 'Schminke, Kostüm …', en: 'Face paint, disguise …' } },
+  dowsing_rod: { type: 'gear', size: 1, cost: 15, name: { de: 'Wünschelrute', en: 'Dowsing Rod' }, effect: { de: '', en: '' } },
+  expeditionary_gear: { type: 'gear', size: 1, cost: 10, name: { de: 'Expeditionsausrüstung', en: 'Expeditionary Gear' }, effect: { de: 'Steigeisen, Flaschenzug …', en: 'Climbing spikes, pulley …' } },
+  fire_oil: { type: 'gear', size: 1, cost: 10, name: { de: 'Brandöl', en: 'Fire Oil' }, effect: { de: '', en: '' } },
+  fishing_rod: { type: 'gear', size: 1, cost: 10, name: { de: 'Angelrute', en: 'Fishing Rod' }, effect: { de: '', en: '' } },
+  games: { type: 'gear', size: 1, cost: 10, name: { de: 'Spiele', en: 'Games' }, effect: { de: 'Karten, Würfel …', en: 'Cards, dice …' } },
+  mirror: { type: 'gear', size: 1, cost: 5, name: { de: 'Spiegel', en: 'Mirror' }, effect: { de: '', en: '' } },
+  parchment: { type: 'gear', size: 1, usage: { max: 3 }, cost: 10, name: { de: 'Pergament', en: 'Parchment' }, effect: { de: '3 Nutzungen.', en: '3 uses.' } },
+  sewing_kit: { type: 'gear', size: 1, cost: 20, name: { de: 'Nähzeug', en: 'Sewing Kit' }, effect: { de: '', en: '' } },
+  specialized_tools: { type: 'gear', size: 1, cost: 20, name: { de: 'Spezialwerkzeug', en: 'Specialized Tools' }, effect: { de: 'Tinte …', en: 'Ink …' } },
+  spiked_boots: { type: 'gear', size: 1, cost: 15, name: { de: 'Nagelstiefel', en: 'Spiked Boots' }, effect: { de: '', en: '' } },
+
   // --- Petty (kein Slot) ---
   chalk: { type: 'gear', size: 0, cost: 1, name: { de: 'Kreide', en: 'Chalk' }, effect: { de: '', en: '' } },
   whistle: { type: 'gear', size: 0, cost: 15, name: { de: 'Pfeife', en: 'Whistle' }, effect: { de: '', en: '' } },
