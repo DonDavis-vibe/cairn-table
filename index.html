@@ -1,0 +1,67 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="theme-color" content="#2f6f66" />
+    <script>
+      // Theme vor dem ersten Paint setzen (kein Flackern).
+      try {
+        var p = localStorage.getItem('cairn-table-theme');
+        var dark = p === 'dark'
+          || ((!p || p === 'system') && window.matchMedia('(prefers-color-scheme: dark)').matches);
+        document.documentElement.setAttribute('data-theme', dark ? 'dark' : 'light');
+      } catch (e) { /* privater Modus */ }
+    </script>
+
+    <!-- Schriften werden selbst gehostet (src/assets/fonts/) — kein externer Aufruf. -->
+
+    <title>Cairn Table — Cairn character sheet, Warden dashboard &amp; multiplayer</title>
+    <meta
+      name="description"
+      content="Free browser character sheet and Warden dashboard for Cairn, the fantasy adventure RPG. Serverless real-time multiplayer, slot inventory, dice, character creation. No sign-up. English & German."
+    />
+    <meta name="author" content="DonDavis" />
+    <!-- Bei eigener Domain / anderem Repo hier + in src/config.js anpassen. -->
+    <link rel="canonical" href="https://dondavis-vibe.github.io/cairn-table/" />
+
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="Cairn Table" />
+    <meta property="og:title" content="Cairn Table — a Cairn character sheet & Warden tool" />
+    <meta
+      property="og:description"
+      content="Free browser character sheet and Warden dashboard for Cairn. Real-time multiplayer, slot inventory, no sign-up. English & German."
+    />
+    <meta property="og:url" content="https://dondavis-vibe.github.io/cairn-table/" />
+    <meta property="og:locale" content="en_GB" />
+    <meta property="og:locale:alternate" content="de_DE" />
+    <meta property="og:image" content="https://dondavis-vibe.github.io/cairn-table/og.jpg" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content="A stone cairn on a misty moorland path into the Wood, with a d20 and a treasure map on a mossy rock" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="Cairn Table — a Cairn character sheet & Warden tool" />
+    <meta name="twitter:description" content="Free browser character sheet and Warden dashboard for Cairn. Real-time multiplayer, no sign-up." />
+    <meta name="twitter:image" content="https://dondavis-vibe.github.io/cairn-table/og.jpg" />
+
+    <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Cg fill='%231f5e52'%3E%3Cellipse cx='32' cy='53' rx='19' ry='8'/%3E%3Cellipse cx='30' cy='39' rx='15' ry='7.5'/%3E%3Cellipse cx='34' cy='27' rx='11' ry='6'/%3E%3Cellipse cx='31' cy='17' rx='7' ry='4.6'/%3E%3C/g%3E%3C/svg%3E" />
+    <link rel="apple-touch-icon" href="./logo-wide.jpg" />
+  </head>
+  <body>
+    <div id="root"></div>
+    <noscript>
+      <h1>Cairn Table — a character sheet and Warden dashboard for Cairn</h1>
+      <p>
+        Cairn Table is a free, open-source tool for the tabletop role-playing game
+        <strong>Cairn</strong>. It runs entirely in your browser: build an adventurer following
+        the rules, track Hit Protection, attributes, gold and scars, manage a ten-slot
+        inventory, and roll saves. A serverless real-time multiplayer mode lets a Warden open a
+        room and see every player's sheet live. No account, no server. English and German.
+      </p>
+      <p>
+        Based on Cairn by Yochai Gal, used under CC-BY-SA 4.0.
+      </p>
+    </noscript>
+    <script type="module" src="/src/main.jsx"></script>
+  </body>
+</html>

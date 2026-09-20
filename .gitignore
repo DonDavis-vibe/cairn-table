@@ -1,0 +1,15 @@
+# Regel-Referenz nur lokal. CC BY-SA erlaubt Weitergabe, aber wir checken nur
+# die abgeleiteten src/data/*-Dateien ein, nicht den ganzen SRD-Klon.
+reference/
+
+# Roh-Bildquellen nur lokal; die verkleinerten Fassungen in src/assets/ + public/
+# sind im Repo.
+img/
+
+node_modules/
+dist/
+.DS_Store
+*.log
+
+# Internes Planungsdokument (Feature-Fahrplan, Umbenennungs-Historie) — nur lokal.
+PLAN.md

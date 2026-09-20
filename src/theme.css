@@ -1,0 +1,130 @@
+/* Cairn Table — „Feldjournal der Warden": gebundenes Buch, botanischer Holzschnitt,
+   tiefe Waldtinte auf Knochenpapier, ein einziger Rostakzent für Gefahr.
+   Hell = Standard auf :root, Dunkel ueberschreibt gezielt. */
+
+:root {
+  color-scheme: light;
+
+  /* Papier */
+  --paper: #efe7d3;          /* Knochenpapier */
+  --paper-deep: #e6dcc2;
+  --paper-edge: #d8cca8;     /* Blattrand / Falz */
+  --leaf: #f4eeddee;         /* Textbereich, leicht heller */
+  --inset: #e4dabf;          /* eingelassene Flaechen (Slots, Felder) */
+
+  /* Tinte */
+  --ink: #211c12;
+  --ink-soft: #5b5138;
+  --ink-faint: #8a7d5b;
+
+  /* Linien */
+  --rule: #b7a878;           /* Haarlinien */
+  --rule-strong: #8c7c52;    /* Doppellinien, Rahmen */
+
+  /* Waldgruen — die eine Leitfarbe */
+  --forest: #1c463b;
+  --forest-deep: #123128;
+  --forest-bright: #2f6f5e;
+  --forest-wash: #dce4d5;    /* zarter Grunton fuer Flaechen */
+
+  /* Zweitfarben */
+  --brass: #8a6a2e;          /* Gold / Muenzen / Warnung */
+  --brass-wash: #e8dcbb;
+  --rust: #9a3b1f;           /* Glut — Schaden, Tod, Gefahr */
+  --rust-wash: #ecd6c5;
+
+  /* Semantik */
+  --ok: var(--forest);
+  --ok-wash: var(--forest-wash);
+  --warn: var(--brass);
+  --warn-wash: var(--brass-wash);
+  --bad: var(--rust);
+  --bad-wash: var(--rust-wash);
+
+  /* alte Tokennamen — Kompatibilitaet */
+  --bg: var(--paper);
+  --bg-deep: var(--paper-deep);
+  --surface: var(--leaf);
+  --surface-2: var(--paper-deep);
+  --surface-inset: var(--inset);
+  --border: var(--rule);
+  --border-strong: var(--rule-strong);
+  --text: var(--ink);
+  --text-dim: var(--ink-soft);
+  --text-faint: var(--ink-faint);
+  --accent: var(--forest);
+  --accent-ink: var(--forest-deep);
+  --accent-bright: var(--forest-bright);
+  --accent-soft: var(--forest-wash);
+  --gold: var(--brass);
+  --gold-soft: var(--brass-wash);
+  --ember: var(--rust);
+  --ember-soft: var(--rust-wash);
+
+  --radius: 2px;
+  --radius-sm: 2px;
+  --ring: 0 0 0 2px var(--forest-bright);
+  --seal: 0 0 0 1px var(--leaf), 0 0 0 2px var(--rule-strong), 0 0 0 3px var(--leaf), 0 0 0 4px var(--rule);
+  --letterpress: inset 0 1px 0 rgba(255, 253, 245, .55), inset 0 -1px 0 rgba(33, 28, 18, .09);
+  --vignette: rgba(60, 44, 20, .12);
+
+  --font-display: "IM Fell English", "Spectral", Georgia, serif;
+  --font-sc: "IM Fell English SC", "IM Fell English", Georgia, serif;
+  --font-body: "Spectral", Georgia, "Times New Roman", serif;
+
+  /* Leinwandfarben — battleMap.js liest genau diese Namen aus (Karte folgt
+     dem Feldjournal-Thema statt fester Hex-Werte). */
+  --karte-blatt: #efe7d3;
+  --karte-tinte: #211c12;
+  --karte-stempel: #2f6f5e;
+  --karte-mess: #1c463b;
+  --karte-raster: rgba(33, 28, 18, 0.18);
+  --karte-schleier: rgba(33, 28, 18, 0.10);
+  --karte-beschriftung: rgba(239, 231, 211, 0.92);
+  --karte-umriss: rgba(33, 28, 18, 0.7);
+  --karte-nebelVoll: #c3b489;
+  --karte-nebelHalb: rgba(140, 124, 82, 0.55);
+}
+
+:root[data-theme="dark"] {
+  color-scheme: dark;
+
+  --paper: #14170f;          /* Journal bei Kerzenlicht */
+  --paper-deep: #0f120b;
+  --paper-edge: #1e2116;
+  --leaf: #1a1e13;
+  --inset: #12150d;
+
+  --ink: #e9e0c6;
+  --ink-soft: #a99d78;
+  --ink-faint: #857a58;
+
+  --rule: #3d3a29;
+  --rule-strong: #56513a;
+
+  --forest: #6cb39c;
+  --forest-deep: #97cbba;
+  --forest-bright: #7ec4b1;
+  --forest-wash: #1c2b25;
+
+  --brass: #c9a45f;
+  --brass-wash: #2c2616;
+  --rust: #d17a54;
+  --rust-wash: #33231a;
+
+  --seal: 0 0 0 1px var(--leaf), 0 0 0 2px var(--rule-strong), 0 0 0 3px var(--leaf), 0 0 0 4px var(--rule);
+  --letterpress: inset 0 1px 0 rgba(255, 246, 224, .07), inset 0 -1px 0 rgba(0, 0, 0, .3);
+  --vignette: rgba(0, 0, 0, .5);
+  --ring: 0 0 0 2px var(--forest-bright);
+
+  --karte-blatt: #14170f;
+  --karte-tinte: #e9e0c6;
+  --karte-stempel: #7ec4b1;
+  --karte-mess: #6cb39c;
+  --karte-raster: rgba(233, 224, 198, 0.16);
+  --karte-schleier: rgba(233, 224, 198, 0.08);
+  --karte-beschriftung: rgba(20, 23, 15, 0.92);
+  --karte-umriss: rgba(233, 224, 198, 0.55);
+  --karte-nebelVoll: #0d0f09;
+  --karte-nebelHalb: rgba(10, 12, 8, 0.66);
+}
