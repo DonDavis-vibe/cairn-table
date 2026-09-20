@@ -168,7 +168,7 @@ export const BACKGROUNDS = [
     name: { de: 'Pfeilwind', en: 'Fletchwind' },
     blurb: { de: 'Du triffst aus der Ferne – der Klang deiner Sehne ist eine Warnung.', en: 'You strike from afar; the song of your bowstring is a warning.' },
     names: ['Flint', 'Feather', 'Crier', 'Thunder', 'Falcon', 'Pluck', 'Needle', 'Warsong', 'Hawk', 'Cai'],
-    gear: [G('rations'), G('torch'), C({ de: 'Serratenmesser (W6)', en: 'Serrated knife (d6)', damage: 'd6' }), C({ de: 'Gekochtes Leder (1 Rüstung)', en: 'Boiled leather (1 Armor)', armor: 1 }), C({ de: 'Herzwurz-Salbe (heilt 1W4 STÄ, 1×)', en: 'Heartroot salve (restores 1d4 STR, 1 use)', usage: 1 })],
+    gear: [G('rations'), G('torch'), G('w_bow'), C({ de: 'Serratenmesser (W6)', en: 'Serrated knife (d6)', damage: 'd6' }), C({ de: 'Gekochtes Leder (1 Rüstung)', en: 'Boiled leather (1 Armor)', armor: 1 }), C({ de: 'Herzwurz-Salbe (heilt 1W4 STÄ, 1×)', en: 'Heartroot salve (restores 1d4 STR, 1 use)', usage: 1 })],
     tables: [
       { q: { de: 'Wie hast du deinen Bogen verdient?', en: 'How did you earn your bow?' }, rolls: [
         S('Krieg: greifst du zuerst an, hat dein Bogen die erste Runde Flächenschaden.', 'War: if you attack first, your bow gains blast for the first round.'),
