@@ -38,7 +38,7 @@
     <meta property="og:image" content="https://dondavis-vibe.github.io/cairn-table/og.jpg" />
     <meta property="og:image:width" content="1200" />
     <meta property="og:image:height" content="630" />
-    <meta property="og:image:alt" content="A stone cairn on a misty moorland path into the Wood, with a d20 and a treasure map on a mossy rock" />
+    <meta property="og:image:alt" content="A lantern-lit stone cairn at the edge of a dark forest, with a raven perched on a rune-carved standing stone under a crescent moon" />
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:title" content="Cairn Table — a Cairn character sheet & Warden tool" />
     <meta name="twitter:description" content="Free browser character sheet and Warden dashboard for Cairn. Real-time multiplayer, no sign-up." />
@@ -46,9 +46,55 @@
 
     <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Cg fill='%231f5e52'%3E%3Cellipse cx='32' cy='53' rx='19' ry='8'/%3E%3Cellipse cx='30' cy='39' rx='15' ry='7.5'/%3E%3Cellipse cx='34' cy='27' rx='11' ry='6'/%3E%3Cellipse cx='31' cy='17' rx='7' ry='4.6'/%3E%3C/g%3E%3C/svg%3E" />
     <link rel="apple-touch-icon" href="./logo-wide.jpg" />
+
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "WebApplication",
+        "name": "Cairn Table",
+        "url": "https://dondavis-vibe.github.io/cairn-table/",
+        "description": "Free browser character sheet and Warden dashboard for Cairn, the fantasy adventure RPG. Serverless real-time multiplayer, slot inventory, dice, character creation. No sign-up. English & German.",
+        "applicationCategory": "GameApplication",
+        "operatingSystem": "Any (runs in a web browser)",
+        "browserRequirements": "Requires JavaScript.",
+        "inLanguage": ["en", "de"],
+        "isAccessibleForFree": true,
+        "image": "https://dondavis-vibe.github.io/cairn-table/og.jpg",
+        "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" },
+        "author": { "@type": "Person", "name": "DonDavis", "url": "https://github.com/DonDavis-vibe" },
+        "isBasedOn": {
+          "@type": "CreativeWork",
+          "name": "Cairn (2nd Edition)",
+          "url": "https://cairnrpg.com/",
+          "author": "Yochai Gal"
+        }
+      }
+    </script>
   </head>
   <body>
-    <div id="root"></div>
+    <!-- Statischer Platzhalter fuer Crawler ohne JS-Rendering: React (createRoot,
+         kein hydrateRoot) ersetzt den Inhalt beim Start komplett, kein Mismatch-Risiko. -->
+    <div id="root">
+      <div style="max-width:760px;margin:60px auto;padding:0 24px;font-family:var(--font-body,Georgia,serif);color:var(--ink,#211c12);line-height:1.6;">
+        <h1 style="font-family:var(--font-display,Georgia,serif);font-size:2rem;margin:0 0 8px;">Cairn Table</h1>
+        <p style="margin:0 0 18px;">
+          <strong>Character sheet, Warden dashboard and serverless real-time multiplayer</strong>
+          for the tabletop role-playing game <a href="https://cairnrpg.com/" style="color:inherit;">Cairn</a>
+          (2nd Edition) — free, in your browser, no sign-up.
+        </p>
+        <p style="margin:0 0 18px;">
+          Build an adventurer with the guided creation wizard, track Hit Protection,
+          attributes, gold and scars, manage a ten-slot inventory, and roll saves and
+          damage. Open a room as Warden and see every player's sheet live — peer-to-peer
+          over WebRTC, no account and no game server. Available in English and German.
+        </p>
+        <p>
+          <strong>Charakterbogen, Warden-Dashboard und serverloser Echtzeit-Multiplayer</strong>
+          für das Pen-&amp;-Paper-Rollenspiel Cairn (2nd Edition) — kostenlos, im Browser,
+          ohne Anmeldung.
+        </p>
+      </div>
+    </div>
     <noscript>
       <h1>Cairn Table — a character sheet and Warden dashboard for Cairn</h1>
       <p>
