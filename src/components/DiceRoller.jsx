@@ -8,6 +8,7 @@ import {
 } from '../rules/dice.js';
 import { shareRoll, shareSave } from '../utils/discord.js';
 import { DiceStage, DieGlyph } from './DiceKit.jsx';
+import { InfoHint } from './ui.jsx';
 
 const MODES = ['normal', 'adv', 'disadv'];
 
@@ -112,6 +113,7 @@ export default function DiceRoller({ character, log, pushLog, onEvent = null }) 
                   {t(`dice.${m}`)}
                 </button>
               ))}
+              {mode !== 'normal' ? <InfoHint text={t('dice.advHouseRule')} /> : null}
             </div>
             <div className="dice-row">
               {ATTR_KEYS.map((k) => (

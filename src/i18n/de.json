@@ -198,6 +198,7 @@
   "dice.normal": "normal",
   "dice.adv": "Vorteil",
   "dice.disadv": "Nachteil",
+  "dice.advHouseRule": "Hausregel, nicht Cairn-RAW: Vorteil/Nachteil als \"zweimal würfeln, besseren/schlechteren W20 nehmen\" kennt Cairn nicht. Laut Regelwerk regelt der Warden sowas über die Fiktion — angepasster Zielwert, erlassener Save, andere Konsequenz.",
   "dice.impaired": "beeinträchtigt (W4)",
   "dice.enhanced": "verstärkt (W12)",
   "dice.panicImpaired": "Panik: Angriffe sind beeinträchtigt (W4).",
