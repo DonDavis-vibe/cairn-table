@@ -792,13 +792,55 @@ textarea.notes {
 .mp-discord-opts label { display: flex; align-items: center; gap: 6px; }
 
 /* ---------- Warden-Dashboard ---------- */
-.gm-dash { display: flex; flex-direction: column; gap: 34px; }
+.gm-dash { display: grid; gap: 34px 44px; grid-template-columns: 1fr; }
+/* Zwei unabhaengig fliessende Spalten, gleicher Grund wie .sheet-main/.sheet-side
+   im Charakterbogen: .gm-main (Kampf bis Spielerkarten) und .gm-side (Raum-
+   Steuerung + Rundenlog) sind je EIN Grid-Feld mit eigenem Flex-Fluss, statt
+   dass ein Grid mit vielen einzelnen Panels sie auf gemeinsame Zeilenhoehen
+   zwingt. Das Rundenlog (eigene UND Spieler-Wuerfe) steht dadurch prominent
+   neben den Wuerfel-Knoepfen, statt ganz unten nach fuenf weiteren Feldern. */
+.gm-main, .gm-side { display: flex; flex-direction: column; gap: 34px; }
+@media (min-width: 900px) {
+  .gm-dash { grid-template-columns: 1fr 1fr; align-items: start; }
+}
+
+/* Panels lassen sich per Griff frei umsortieren und zwischen den Spalten
+   verschieben (siehe GmDashboard.jsx, @dnd-kit/sortable). Anordnung wird
+   lokal gemerkt (utils/gmLayout.js), nicht raum-synchronisiert. */
+.gm-dash-tools { display: flex; justify-content: flex-end; margin-bottom: -12px; }
+.panel-drag-handle {
+  display: inline-flex; align-items: center; justify-content: center;
+  width: 26px; height: 26px; flex: none;
+  border: 1px solid var(--rule-strong); border-radius: 2px;
+  background: var(--paper-deep); color: var(--ink-soft);
+  cursor: grab; touch-action: none;
+}
+.panel-drag-handle:hover { color: var(--ink); border-color: var(--ink-soft); }
+.panel-drag-handle:active { cursor: grabbing; }
+
 .gm-room-row { padding: 3px 0; }
 .gm-room-row .text-input { flex: 1; min-width: 160px; width: auto; }
 .gm-count { color: var(--ink-soft); }
-.gm-log { max-height: 320px; }
+.gm-log { max-height: 480px; overflow-y: auto; }
 .gm-empty { display: flex; flex-direction: column; align-items: center; gap: 12px; padding: 20px; text-align: center; color: var(--ink-soft); font-style: italic; }
 .gm-empty img { border: 1px solid var(--rule-strong); box-shadow: var(--seal); }
+
+/* Party-Uebersicht (GmPartyOverview.jsx): eigenes, nicht ziehbares Feld ueber
+   beide Spalten (siehe GmDashboard.jsx), Karten nebeneinander statt
+   untereinander, damit sie sich unabhaengig von der Spielerzahl umbrechen. */
+.panel-overview { margin-bottom: 34px; }
+.gm-ov-list { display: flex; flex-wrap: wrap; gap: 10px; }
+.gm-ov-card {
+  display: flex; flex-direction: column; gap: 4px;
+  flex: 1 1 170px; min-width: 170px; max-width: 240px;
+  padding: 8px 12px; border: 1px solid var(--rule); border-radius: 2px; background: var(--inset);
+}
+.gm-ov-name { font-weight: 600; }
+.gm-ov-hp { display: flex; align-items: center; gap: 6px; font-size: .8rem; color: var(--ink-soft); }
+.gm-ov-bar { flex: 1; height: 6px; margin-bottom: 0; }
+.gm-ov-hp-warn .gm-ov-bar span { background: var(--brass); }
+.gm-ov-hp-bad .gm-ov-bar span { background: var(--rust); }
+.gm-ov-flags { display: flex; gap: 4px; flex-wrap: wrap; }
 .gm-cards { display: grid; grid-template-columns: 1fr; gap: 18px; }
 @media (min-width: 1000px) { .gm-cards { grid-template-columns: 1fr 1fr; } }
 .gm-card { background: var(--inset); border: 1px solid var(--rule-strong); box-shadow: var(--letterpress); padding: 15px; display: flex; flex-direction: column; gap: 10px; }
