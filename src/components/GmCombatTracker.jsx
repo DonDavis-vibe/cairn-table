@@ -154,9 +154,9 @@ export default function GmCombatTracker({ mp }) {
               </label>
               <span>/ {foe.hpMax}</span>
               {foe.armor ? <span className="badge badge-armor">{foe.armor} {t('item.armor')}</span> : null}
-              <span className="combat-attr">STÄ {foe.str}</span>
-              <span className="combat-attr">GES {foe.dex}</span>
-              <span className="combat-attr">WIL {foe.wil}</span>
+              <span className="combat-attr">{t('attr.str')} {foe.str}</span>
+              <span className="combat-attr">{t('attr.dex')} {foe.dex}</span>
+              <span className="combat-attr">{t('attr.wil')} {foe.wil}</span>
               {foe.attack !== '—' ? <span className="combat-atk">{toW(foe.attack)}</span> : null}
             </div>
             <div className="combat-foe-actions">
