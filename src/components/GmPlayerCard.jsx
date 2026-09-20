@@ -160,7 +160,7 @@ export default function GmPlayerCard({ peerId, character: c, mp }) {
               if (!ref || ref.cont) return null;
               const it = c.items?.[ref.itemId];
               if (!it) return null;
-              return <li key={s}>{loc(it.name, lang)}{it.damage ? ` (${toW(it.damage)})` : ''}{it.armor ? ` (+${it.armor})` : ''}</li>;
+              return <li key={s}>{loc(it.name, lang)}{it.damage ? ` (${toW(it.damage, t('dice.die'))})` : ''}{it.armor ? ` (+${it.armor})` : ''}</li>;
             })}
             {Object.values(c.items || {}).filter((i) => i.petty).map((i) => <li key={i.itemId} className="petty">{loc(i.name, lang)}</li>)}
           </ul>

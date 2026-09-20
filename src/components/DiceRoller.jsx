@@ -4,7 +4,7 @@ import { IconSwords } from './icons.jsx';
 import { useLang } from '../i18n/index.jsx';
 import { ATTR_KEYS } from '../rules/character.js';
 import {
-  rollSave, rollDamage, rollDieOfFate, rollReaction, DAMAGE_DICE,
+  rollSave, rollDamage, rollDieOfFate, rollReaction, toW, DAMAGE_DICE,
 } from '../rules/dice.js';
 import { shareRoll, shareSave } from '../utils/discord.js';
 import { DiceStage, DieGlyph } from './DiceKit.jsx';
@@ -25,7 +25,7 @@ export default function DiceRoller({ character, log, pushLog, onEvent = null }) 
     const r = rollSave(character[attr].current);
     pushLog({
       kind: r.ok ? 'ok' : 'bad',
-      text: `${t('dice.saveVs', { attr: t(`attr.${attr}`) })} — W20 ${r.d} ${r.ok ? '≤' : '>'} ${r.target} · ${r.ok ? t('dice.success') : t('dice.fail')}${r.nat1 ? ' ✦' : ''}${r.nat20 ? ' ✗' : ''}`,
+      text: `${t('dice.saveVs', { attr: t(`attr.${attr}`) })} — ${t('dice.die')}20 ${r.d} ${r.ok ? '≤' : '>'} ${r.target} · ${r.ok ? t('dice.success') : t('dice.fail')}${r.nat1 ? ' ✦' : ''}${r.nat20 ? ' ✗' : ''}`,
     });
     setStage({
       id: nextRollId(),
@@ -45,7 +45,7 @@ export default function DiceRoller({ character, log, pushLog, onEvent = null }) 
 
   const damage = () => {
     const r = rollDamage(dmgDie, { mode: effDmgMode, attackers: Number(attackers) || 1, armor: Number(armor) || 0 });
-    const dieLabel = r.mode === 'impaired' ? 'W4' : r.mode === 'enhanced' ? 'W12' : dmgDie.replace('d', 'W');
+    const dieLabel = r.mode === 'impaired' ? `${t('dice.die')}4` : r.mode === 'enhanced' ? `${t('dice.die')}12` : toW(dmgDie, t('dice.die'));
     const rolls = r.pool.map((p) => p.roll).join('/');
     const armorPart = r.armor > 0 ? ` − ${r.armor} ${t('dice.armor')}` : '';
     const text = `${dieLabel}${Number(attackers) > 1 ? `×${attackers}` : ''} — [${rolls}]${armorPart} = ${r.final}`;
@@ -65,7 +65,7 @@ export default function DiceRoller({ character, log, pushLog, onEvent = null }) 
 
   const fate = () => {
     const r = rollDieOfFate();
-    const text = `W6 ${r.d} · ${r.favorsPcs ? t('dice.fateGood') : t('dice.fateBad')}`;
+    const text = `${t('dice.die')}6 ${r.d} · ${r.favorsPcs ? t('dice.fateGood') : t('dice.fateBad')}`;
     pushLog({ kind: r.favorsPcs ? 'ok' : 'bad', text: `${t('dice.fate')} — ${text}` });
     setStage({
       id: nextRollId(),
@@ -82,7 +82,7 @@ export default function DiceRoller({ character, log, pushLog, onEvent = null }) 
 
   const reaction = () => {
     const r = rollReaction();
-    const text = `2W6 ${r.dice.join('+')} = ${r.total} · ${t(`reaction.${r.key}`)}`;
+    const text = `2${t('dice.die')}6 ${r.dice.join('+')} = ${r.total} · ${t(`reaction.${r.key}`)}`;
     pushLog({ kind: 'roll', text: `${t('dice.reaction')} — ${text}` });
     setStage({
       id: nextRollId(),
@@ -90,7 +90,7 @@ export default function DiceRoller({ character, log, pushLog, onEvent = null }) 
       value: r.total,
       max: 12,
       verdict: t(`reaction.${r.key}`),
-      parts: r.dice.map((d) => ({ value: d, label: 'W6' })),
+      parts: r.dice.map((d) => ({ value: d, label: `${t('dice.die')}6` })),
     });
     shareRoll(who, t('dice.reaction'), text);
     onEvent?.({ kind: 'roll', label: t('dice.reaction'), text });
@@ -113,7 +113,7 @@ export default function DiceRoller({ character, log, pushLog, onEvent = null }) 
           <div className="dice-group">
             <div className="dice-row dice-damage">
               <select className="text-input" value={dmgDie} onChange={(e) => setDmgDie(e.target.value)} aria-label={t('dice.damageDie')}>
-                {DAMAGE_DICE.map((d) => <option key={d} value={d}>{d.replace('d', 'W')}</option>)}
+                {DAMAGE_DICE.map((d) => <option key={d} value={d}>{toW(d, t('dice.die'))}</option>)}
               </select>
               <select
                 className="text-input"

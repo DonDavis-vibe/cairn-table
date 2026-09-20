@@ -8,13 +8,13 @@ import { firstFreeFit, isPetty, removeItem } from '../rules/inventory.js';
 import { InfoHint } from './ui.jsx';
 import AddItemMenu from './AddItemMenu.jsx';
 
-function ItemLine({ item, lang }) {
+function ItemLine({ item, lang, mark }) {
   const effect = loc(item.effect, lang);
   return (
     <div className="stash-item-info">
       <Package size={13} className="item-icon" />
       <span className="stash-item-name">{loc(item.name, lang)}</span>
-      {item.damage ? <span className="badge badge-dmg">{toW(item.damage)}</span> : null}
+      {item.damage ? <span className="badge badge-dmg">{toW(item.damage, mark)}</span> : null}
       {item.armor ? <span className="badge badge-armor">+{item.armor}</span> : null}
       {item.size === 2 ? <span className="badge">·</span> : null}
       {effect ? <InfoHint text={effect} /> : null}
@@ -60,7 +60,7 @@ export default function Stash({ mp, character, setCharacter, pushLog }) {
         <ul className="stash-list">
           {stash.map((it) => (
             <li key={it.itemId} className="stash-row">
-              <ItemLine item={it} lang={lang} />
+              <ItemLine item={it} lang={lang} mark={t('dice.die')} />
               <div className="stash-row-actions">
                 {isGm ? (
                   <>
@@ -111,7 +111,7 @@ export default function Stash({ mp, character, setCharacter, pushLog }) {
               <li key={it.itemId}>
                 <button type="button" className="catalog-item" onClick={() => drop(it)}>
                   <span className="catalog-name">{loc(it.name, lang)}</span>
-                  {it.damage ? <span className="badge badge-dmg">{toW(it.damage)}</span> : null}
+                  {it.damage ? <span className="badge badge-dmg">{toW(it.damage, t('dice.die'))}</span> : null}
                   {it.armor ? <span className="badge badge-armor">+{it.armor}</span> : null}
                 </button>
               </li>

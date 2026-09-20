@@ -18,11 +18,22 @@ function seedRolls(values) {
 afterEach(() => vi.restoreAllMocks());
 
 describe('toW', () => {
-  it('wandelt Wuerfelnotation um, ohne Buchstaben zu zerstoeren', () => {
-    expect(toW('d6')).toBe('W6');
-    expect(toW('d8+d8')).toBe('W8+W8');
-    expect(toW('dagger (d6)')).toBe('dagger (W6)');
-    expect(toW(null)).toBe('');
+  it('setzt die deutsche Notation, ohne Buchstaben zu zerstoeren', () => {
+    expect(toW('d6', 'W')).toBe('W6');
+    expect(toW('d8+d8', 'W')).toBe('W8+W8');
+    expect(toW('dagger (d6)', 'W')).toBe('dagger (W6)');
+    expect(toW(null, 'W')).toBe('');
+  });
+
+  it('laesst die englische Notation unveraendert', () => {
+    expect(toW('d6', 'd')).toBe('d6');
+    expect(toW('d8+d8', 'd')).toBe('d8+d8');
+    expect(toW('dagger (d6)', 'd')).toBe('dagger (d6)');
+    expect(toW(null, 'd')).toBe('');
+  });
+
+  it('faellt ohne Markierung auf die englische Notation zurueck', () => {
+    expect(toW('d6')).toBe('d6');
   });
 });
 

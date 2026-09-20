@@ -166,8 +166,8 @@ export default function GmDashboard({ mp }) {
           </div>
           <div className="gm-room-row">
             <span className="field-label">{t('sheet.dice')}:</span>
-            <button type="button" className="btn btn-sm" onClick={() => gmRoll('W20', () => rollDie(20))}><Dices size={13} /> W20</button>
-            <button type="button" className="btn btn-sm" onClick={() => gmRoll('W6', () => rollDie(6))}><Dices size={13} /> W6</button>
+            <button type="button" className="btn btn-sm" onClick={() => gmRoll(`${t('dice.die')}20`, () => rollDie(20))}><Dices size={13} /> {t('dice.die')}20</button>
+            <button type="button" className="btn btn-sm" onClick={() => gmRoll(`${t('dice.die')}6`, () => rollDie(6))}><Dices size={13} /> {t('dice.die')}6</button>
             <button type="button" className="btn btn-sm" onClick={() => gmRoll(t('dice.reaction'), () => { const x = rollReaction(); return `${x.dice.join('+')} · ${t(`reaction.${x.key}`)}`; })}>{t('dice.reaction')}</button>
             <button type="button" className="btn btn-sm" onClick={() => gmRoll(t('dice.fate'), () => { const x = rollDieOfFate(); return `${x.d} · ${x.favorsPcs ? t('dice.fateGood') : t('dice.fateBad')}`; })}>{t('dice.fate')}</button>
           </div>

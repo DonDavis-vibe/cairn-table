@@ -5,7 +5,7 @@ import {
 import { IconSwords } from './icons.jsx';
 import { useLang, loc } from '../i18n/index.jsx';
 import { Field, TextInput } from './ui.jsx';
-import { rollDie, rollReaction, toW } from '../rules/dice.js';
+import { rollDie, rollReaction, rollSave } from '../rules/dice.js';
 import { CREATURES } from '../data/creatures.js';
 import { readJSON, writeJSON } from '../utils/storage.js';
 
@@ -14,20 +14,22 @@ const nid = () => `f${(seq += 1)}${Date.now().toString(36).slice(-3)}`;
 
 const LIB_KEY = 'cairn-table-user-monsters';
 
-function fromCreature(c, lang) {
+// Name, Angriff und Notiz bleiben zweisprachig ({de,en}) im Gegner stehen —
+// so rendert jede Seite (auch die Spieler:innen) in ihrer eigenen Sprache.
+function fromCreature(c) {
   return {
-    id: nid(), name: loc(c.name, lang), hp: c.hp, hpMax: c.hp, armor: c.armor,
-    str: c.str, dex: c.dex, wil: c.wil, attack: loc(c.attack, lang), dmg: c.dmg, detachment: c.detachment,
-    note: loc(c.note, lang),
+    id: nid(), name: c.name, hp: c.hp, hpMax: c.hp, armor: c.armor,
+    str: c.str, dex: c.dex, wil: c.wil, attack: c.attack, dmg: c.dmg, detachment: c.detachment,
+    note: c.note,
   };
 }
 
 // Eigene NSCs, lokal gesichert (nicht Teil der Raum-Synchronisation — reine
 // Vorbereitungs-Bequemlichkeit fuer den Warden, wie das eingebaute Bestiarium).
-function fromLibrary(m) {
+function fromLibrary(m, mark) {
   return {
     id: nid(), name: m.name, hp: m.hp, hpMax: m.hp, armor: m.armor,
-    str: 10, dex: 10, wil: m.wil, attack: `W${m.dmg}`, dmg: m.dmg, detachment: m.detachment, note: '',
+    str: 10, dex: 10, wil: m.wil, attack: `${mark}${m.dmg}`, dmg: m.dmg, detachment: m.detachment, note: '',
   };
 }
 
@@ -83,21 +85,21 @@ export default function GmCombatTracker({ mp }) {
     if (foe.detachment) {
       // Abteilungen gegen Einzelne: verstaerkt (W12) + Stoss (je Ziel einzeln).
       const roll = rollDie(12);
-      log(`${foe.name} ${t('combat.log.attackRoll', { die: 'W12', roll })} — ${t('gm.detachAttack')}`, 'bad');
+      log(`${loc(foe.name, lang)} ${t('combat.log.attackRoll', { die: `${t('dice.die')}12`, roll })} — ${t('gm.detachAttack')}`, 'bad');
       return;
     }
     const roll = rollDie(foe.dmg || 6);
-    log(`${foe.name} ${t('combat.log.attackRoll', { die: `W${foe.dmg}`, roll })}`, 'bad');
+    log(`${loc(foe.name, lang)} ${t('combat.log.attackRoll', { die: `${t('dice.die')}${foe.dmg}`, roll })}`, 'bad');
   };
   const morale = (foe) => {
-    // Moral ist ein WIL-Rettungswurf: 1 gelingt immer, 20 misslingt immer.
-    const d = rollDie(20);
-    const ok = d === 1 ? true : d === 20 ? false : d <= foe.wil;
-    log(`${foe.name} — ${t('gm.moraleRoll', { roll: d, wil: foe.wil })}: ${ok ? t('gm.moraleHold') : t('gm.moraleFlee')}`, ok ? 'gm' : 'bad');
+    // Moral ist ein ganz normaler WIL-Rettungswurf (1 gelingt, 20 misslingt immer).
+    const { d, ok } = rollSave(foe.wil);
+    const vars = { die: `${t('dice.die')}20`, roll: d, cmp: ok ? '≤' : '>', wil: foe.wil };
+    log(`${loc(foe.name, lang)} — ${t('gm.moraleRoll', vars)}: ${ok ? t('gm.moraleHold') : t('gm.moraleFlee')}`, ok ? 'gm' : 'bad');
   };
   const reaction = () => {
     const r = rollReaction();
-    log(`${t('dice.reaction')} — 2W6 ${r.dice.join('+')} · ${t(`reaction.${r.key}`)}`);
+    log(`${t('dice.reaction')} — 2${t('dice.die')}6 ${r.dice.join('+')} · ${t(`reaction.${r.key}`)}`);
   };
 
   const nextRound = () => {
@@ -128,7 +130,7 @@ export default function GmCombatTracker({ mp }) {
           <li key={foe.id} className={`combat-foe${foe.hp <= 0 ? ' is-down' : ''}`}>
             <div className="combat-foe-head">
               {foe.hp <= 0 ? <Skull size={14} /> : null}
-              <strong>{foe.name}</strong>
+              <strong>{loc(foe.name, lang)}</strong>
               <button
                 type="button"
                 className={`badge combat-detach${foe.detachment ? ' on' : ''}`}
@@ -157,14 +159,14 @@ export default function GmCombatTracker({ mp }) {
               <span className="combat-attr">{t('attr.str')} {foe.str}</span>
               <span className="combat-attr">{t('attr.dex')} {foe.dex}</span>
               <span className="combat-attr">{t('attr.wil')} {foe.wil}</span>
-              {foe.attack !== '—' ? <span className="combat-atk">{toW(foe.attack)}</span> : null}
+              {loc(foe.attack, lang) !== '—' ? <span className="combat-atk">{loc(foe.attack, lang)}</span> : null}
             </div>
             <div className="combat-foe-actions">
               {foe.dmg ? <button type="button" className="btn btn-bad btn-sm" onClick={() => attack(foe)}><IconSwords size={12} /> {t('gm.rollAttack')}</button> : null}
               <button type="button" className="btn btn-sm" onClick={() => morale(foe)}>{t('gm.morale')}</button>
             </div>
             {foe.detachment ? <p className="combat-note combat-detach-note">{t('gm.detachVuln')}</p> : null}
-            {foe.note ? <p className="combat-note">{foe.note}</p> : null}
+            {loc(foe.note, lang) ? <p className="combat-note">{loc(foe.note, lang)}</p> : null}
           </li>
         ))}
       </ul>
@@ -177,11 +179,11 @@ export default function GmCombatTracker({ mp }) {
           <ul className="combat-matches">
             {matches.map((c) => (
               <li key={c.name.en}>
-                <button type="button" className="catalog-item" onClick={() => { add(fromCreature(c, lang)); setQ(''); }}>
+                <button type="button" className="catalog-item" onClick={() => { add(fromCreature(c)); setQ(''); }}>
                   <span className="catalog-name">{loc(c.name, lang)}</span>
                   <span className="badge">{c.hp} {t('res.hp')}</span>
                   {c.armor ? <span className="badge badge-armor">{c.armor}</span> : null}
-                  {loc(c.attack, lang) !== '—' ? <span className="badge badge-dmg">{toW(loc(c.attack, lang))}</span> : null}
+                  {loc(c.attack, lang) !== '—' ? <span className="badge badge-dmg">{loc(c.attack, lang)}</span> : null}
                 </button>
               </li>
             ))}
@@ -194,11 +196,11 @@ export default function GmCombatTracker({ mp }) {
             <ul className="combat-matches">
               {library.map((m) => (
                 <li key={m.id} className="combat-lib-row">
-                  <button type="button" className="catalog-item" onClick={() => add(fromLibrary(m))}>
+                  <button type="button" className="catalog-item" onClick={() => add(fromLibrary(m, t('dice.die')))}>
                     <span className="catalog-name">{m.name}</span>
                     <span className="badge">{m.hp} {t('res.hp')}</span>
                     {m.armor ? <span className="badge badge-armor">{m.armor}</span> : null}
-                    <span className="badge badge-dmg">{toW(`W${m.dmg}`)}</span>
+                    <span className="badge badge-dmg">{`${t('dice.die')}${m.dmg}`}</span>
                   </button>
                   <button type="button" className="item-x" onClick={() => deleteFromLibrary(m.id)} aria-label={t('common.remove')}><X size={12} /></button>
                 </li>
@@ -219,7 +221,7 @@ export default function GmCombatTracker({ mp }) {
           </label>
           <button type="button" className="btn btn-sm btn-primary" disabled={!custom.name.trim()} onClick={() => {
             add({
-              id: nid(), name: custom.name.trim(), hp: custom.hp, hpMax: custom.hp, armor: custom.armor, str: 10, dex: 10, wil: custom.wil, attack: `W${custom.dmg}`, dmg: custom.dmg, detachment: custom.detachment, note: '',
+              id: nid(), name: custom.name.trim(), hp: custom.hp, hpMax: custom.hp, armor: custom.armor, str: 10, dex: 10, wil: custom.wil, attack: `${t('dice.die')}${custom.dmg}`, dmg: custom.dmg, detachment: custom.detachment, note: '',
             });
             setCustom({
               name: '', hp: 4, armor: 0, dmg: 6, wil: 8, detachment: false,

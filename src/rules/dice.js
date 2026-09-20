@@ -1,8 +1,9 @@
 // Reine Wuerfel-Funktionen fuer Cairn. Kein DOM, kein State.
 
-// Wuerfel-Notation fuer die Anzeige: nur "d" vor einer Ziffer wird zu "W"
-// (nicht das "d" in "dagger" o.Ae.).
-export const toW = (s) => String(s ?? '').replace(/d(?=\d)/g, 'W');
+// Wuerfel-Notation fuer die Anzeige. Deutsch schreibt "W6", Englisch "d6" —
+// `mark` kommt darum aus der Sprache (t('dice.die')). Ersetzt nur "d" vor einer
+// Ziffer, nicht das "d" in "dagger" o.Ae.
+export const toW = (s, mark = 'd') => String(s ?? '').replace(/d(?=\d)/g, mark);
 
 export function rollDie(sides = 6) {
   return 1 + Math.floor(Math.random() * sides);

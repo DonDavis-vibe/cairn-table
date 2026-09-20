@@ -13,17 +13,17 @@ export default function CombatPrompt({ prompt, setCharacter, pushLog, onEvent, o
     const roll = () => {
       const s = rollSave(prompt.target);
       if (s.ok) {
-        pushLog({ kind: 'ok', text: `${t('combat.strSave')} W20 ${s.d} ≤ ${prompt.target} · ${t('dice.success')}` });
+        pushLog({ kind: 'ok', text: `${t('combat.strSave')} ${t('dice.die')}20 ${s.d} ≤ ${prompt.target} · ${t('dice.success')}` });
       } else {
         setCharacter((c) => ({ ...c, critical: true }));
-        pushLog({ kind: 'bad', text: `${t('combat.strSave')} W20 ${s.d} > ${prompt.target} · ${t('dice.fail')} — ${t('res.critical')}` });
+        pushLog({ kind: 'bad', text: `${t('combat.strSave')} ${t('dice.die')}20 ${s.d} > ${prompt.target} · ${t('dice.fail')} — ${t('res.critical')}` });
       }
       onEvent?.({ kind: 'save', attr: 'str', roll: s.d, target: prompt.target, ok: s.ok, reason: t('combat.criticalShort') });
       onClose();
     };
     return (
       <div className="prompt-card prompt-warn">
-        <strong>{t('combat.strSave')} W20 ≤ {prompt.target}</strong>
+        <strong>{t('combat.strSave')} {t('dice.die')}20 ≤ {prompt.target}</strong>
         <p>{t('combat.strSaveHint')}</p>
         <div className="scar-card-actions">
           <button type="button" className="btn btn-primary" onClick={roll}><Dices size={15} /> {t('dice.roll')}</button>

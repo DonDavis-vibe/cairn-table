@@ -22,12 +22,12 @@ const nid = () => `ctr${(seq += 1)}${Date.now().toString(36).slice(-3)}`;
 
 const usedSlotsOf = (items) => items.reduce((n, it) => n + itemSlotCost(it), 0);
 
-function ItemLine({ item, lang }) {
+function ItemLine({ item, lang, mark }) {
   const effect = loc(item.effect, lang);
   return (
     <div className="stash-item-info">
       <span className="stash-item-name">{loc(item.name, lang)}</span>
-      {item.damage ? <span className="badge badge-dmg">{toW(item.damage)}</span> : null}
+      {item.damage ? <span className="badge badge-dmg">{toW(item.damage, mark)}</span> : null}
       {item.armor ? <span className="badge badge-armor">+{item.armor}</span> : null}
       {effect ? <InfoHint text={effect} /> : null}
     </div>
@@ -95,7 +95,7 @@ export default function Containers({ mp }) {
                 <ul className="stash-list">
                   {c.items.map((it) => (
                     <li key={it.itemId} className="stash-row">
-                      <ItemLine item={it} lang={lang} />
+                      <ItemLine item={it} lang={lang} mark={t('dice.die')} />
                       <div className="stash-row-actions">
                         <select
                           className="text-input stash-give"

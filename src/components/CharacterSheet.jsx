@@ -105,7 +105,7 @@ export default function CharacterSheet({ character, setCharacter, mp = null, not
       say(`${gmCommand.amount >= 0 ? '+' : ''}${gmCommand.amount} ${t('res.gp')}`, gmCommand.amount >= 0 ? 'ok' : 'warn');
     } else if (cmd === GM_SAVE) {
       const s = rollSave(character[gmCommand.attr].current);
-      say(`${t('dice.saveVs', { attr: t(`attr.${gmCommand.attr}`) })} — W20 ${s.d} ${s.ok ? '≤' : '>'} ${s.target} · ${s.ok ? t('dice.success') : t('dice.fail')}`, s.ok ? 'ok' : 'bad', false);
+      say(`${t('dice.saveVs', { attr: t(`attr.${gmCommand.attr}`) })} — ${t('dice.die')}20 ${s.d} ${s.ok ? '≤' : '>'} ${s.target} · ${s.ok ? t('dice.success') : t('dice.fail')}`, s.ok ? 'ok' : 'bad', false);
       shareSave(cn, t('dice.saveVs', { attr: t(`attr.${gmCommand.attr}`) }), s.d, s.target, s.ok);
       onEvent?.({ kind: 'save', attr: gmCommand.attr, roll: s.d, target: s.target, ok: s.ok, reason: t('gm.warden') });
     } else if (cmd === GM_FATIGUE) {
@@ -164,7 +164,7 @@ export default function CharacterSheet({ character, setCharacter, mp = null, not
     const r = rollSave(character[attr].current);
     pushLog({
       kind: r.ok ? 'ok' : 'bad',
-      text: `${t('dice.saveVs', { attr: t(`attr.${attr}`) })} — W20 ${r.d} ${r.ok ? '≤' : '>'} ${r.target} · ${r.ok ? t('dice.success') : t('dice.fail')}`,
+      text: `${t('dice.saveVs', { attr: t(`attr.${attr}`) })} — ${t('dice.die')}20 ${r.d} ${r.ok ? '≤' : '>'} ${r.target} · ${r.ok ? t('dice.success') : t('dice.fail')}`,
     });
     shareSave(character.name || t('app.title'), t('dice.saveVs', { attr: t(`attr.${attr}`) }), r.d, r.target, r.ok);
     onEvent?.({ kind: 'save', attr, roll: r.d, target: r.target, ok: r.ok });
@@ -215,7 +215,7 @@ export default function CharacterSheet({ character, setCharacter, mp = null, not
         const s = rollSave(c.wil.current);
         pushLog({
           kind: s.ok ? 'ok' : 'bad',
-          text: `${t('inv.castDeprived')} — W20 ${s.d} ${s.ok ? '≤' : '>'} ${s.target} · ${s.ok ? t('dice.success') : t('dice.fail')}`,
+          text: `${t('inv.castDeprived')} — ${t('dice.die')}20 ${s.d} ${s.ok ? '≤' : '>'} ${s.target} · ${s.ok ? t('dice.success') : t('dice.fail')}`,
         });
         onEvent?.({ kind: 'save', attr: 'wil', roll: s.d, target: s.target, ok: s.ok, reason: t('inv.castDeprived') });
         if (!s.ok) {
@@ -251,7 +251,7 @@ export default function CharacterSheet({ character, setCharacter, mp = null, not
       {partyNpcs.length ? (
         <div className="npc-banner" role="status">
           <span className="npc-banner-label">{t('sheet.inFight')}</span>
-          {partyNpcs.map((n) => <span key={n.id} className="npc-chip">{n.name}</span>)}
+          {partyNpcs.map((n) => <span key={n.id} className="npc-chip">{loc(n.name, lang)}</span>)}
         </div>
       ) : null}
 

@@ -8,7 +8,7 @@ function formatEvent(ev, t) {
       const cmp = ev.ok ? '≤' : '>';
       const verdict = ev.ok ? t('dice.success') : t('dice.fail');
       const reason = ev.reason ? `${ev.reason} · ` : '';
-      return `${reason}${t('dice.saveVs', { attr })} — W20 ${ev.roll} ${cmp} ${ev.target} · ${verdict}`;
+      return `${reason}${t('dice.saveVs', { attr })} — ${t('dice.die')}20 ${ev.roll} ${cmp} ${ev.target} · ${verdict}`;
     }
     case 'roll':
       return `${ev.label || t('dice.damage')} — ${ev.text}`;

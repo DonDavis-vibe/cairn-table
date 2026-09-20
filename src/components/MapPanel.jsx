@@ -5,7 +5,7 @@ import {
   Map as MapIcon, Image, Hand, Ruler, Pencil, Eraser, Users, Plus, Maximize,
   Eye, EyeOff, Grid3x3, Undo2, Check, Trash2, SquarePen,
 } from 'lucide-react';
-import { useLang } from '../i18n/index.jsx';
+import { useLang, loc } from '../i18n/index.jsx';
 import { BattleMap } from '../map/battleMap.js';
 
 const MAP_OPEN_KEY = 'cairn-table-map-open';
@@ -39,7 +39,7 @@ const EMPTY_MAP_STATE = () => ({
 const newMapId = () => `m${Date.now().toString(36)}${Math.random().toString(36).slice(2, 5)}`;
 
 export default function MapPanel({ mp }) {
-  const { t } = useLang();
+  const { t, lang } = useLang();
   const {
     role, players, partyNpcs,
     broadcastMap, sendMapImage, sendMapMove, sendMapPortraits, clearMapMoveEvent, setMapMoveFreeShared,
@@ -292,7 +292,7 @@ export default function MapPanel({ mp }) {
       const id = `foe:${n.id}`;
       if (map.figuren.find((f) => f.id === id)) return;
       map.addFigur({
-        id, name: n.name, farbe: '#9a3b1f', besitzer: 'sl', x: c.x + (i % 4), y: c.y - 1 - Math.floor(i / 4), groesse: 1,
+        id, name: loc(n.name, lang), farbe: '#9a3b1f', besitzer: 'sl', x: c.x + (i % 4), y: c.y - 1 - Math.floor(i / 4), groesse: 1,
       });
     });
   };

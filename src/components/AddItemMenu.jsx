@@ -76,7 +76,7 @@ export default function AddItemMenu({ onPick, onClose }) {
                     <li key={key}>
                       <button type="button" className="catalog-item" onClick={() => onPick(makeItem(key))}>
                         <span className="catalog-name">{loc(spec.name, lang)}</span>
-                        {spec.damage ? <span className="badge badge-dmg">{toW(spec.damage)}</span> : null}
+                        {spec.damage ? <span className="badge badge-dmg">{toW(spec.damage, t('dice.die'))}</span> : null}
                         {spec.armor ? <span className="badge badge-armor">+{spec.armor}</span> : null}
                         {spec.size === 2 ? <span className="badge">{t('item.bulky')}</span> : null}
                         {spec.size === 0 ? <span className="badge">{t('item.petty')}</span> : null}
@@ -140,7 +140,7 @@ export default function AddItemMenu({ onPick, onClose }) {
                   <strong>{loc(r.name, lang)}
                     {r.charges ? <span className="badge"> {r.charges} {t('item.charges')}</span> : null}
                     {r.uses ? <span className="badge"> {r.uses} {t('item.usage')}</span> : null}
-                    {r.damage ? <span className="badge badge-dmg"> {toW(r.damage)}</span> : null}
+                    {r.damage ? <span className="badge badge-dmg"> {toW(r.damage, t('dice.die'))}</span> : null}
                     {r.armor ? <span className="badge badge-armor"> +{r.armor}</span> : null}
                   </strong>
                   <span>{loc(r.effect, lang)}{r.recharge ? ` — ${t('item.recharge')}: ${loc(r.recharge, lang)}` : ''}</span>

@@ -34,7 +34,7 @@ export default function ItemCard({ item, span = 1, onRemove, onToggleUsage, onTo
       </div>
 
       <div className="item-meta">
-        {item.damage ? <span className="badge badge-dmg">{toW(item.damage)}</span> : null}
+        {item.damage ? <span className="badge badge-dmg">{toW(item.damage, t('dice.die'))}</span> : null}
         {item.armor ? <span className="badge badge-armor">+{item.armor} {t('item.armor')}</span> : null}
         {item.size === 2 ? <span className="badge">{t('item.bulky')}</span> : null}
         {item.size === 0 ? <span className="badge">{t('item.petty')}</span> : null}
