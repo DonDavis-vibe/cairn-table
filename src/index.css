@@ -936,6 +936,8 @@ textarea.notes {
 }
 .footer-link:hover { color: var(--rust); border-bottom-color: currentColor; }
 .footer-link-ext { opacity: .5; flex: none; }
+.footer-links-legal { flex-basis: 100%; display: flex; gap: 14px; font-size: .74rem; }
+.footer-links-legal .footer-link { color: var(--ink-faint); }
 .footer-legal { margin: 6px 0 0; font-style: italic; line-height: 1.55; }
 .footer-legal a { color: var(--ink-soft); }
 

@@ -39,8 +39,10 @@ export default function Footer({ onHelp }) {
           <Ext href={DISCORD_URL} icon={MessagesSquare}>{t('footer.discord')}</Ext>
           <Ext href={REPO_URL} icon={Github}>GitHub</Ext>
           <Ext href={KOFI_URL} icon={Coffee}>{t('footer.kofi')}</Ext>
-          <a className="footer-link" href="./impressum.html">{t('footer.imprint')}</a>
-          <a className="footer-link" href="./datenschutz.html">{t('footer.privacy')}</a>
+          <div className="footer-links-legal">
+            <a className="footer-link" href="./impressum.html">{t('footer.imprint')}</a>
+            <a className="footer-link" href="./datenschutz.html">{t('footer.privacy')}</a>
+          </div>
         </nav>
       </div>
 
