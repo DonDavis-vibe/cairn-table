@@ -1,5 +1,7 @@
 <div align="center">
 
+<img src="public/banner.jpg" width="100%" alt="Ein Rabe auf einem runenbesetzten Menhir blickt über ein neblige Moor zu einem laternenbeleuchteten Steinmal am Waldrand" />
+
 # Cairn Table
 
 **Charakterbogen · Warden-Dashboard · serverloser Echtzeit-Multiplayer**
@@ -79,8 +81,8 @@ Schriften (IM Fell English, Spectral) selbst gehostet. Kein Backend, kein Konto.
 Abgeleitete Regeltexte stehen dadurch ebenfalls unter CC BY-SA 4.0. Der volle
 SRD-Klon unter `reference/` liegt nur lokal (per `.gitignore` ausgeschlossen).
 
-Logo, Social-Card und Holzschnitt-Vignetten sind eigene KI-Generierungen (Quellen
-in `img/`, nur lokal) — **kein** offizielles Cairn-Artwork.
+Logo, Banner, Social-Card und Holzschnitt-Vignetten sind eigene KI-Generierungen
+(Quellen in `img/`, nur lokal) — **kein** offizielles Cairn-Artwork.
 
 ## Rechtliches
 
