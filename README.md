@@ -1,99 +1,101 @@
 <div align="center">
 
-<img src="public/banner.jpg" width="100%" alt="Ein Rabe auf einem runenbesetzten Menhir blickt über ein neblige Moor zu einem laternenbeleuchteten Steinmal am Waldrand" />
+<sub>English · [Deutsch](README.de.md)</sub>
+
+<img src="public/banner.jpg" width="100%" alt="A raven on a rune-carved standing stone looks across a foggy moor toward a lantern-lit cairn at the edge of the wood" />
 
 # Cairn Table
 
-**Charakterbogen · Warden-Dashboard · serverloser Echtzeit-Multiplayer**
-für das Pen-&-Paper-Rollenspiel **[Cairn](https://cairnrpg.com/)** (2nd Edition) —
-alles im Browser, ohne Anmeldung.
+**Character sheet · Warden dashboard · serverless real-time multiplayer**
+for the tabletop role-playing game **[Cairn](https://cairnrpg.com/)** (2nd Edition) —
+all in the browser, no sign-up.
 
-<sub>zweisprachig DE / EN · alles bleibt lokal im Browser · kein Konto, kein Server</sub>
+<sub>bilingual DE / EN · everything stays local in your browser · no account, no server</sub>
 
 </div>
 
 ---
 
-Öffne die Seite, würfle dir eine:n Abenteurer:in zusammen und leg los. Zu mehreren
-eröffnet der Warden einen Raum und teilt einen Link — die Verbindung läuft direkt
-zwischen den Browsern (WebRTC), ohne dass Spieldaten über einen Server laufen.
+Open the page, roll up an adventurer, and go. With others, the Warden opens a
+room and shares a link — the connection runs directly between browsers
+(WebRTC), so no game data ever passes through a server.
 
 <p align="center">
-  <img src="public/screenshot-sheet.jpg" width="49%" alt="Charakterbogen mit Attributen, Trefferschutz und Schadenskette" />
-  <img src="public/screenshot-warden.jpg" width="49%" alt="Warden-Dashboard mit Raum, Kampf-Tracker und Gegner" />
+  <img src="public/screenshot-sheet.jpg" width="49%" alt="Character sheet with attributes, Hit Protection and the damage chain" />
+  <img src="public/screenshot-warden.jpg" width="49%" alt="Warden dashboard with room, combat tracker and a foe" />
 </p>
 
-## Für Spieler:innen
+## For players
 
-- **Charakterbogen** — STÄ / GES / WIL (3–18), Trefferschutz, Gold, Entbehrung,
-  Narben, Alter, Merkmale, Bande, Omen. Alles wird automatisch im Browser gesichert.
-- **Charaktererschaffung** nach Cairn 2e — alle **20 Hintergründe** mit fester
-  Startausrüstung und W6-Untertabellen, 3W6 je Attribut (zwei tauschbar),
-  TP 1W6, Gold 3W6, 8 Merkmalstabellen, Bande & Omen.
-- **10-Slot-Inventar per Drag & Drop** — vier am Körper, sechs im Rucksack; 1- und
-  2-Platz-Gegenstände, petty (kein Slot), Nutzungspunkte, Erschöpfung als Slot-Karte.
-- **Würfeln** — Rettungswurf (W20 ≤ Attribut, Vorteil/Nachteil), Schadenswurf
-  (Würfelwahl, beeinträchtigt / verstärkt, mehrere Angreifer, Rüstungsabzug),
-  Schicksalswürfel, Reaktion. Automatische Schadenskette Rüstung → TP → STÄ →
-  Rettungswurf → Narbe/Tod.
-- **Rast** — kurze Rast stellt die TP voll her, Woche Rast auch die Attribute.
+- **Character sheet** — STR / DEX / WIL (3–18), Hit Protection, gold, Deprivation,
+  scars, age, traits, bond, omen. Everything saves automatically in the browser.
+- **Character creation** following Cairn 2e — all **20 backgrounds** with fixed
+  starting gear and d6 sub-tables, 3d6 per attribute (two swappable),
+  HP 1d6, gold 3d6, 8 trait tables, bond & omen.
+- **10-slot inventory via drag & drop** — four worn/in hand, six in the backpack;
+  1- and 2-slot items, petty (no slot), usage points, Fatigue as a slot card.
+- **Dice** — saves (d20 ≤ attribute, advantage/disadvantage), damage rolls
+  (die choice, impaired/enhanced, multiple attackers, armor deduction),
+  die of fate, reaction. Automatic damage chain: armor → HP → STR →
+  save → scar/death.
+- **Rest** — a short rest restores HP fully, a week's rest restores attributes too.
 
-## Für Wardens
+## For Wardens
 
-- **Dashboard** — alle Held:innen auf einen Blick: TP-Balken, Attribute, Gold,
-  Rüstung, belegte Slots, Zustände & Narben als Chips, ausklappbares Inventar.
-- **Eingriffe pro Bogen** — Schaden (mit voller Kette), Heilen, Gold ±,
-  Rettungswurf fordern, Erschöpfung, Entbehrung, Rast auslösen, flüstern.
-- **Geteiltes Runden-Log** und Ansage an alle.
-- **Kampf-Tracker** — Gegner aus dem **2e-Bestiarium (84 Kreaturen)** oder eigene,
-  TP-Verwaltung, Angriffswurf, Moral (WIL-RW), Reaktion, Rundenzähler mit
-  „Erste Runde: GES-Rettungswurf"-Hinweis.
-- **Geheime Warden-Notizen** pro Spieler:in — nur lokal, nie gesendet.
+- **Dashboard** — every hero at a glance: HP bar, attributes, gold, armor,
+  occupied slots, conditions & scars as chips, expandable inventory.
+- **Per-sheet actions** — damage (runs the full chain), heal, gold ±,
+  demand a save, add Fatigue, toggle Deprived, trigger a rest, whisper.
+- **Shared round log** and announcements to everyone.
+- **Combat tracker** — foes from the **2e bestiary (84 creatures)** or your own,
+  HP tracking, attack rolls, morale (WIL save), reaction, round counter with
+  a "first round: DEX save" hint.
+- **Secret Warden notes** per player — local only, never sent.
 
-## Zusammen spielen
+## Playing together
 
-Serverloser Multiplayer über WebRTC / PeerJS. Der Warden ist Host; Spieler:innen
-treten per 4-Buchstaben-Code oder `?join`-Link bei. Reconnect und
-Reload-Wiederherstellung sind eingebaut. Spieldaten laufen direkt und verschlüsselt
-zwischen den Browsern — nur der Verbindungsaufbau nutzt den öffentlichen
-PeerJS-Broker und Google-STUN.
+Serverless multiplayer over WebRTC / PeerJS. The Warden is the host; players
+join with a 4-letter code or a `?join` link. Reconnect and reload recovery
+are built in. Game data runs directly and encrypted between browsers — only
+the connection setup uses the public PeerJS broker and Google STUN.
 
-## Entwickeln
+## Developing
 
 ```bash
 npm install
 npm run dev        # http://localhost:5173
-npm run build      # -> dist/index.html  (portable Einzeldatei, viteSingleFile)
+npm run build      # -> dist/index.html  (portable single file, viteSingleFile)
 npm run preview
 npm run lint       # oxlint
 ```
 
-Push auf `main` baut und deployt über GitHub Actions auf GitHub Pages.
+A push to `main` builds and deploys via GitHub Actions to GitHub Pages.
 
-**Stack:** Vite + React 19 (plain JS, kein TypeScript), `@dnd-kit` fürs
-Inventar-Raster, `peerjs` für den Multiplayer, `lucide-react` für Icons.
-Schriften (IM Fell English, Spectral) selbst gehostet. Kein Backend, kein Konto.
+**Stack:** Vite + React 19 (plain JS, no TypeScript), `@dnd-kit` for the
+inventory grid, `peerjs` for multiplayer, `lucide-react` for icons. Fonts
+(IM Fell English, Spectral) are self-hosted. No backend, no account.
 
-## Regeldaten & Bilder
+## Rule data & images
 
-`src/data/*` ist aus dem offiziellen **Cairn-2e-SRD** von Yochai Gal abgeleitet
-(**CC BY-SA 4.0**). Wirkungstexte sind zusammengefasst, nicht wörtlich übernommen.
-Abgeleitete Regeltexte stehen dadurch ebenfalls unter CC BY-SA 4.0. Der volle
-SRD-Klon unter `reference/` liegt nur lokal (per `.gitignore` ausgeschlossen).
+`src/data/*` is derived from the official **Cairn 2e SRD** by Yochai Gal
+(**CC BY-SA 4.0**). Effect texts are summarized, not copied verbatim.
+Derived rule text is therefore also CC BY-SA 4.0. The full SRD clone under
+`reference/` stays local only (excluded via `.gitignore`).
 
-Logo, Banner, Social-Card und Holzschnitt-Vignetten sind eigene KI-Generierungen
-(Quellen in `img/`, nur lokal) — **kein** offizielles Cairn-Artwork.
+Logo, banner, social card and woodcut vignettes are original AI generations
+(sources in `img/`, local only) — **not** official Cairn artwork.
 
-## Rechtliches
+## Legal
 
-[Impressum](public/impressum.html) · [Datenschutzerklärung](public/datenschutz.html)
-— eigenständige Seiten. Der Kontaktblock des Impressums wird beim Deploy aus dem
-Repository-Secret `IMPRESSUM_KONTAKT` eingesetzt (Vorlage:
-[`.github/KONTAKT.beispiel.html`](.github/KONTAKT.beispiel.html)) und steht nicht
-im öffentlichen Quellcode. Wer den Code forkt und selbst betreibt, braucht ein
-eigenes Impressum.
+[Imprint](public/impressum.html) · [Privacy policy](public/datenschutz.html) —
+standalone pages. The imprint's contact block is injected at deploy time from
+the repository secret `IMPRESSUM_KONTAKT` (template:
+[`.github/KONTAKT.beispiel.html`](.github/KONTAKT.beispiel.html)) and never
+appears in the public source code. German law (§5 DDG) requires an imprint
+for any publicly run online service, commercial or not — if you fork this
+and run your own instance, you'll need your own.
 
-## Lizenz
+## License
 
 Code: **MIT** (`LICENSE`).
 
