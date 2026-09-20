@@ -11,7 +11,7 @@ export const DISCORD_URL = 'https://discord.gg/s6J6JqBQ8w';
 export const CAIRN_DISCORD_URL = 'https://discord.gg/7U6px3Mdkg';
 export const KOFI_URL = 'https://ko-fi.com/don_davis';
 
-export const APP_VERSION = '0.1.0';
+export const APP_VERSION = '0.2.0';
 
 export const LINKS = {
   cairn: 'https://cairnrpg.com/',
