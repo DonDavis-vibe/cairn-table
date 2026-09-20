@@ -12,11 +12,13 @@ all in the browser, no sign-up.
 
 <sub>bilingual DE / EN · everything stays local in your browser · no account, no server</sub>
 
+### [**▶ Play Cairn Table**](https://dondavis-vibe.github.io/cairn-table/)
+
 </div>
 
 ---
 
-Open the page, roll up an adventurer, and go. With others, the Warden opens a
+Open [the page](https://dondavis-vibe.github.io/cairn-table/), roll up an adventurer, and go. With others, the Warden opens a
 room and shares a link — the connection runs directly between browsers
 (WebRTC), so no game data ever passes through a server.
 

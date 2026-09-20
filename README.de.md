@@ -12,11 +12,13 @@ alles im Browser, ohne Anmeldung.
 
 <sub>zweisprachig DE / EN · alles bleibt lokal im Browser · kein Konto, kein Server</sub>
 
+### [**▶ Cairn Table spielen**](https://dondavis-vibe.github.io/cairn-table/)
+
 </div>
 
 ---
 
-Öffne die Seite, würfle dir eine:n Abenteurer:in zusammen und leg los. Zu mehreren
+Öffne [die Seite](https://dondavis-vibe.github.io/cairn-table/), würfle dir eine:n Abenteurer:in zusammen und leg los. Zu mehreren
 eröffnet der Warden einen Raum und teilt einen Link — die Verbindung läuft direkt
 zwischen den Browsern (WebRTC), ohne dass Spieldaten über einen Server laufen.
 
