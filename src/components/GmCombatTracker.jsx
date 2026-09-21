@@ -1,11 +1,11 @@
 import { useEffect, useMemo, useState } from 'react';
 import {
-  Plus, X, ChevronRight, RotateCcw, Skull, Users, Eye, EyeOff, Save,
+  Plus, X, ChevronRight, RotateCcw, Skull, Eye, EyeOff, Save,
 } from 'lucide-react';
 import { IconSwords } from './icons.jsx';
 import { useLang, loc } from '../i18n/index.jsx';
 import { Field, TextInput } from './ui.jsx';
-import { rollDie, rollReaction, rollSave } from '../rules/dice.js';
+import { rollDie, rollSave } from '../rules/dice.js';
 import { CREATURES } from '../data/creatures.js';
 import { readJSON, writeJSON } from '../utils/storage.js';
 
@@ -33,7 +33,8 @@ function fromLibrary(m, mark) {
   };
 }
 
-export default function GmCombatTracker({ mp }) {
+// onRoll: Angriffs- und Moralwuerfe landen zusaetzlich auf dem Wuerfelteller des Wardens.
+export default function GmCombatTracker({ mp, onRoll = null }) {
   const { t, lang } = useLang();
   const [round, setRound] = useState(0);
   const [foes, setFoes] = useState([]);
@@ -82,24 +83,23 @@ export default function GmCombatTracker({ mp }) {
   }, [foes, shareNpcs]);
 
   const attack = (foe) => {
-    if (foe.detachment) {
-      // Abteilungen gegen Einzelne: verstaerkt (W12) + Stoss (je Ziel einzeln).
-      const roll = rollDie(12);
-      log(`${loc(foe.name, lang)} ${t('combat.log.attackRoll', { die: `${t('dice.die')}12`, roll })} — ${t('gm.detachAttack')}`, 'bad');
-      return;
-    }
-    const roll = rollDie(foe.dmg || 6);
-    log(`${loc(foe.name, lang)} ${t('combat.log.attackRoll', { die: `${t('dice.die')}${foe.dmg}`, roll })}`, 'bad');
+    const name = loc(foe.name, lang);
+    // Abteilungen gegen Einzelne: verstaerkt (W12) + Stoss (je Ziel einzeln).
+    const sides = foe.detachment ? 12 : (foe.dmg || 6);
+    const roll = rollDie(sides);
+    const dieLabel = `${t('dice.die')}${sides}`;
+    const detach = foe.detachment ? ` — ${t('gm.detachAttack')}` : '';
+    log(`${name} ${t('combat.log.attackRoll', { die: dieLabel, roll })}${detach}`, 'bad');
+    onRoll?.({ label: `${name} · ${t('gm.rollAttack')} ${dieLabel}`, value: roll, max: sides, die: sides, tone: 'bad' });
   };
   const morale = (foe) => {
+    const name = loc(foe.name, lang);
     // Moral ist ein ganz normaler WIL-Rettungswurf (1 gelingt, 20 misslingt immer).
     const { d, ok } = rollSave(foe.wil);
+    const verdict = ok ? t('gm.moraleHold') : t('gm.moraleFlee');
     const vars = { die: `${t('dice.die')}20`, roll: d, cmp: ok ? '≤' : '>', wil: foe.wil };
-    log(`${loc(foe.name, lang)} — ${t('gm.moraleRoll', vars)}: ${ok ? t('gm.moraleHold') : t('gm.moraleFlee')}`, ok ? 'gm' : 'bad');
-  };
-  const reaction = () => {
-    const r = rollReaction();
-    log(`${t('dice.reaction')} — 2${t('dice.die')}6 ${r.dice.join('+')} · ${t(`reaction.${r.key}`)}`);
+    log(`${name} — ${t('gm.moraleRoll', vars)}: ${verdict}`, ok ? 'gm' : 'bad');
+    onRoll?.({ label: `${name} · ${t('gm.morale')}`, value: d, max: 20, tone: ok ? 'ok' : 'bad', verdict });
   };
 
   const nextRound = () => {
@@ -116,7 +116,6 @@ export default function GmCombatTracker({ mp }) {
           <ChevronRight size={14} /> {round === 0 ? t('gm.startCombat') : t('gm.nextRound')}
         </button>
         {round > 0 ? <span className="combat-round">{t('gm.roundLabel', { n: round })}</span> : null}
-        <button type="button" className="btn btn-sm" onClick={reaction}><Users size={13} /> {t('dice.reaction')}</button>
         {round > 0 || foes.length ? (
           <button type="button" className="btn btn-sm btn-ghost" onClick={reset}><RotateCcw size={13} /> {t('common.reset')}</button>
         ) : null}

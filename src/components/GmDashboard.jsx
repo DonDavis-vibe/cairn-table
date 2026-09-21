@@ -21,7 +21,11 @@ import GmGenerators from './GmGenerators.jsx';
 import Stash from './Stash.jsx';
 import Containers from './Containers.jsx';
 import MapPanel from './MapPanel.jsx';
+import { DiceStage, DieGlyph } from './DiceKit.jsx';
 import emptyLobby from '../assets/vg-barrow.jpg';
+
+let rollSeq = 0;
+const nextRollId = () => { rollSeq += 1; return rollSeq; };
 
 function inviteLink(code) {
   const url = new URL(window.location.href);
@@ -92,10 +96,29 @@ export default function GmDashboard({ mp }) {
     } catch { /* */ }
   };
 
-  const gmRoll = (label, fn) => {
-    const r = fn();
-    mp.logGmAction({ text: `${t('gm.warden')}: ${label} — ${r}`, tone: 'gm', cmd: 'gm' });
-    shareRoll(t('gm.warden'), label, r);
+  // Der Würfelteller des Wardens: dieselbe Bühne wie auf dem Spielerbogen.
+  // Gefüttert von den Orakelwürfeln hier und vom Kampf-Tracker (Angriff, Moral).
+  const [stage, setStage] = useState(null);
+  const stageRoll = (result) => setStage({ id: nextRollId(), ...result });
+  const gmRoll = (label, text, result) => {
+    mp.logGmAction({ text: `${t('gm.warden')}: ${label} — ${text}`, tone: 'gm', cmd: 'gm' });
+    shareRoll(t('gm.warden'), label, text);
+    stageRoll({ label, ...result });
+  };
+  const die = t('dice.die');
+  const rollD20 = () => { const v = rollDie(20); gmRoll(`${die}20`, String(v), { value: v, max: 20 }); };
+  const rollD6 = () => { const v = rollDie(6); gmRoll(`${die}6`, String(v), { value: v, max: 6, die: 6 }); };
+  const rollReactionRoll = () => {
+    const x = rollReaction();
+    const verdict = t(`reaction.${x.key}`);
+    gmRoll(t('dice.reaction'), `2${die}6 ${x.dice.join('+')} = ${x.total} · ${verdict}`, {
+      value: x.total, max: 12, verdict, parts: x.dice.map((d) => ({ value: d, label: `${die}6` })),
+    });
+  };
+  const rollFate = () => {
+    const x = rollDieOfFate();
+    const verdict = x.favorsPcs ? t('dice.fateGood') : t('dice.fateBad');
+    gmRoll(t('dice.fate'), `${die}6 ${x.d} · ${verdict}`, { value: x.d, max: 6, die: 6, tone: x.favorsPcs ? 'ok' : 'bad', verdict });
   };
 
   const sensors = useSensors(
@@ -166,11 +189,12 @@ export default function GmDashboard({ mp }) {
           </div>
           <div className="gm-room-row">
             <span className="field-label">{t('sheet.dice')}:</span>
-            <button type="button" className="btn btn-sm" onClick={() => gmRoll(`${t('dice.die')}20`, () => rollDie(20))}><Dices size={13} /> {t('dice.die')}20</button>
-            <button type="button" className="btn btn-sm" onClick={() => gmRoll(`${t('dice.die')}6`, () => rollDie(6))}><Dices size={13} /> {t('dice.die')}6</button>
-            <button type="button" className="btn btn-sm" onClick={() => gmRoll(t('dice.reaction'), () => { const x = rollReaction(); return `${x.dice.join('+')} · ${t(`reaction.${x.key}`)}`; })}>{t('dice.reaction')}</button>
-            <button type="button" className="btn btn-sm" onClick={() => gmRoll(t('dice.fate'), () => { const x = rollDieOfFate(); return `${x.d} · ${x.favorsPcs ? t('dice.fateGood') : t('dice.fateBad')}`; })}>{t('dice.fate')}</button>
+            <button type="button" className="btn btn-sm" onClick={rollD20}><Dices size={13} /> {die}20</button>
+            <button type="button" className="btn btn-sm" onClick={rollD6}><Dices size={13} /> {die}6</button>
+            <button type="button" className="btn btn-sm" onClick={rollReactionRoll}>{t('dice.reaction')}</button>
+            <button type="button" className="btn btn-sm" onClick={rollFate}>{t('dice.fate')}</button>
           </div>
+          <DiceStage result={stage} idleIcon={<DieGlyph sides={20} />} idleText={t('dice.logEmpty')} />
           <label className="radio-line">
             <input type="checkbox" checked={mp.partyLog} onChange={(e) => mp.setPartyLogShared(e.target.checked)} />
             {t('mp.sharePartyLog')}
@@ -178,7 +202,7 @@ export default function GmDashboard({ mp }) {
         </>
       ),
     },
-    combat: { title: t('gm.combat'), node: <GmCombatTracker mp={mp} /> },
+    combat: { title: t('gm.combat'), node: <GmCombatTracker mp={mp} onRoll={stageRoll} /> },
     map: { title: t('map.title'), node: <MapPanel mp={mp} /> },
     stash: { title: t('stash.title'), node: <Stash mp={mp} /> },
     containers: { title: t('container.title'), node: <Containers mp={mp} /> },

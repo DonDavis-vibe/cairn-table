@@ -1,10 +1,10 @@
 import { useState } from 'react';
-import { Dices, Sparkle, Users } from 'lucide-react';
+import { Dices, Sparkle } from 'lucide-react';
 import { IconSwords } from './icons.jsx';
 import { useLang } from '../i18n/index.jsx';
 import { ATTR_KEYS } from '../rules/character.js';
 import {
-  rollSave, rollDamage, rollDieOfFate, rollReaction, toW, DAMAGE_DICE,
+  rollSave, rollDamage, rollDieOfFate, toW, DAMAGE_DICE,
 } from '../rules/dice.js';
 import { shareRoll, shareSave } from '../utils/discord.js';
 import { DiceStage, DieGlyph } from './DiceKit.jsx';
@@ -80,22 +80,6 @@ export default function DiceRoller({ character, log, pushLog, onEvent = null }) 
     onEvent?.({ kind: 'roll', label: t('dice.fate'), text });
   };
 
-  const reaction = () => {
-    const r = rollReaction();
-    const text = `2${t('dice.die')}6 ${r.dice.join('+')} = ${r.total} · ${t(`reaction.${r.key}`)}`;
-    pushLog({ kind: 'roll', text: `${t('dice.reaction')} — ${text}` });
-    setStage({
-      id: nextRollId(),
-      label: t('dice.reaction'),
-      value: r.total,
-      max: 12,
-      verdict: t(`reaction.${r.key}`),
-      parts: r.dice.map((d) => ({ value: d, label: `${t('dice.die')}6` })),
-    });
-    shareRoll(who, t('dice.reaction'), text);
-    onEvent?.({ kind: 'roll', label: t('dice.reaction'), text });
-  };
-
   return (
     <div className="dice">
       <div className="dice-layout">
@@ -135,7 +119,6 @@ export default function DiceRoller({ character, log, pushLog, onEvent = null }) 
 
           <div className="dice-row">
             <button type="button" className="btn btn-ghost" onClick={fate}><Sparkle size={15} /> {t('dice.fate')}</button>
-            <button type="button" className="btn btn-ghost" onClick={reaction}><Users size={15} /> {t('dice.reaction')}</button>
           </div>
 
           <DiceStage result={stage} idleIcon={<DieGlyph sides={20} />} idleText={t('dice.logEmpty')} />
