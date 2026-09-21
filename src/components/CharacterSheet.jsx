@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
-import { X } from 'lucide-react';
+import { X, Plus } from 'lucide-react';
 import {
   DndContext, DragOverlay, PointerSensor, TouchSensor, useSensor, useSensors, closestCenter,
 } from '@dnd-kit/core';
@@ -7,6 +7,7 @@ import { useLang, loc } from '../i18n/index.jsx';
 import { Panel, Field, TextInput } from './ui.jsx';
 import { ATTR_KEYS } from '../rules/character.js';
 import { addItemAt, removeItem, pettyItems, tryMove, firstFreeFit } from '../rules/inventory.js';
+import AddItemMenu from './AddItemMenu.jsx';
 import { makeFatigue, makeCondition, makeItem } from '../data/items.js';
 import { SPELL_BY_ID } from '../data/spells.js';
 import { rollSave } from '../rules/dice.js';
@@ -244,6 +245,7 @@ export default function CharacterSheet({ character, setCharacter, mp = null, not
   };
 
   const petty = pettyItems(character);
+  const [pettyMenu, setPettyMenu] = useState(false);
   const partyNpcs = mp?.role === 'player' ? (mp.partyNpcs || []) : [];
 
   return (
@@ -326,9 +328,14 @@ export default function CharacterSheet({ character, setCharacter, mp = null, not
               ) : null}
             </DragOverlay>
           </DndContext>
-          {petty.length ? (
-            <div className="petty-list">
+          <div className="petty-list">
+            <div className="petty-head">
               <h3 className="inv-h">{t('inv.petty')}</h3>
+              <button type="button" className="btn btn-ghost btn-sm" onClick={() => setPettyMenu(true)}>
+                <Plus size={13} /> {t('inv.addPetty')}
+              </button>
+            </div>
+            {petty.length ? (
               <ul>
                 {petty.map((it) => (
                   <li key={it.itemId}>
@@ -340,7 +347,10 @@ export default function CharacterSheet({ character, setCharacter, mp = null, not
                   </li>
                 ))}
               </ul>
-            </div>
+            ) : null}
+          </div>
+          {pettyMenu ? (
+            <AddItemMenu petty onClose={() => setPettyMenu(false)} onPick={(item) => { onAddAt(null, item); setPettyMenu(false); }} />
           ) : null}
         </Panel>
 

@@ -10,11 +10,13 @@ import { toW } from '../rules/dice.js';
 
 const TYPE_ORDER = ['weapon', 'armor', 'light', 'ration', 'gear'];
 
-export default function AddItemMenu({ onPick, onClose }) {
+// petty: nur slotlose Gegenstaende — Katalog gefiltert, eigener Gegenstand
+// gleich als petty voreingestellt (Yochai: "create petty item" neben den Petty-Slots).
+export default function AddItemMenu({ onPick, onClose, petty = false }) {
   const { t, lang } = useLang();
   const [tab, setTab] = useState('gear'); // gear | spell | relic
   const [q, setQ] = useState('');
-  const [custom, setCustom] = useState({ name: '', size: 1, type: 'gear', damage: '', armor: '' });
+  const [custom, setCustom] = useState({ name: '', size: petty ? 0 : 1, type: 'gear', damage: '', armor: '' });
 
   const needle = q.trim().toLowerCase();
 
@@ -22,12 +24,13 @@ export default function AddItemMenu({ onPick, onClose }) {
     const byType = {};
     for (const key of CATALOG_KEYS) {
       const spec = ITEM_CATALOG[key];
+      if (petty && spec.size !== 0) continue;
       const label = `${loc(spec.name, lang)} ${loc(spec.effect, lang)}`.toLowerCase();
       if (needle && !label.includes(needle)) continue;
       (byType[spec.type] ||= []).push(key);
     }
     return byType;
-  }, [needle, lang]);
+  }, [needle, lang, petty]);
 
   const spellHits = useMemo(
     () => SPELLS.filter((s) => `${loc(s.name, lang)} ${loc(s.effect, lang)}`.toLowerCase().includes(needle)),
@@ -51,9 +54,10 @@ export default function AddItemMenu({ onPick, onClose }) {
   };
 
   return (
-    <Modal title={t('inv.addItem')} onClose={onClose} wide>
+    <Modal title={petty ? t('inv.addPettyTitle') : t('inv.addItem')} onClose={onClose} wide>
+      {petty ? <p className="help-intro">{t('inv.pettyHint')}</p> : null}
       <div className="dice-row" style={{ marginBottom: 12 }}>
-        {['gear', 'spell', 'relic'].map((tp) => (
+        {(petty ? ['gear'] : ['gear', 'spell', 'relic']).map((tp) => (
           <button key={tp} type="button" className={`chip${tab === tp ? ' chip-on' : ''}`} onClick={() => setTab(tp)}>
             {t(`inv.tab.${tp}`)}
           </button>
@@ -98,7 +102,7 @@ export default function AddItemMenu({ onPick, onClose }) {
                   <option key={tp} value={tp}>{t(`item.type.${tp}`)}</option>
                 ))}
               </select>
-              <select className="text-input" value={custom.size} onChange={(e) => setCustom((c) => ({ ...c, size: e.target.value }))}>
+              <select className="text-input" value={custom.size} disabled={petty} onChange={(e) => setCustom((c) => ({ ...c, size: e.target.value }))}>
                 <option value={0}>{t('item.petty')}</option>
                 <option value={1}>1</option>
                 <option value={2}>{t('item.bulky')}</option>
