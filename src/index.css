@@ -452,6 +452,19 @@ textarea.notes {
 .container-head { display: flex; align-items: center; gap: 8px; }
 .container-head strong { flex: 1; }
 .container-new { display: flex; flex-wrap: wrap; align-items: flex-end; gap: 8px; border-top: 1px solid var(--rule); padding-top: 12px; }
+.hireling-stats { display: flex; flex-direction: column; gap: 8px; border: 1px solid var(--rule); border-radius: 2px; padding: 8px 10px; }
+.hireling-hp { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+.hp-fig { font-weight: 600; font-size: .88rem; }
+.hp-fig-ok { color: var(--forest); }
+.hp-fig-warn { color: var(--brass); }
+.hp-fig-bad { color: var(--rust); }
+.hireling-bar { flex: 1 1 70px; min-width: 60px; margin-bottom: 0; }
+.hireling-dmg-input { width: 44px; padding: 4px; border: 1px solid var(--rule-strong); border-radius: 2px; background: var(--inset); }
+.hireling-attrs { display: flex; gap: 12px; flex-wrap: wrap; }
+.hireling-attr { display: inline-flex; align-items: center; gap: 5px; font-size: .82rem; color: var(--ink-soft); }
+.hireling-attr input { width: 38px; padding: 3px; border: 1px solid var(--rule-strong); border-radius: 2px; background: var(--inset); text-align: center; }
+.hireling-tools { display: flex; gap: 8px; }
+
 .container-new .field { flex: 1; min-width: 140px; }
 
 /* ---------- Generatoren: Fremde:r + Kleinkram ---------- */
