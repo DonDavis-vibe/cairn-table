@@ -36,22 +36,35 @@ zwischen den Browsern (WebRTC), ohne dass Spieldaten über einen Server laufen.
   TP 1W6, Gold 3W6, 8 Merkmalstabellen, Bande & Omen.
 - **10-Slot-Inventar per Drag & Drop** — vier am Körper, sechs im Rucksack; 1- und
   2-Platz-Gegenstände, petty (kein Slot), Nutzungspunkte, Erschöpfung als Slot-Karte.
-- **Würfeln** — Rettungswurf (W20 ≤ Attribut, Vorteil/Nachteil), Schadenswurf
-  (Würfelwahl, beeinträchtigt / verstärkt, mehrere Angreifer, Rüstungsabzug),
-  Schicksalswürfel, Reaktion. Automatische Schadenskette Rüstung → TP → STÄ →
-  Rettungswurf → Narbe/Tod.
-- **Rast** — kurze Rast stellt die TP voll her, Woche Rast auch die Attribute.
+- **Würfeln** — Rettungswurf (W20 ≤ Attribut, 1 gelingt immer, 20 misslingt
+  immer), Schadenswurf (Würfelwahl, beeinträchtigt / verstärkt, mehrere
+  Angreifer, Rüstungsabzug), Schicksalswürfel. Automatische Schadenskette
+  Rüstung → TP → STÄ → Rettungswurf → Narbe/Tod.
+- **Rast** — kurze Rast stellt die TP voll her; Nachtruhe entfernt zusätzlich
+  alle Erschöpfung; Wochenrast stellt auch Attribute und den kritischen
+  Zustand wieder her.
 
 ## Für Wardens
 
-- **Dashboard** — alle Held:innen auf einen Blick: TP-Balken, Attribute, Gold,
-  Rüstung, belegte Slots, Zustände & Narben als Chips, ausklappbares Inventar.
+- **Dashboard** — ein Gruppenüberblick über alle Spieler:innen auf einen
+  Blick, der Rest in frei anordenbaren Panels, per Drag & Drop sortier- und
+  verschiebbar.
 - **Eingriffe pro Bogen** — Schaden (mit voller Kette), Heilen, Gold ±,
-  Rettungswurf fordern, Erschöpfung, Entbehrung, Rast auslösen, flüstern.
-- **Geteiltes Runden-Log** und Ansage an alle.
-- **Kampf-Tracker** — Gegner aus dem **2e-Bestiarium (84 Kreaturen)** oder eigene,
-  TP-Verwaltung, Angriffswurf, Moral (WIL-RW), Reaktion, Rundenzähler mit
-  „Erste Runde: GES-Rettungswurf"-Hinweis.
+  Rettungswurf fordern, Erschöpfung, Entbehrung oder Panik, Rast auslösen,
+  flüstern.
+- **Geteiltes Runden-Log**, Ansagen und ein animierter Würfelteller (W20,
+  W6, Reaktion, Schicksalswürfel) für den ganzen Tisch.
+- **Kampf-Tracker** — Gegner aus dem **2e-Bestiarium (84 Kreaturen)** oder
+  eigene gespeicherte Monster, TP-Verwaltung, Angriffswurf, Moral (WIL-RW),
+  Abteilungen, Rundenzähler mit „Erste Runde: GES-Rettungswurf"-Hinweis.
+- **Karte** — Bild laden, Figuren setzen (verbundene Spieler:innen per Klick,
+  dazu Marker und aufgedeckte Gegner), Distanzen messen, Zauberradien
+  einzeichnen und Nebel des Krieges steuern. Mehrere benannte Karten;
+  alles bleibt im Browser des Wardens und übersteht einen Reload.
+- **Tischmitte & Behälter** — ein geteilter Beute-Pool, dazu benannte
+  Behälter (Maultier, Karren, Mietlinge) mit eigenem Slot-Limit und
+  Ein-Klick-Übergabe an jede:n Spieler:in.
+- **Generatoren** — Fremde oder Kleinode auf Zuruf auswürfeln.
 - **Geheime Warden-Notizen** pro Spieler:in — nur lokal, nie gesendet.
 
 ## Zusammen spielen

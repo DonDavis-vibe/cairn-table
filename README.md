@@ -36,22 +36,32 @@ room and shares a link — the connection runs directly between browsers
   HP 1d6, gold 3d6, 8 trait tables, bond & omen.
 - **10-slot inventory via drag & drop** — four worn/in hand, six in the backpack;
   1- and 2-slot items, petty (no slot), usage points, Fatigue as a slot card.
-- **Dice** — saves (d20 ≤ attribute, advantage/disadvantage), damage rolls
-  (die choice, impaired/enhanced, multiple attackers, armor deduction),
-  die of fate, reaction. Automatic damage chain: armor → HP → STR →
-  save → scar/death.
-- **Rest** — a short rest restores HP fully, a week's rest restores attributes too.
+- **Dice** — saves (d20 ≤ attribute, 1 always passes, 20 always fails), damage
+  rolls (die choice, impaired/enhanced, multiple attackers, armor deduction),
+  die of fate. Automatic damage chain: armor → HP → STR → save → scar/death.
+- **Rest** — a short rest restores HP fully; a night's rest also clears all
+  Fatigue; a week's rest restores attributes and the critical condition too.
 
 ## For Wardens
 
-- **Dashboard** — every hero at a glance: HP bar, attributes, gold, armor,
-  occupied slots, conditions & scars as chips, expandable inventory.
+- **Dashboard** — a party overview across every player at a glance, the rest
+  in panels you can drag to reorder or move between columns.
 - **Per-sheet actions** — damage (runs the full chain), heal, gold ±,
-  demand a save, add Fatigue, toggle Deprived, trigger a rest, whisper.
-- **Shared round log** and announcements to everyone.
-- **Combat tracker** — foes from the **2e bestiary (84 creatures)** or your own,
-  HP tracking, attack rolls, morale (WIL save), reaction, round counter with
-  a "first round: DEX save" hint.
+  demand a save, add Fatigue, toggle Deprived or Panicked, trigger a rest,
+  whisper.
+- **Shared round log**, announcements, and an animated dice tray (d20, d6,
+  reaction, die of fate) mirrored to the whole table.
+- **Combat tracker** — foes from the **2e bestiary (84 creatures)** or your
+  own saved monsters, HP tracking, attack rolls, morale (WIL save),
+  detachments, round counter with a "first round: DEX save" hint.
+- **Map** — load an image, place tokens (connected players at a click, plus
+  markers and revealed foes), measure distances, paint radii for spell
+  effects, and run the fog of war. Several named maps; everything stays in
+  the Warden's browser and survives a reload.
+- **Table Center & containers** — a shared loot pool, plus named containers
+  (mule, cart, hirelings) with their own slot limit and a one-click give to
+  any player.
+- **Generators** — roll up a stranger or a trinket on the fly.
 - **Secret Warden notes** per player — local only, never sent.
 
 ## Playing together
