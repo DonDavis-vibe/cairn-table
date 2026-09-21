@@ -56,6 +56,18 @@ export default function MapPanel({ mp }) {
   const imgRef = useRef(null); // Wardensicht: aktuelle Hintergrund-dataURL
   const isGmRef = useRef(isGm);
   isGmRef.current = isGm;
+  // Leinwand-Beschriftungen in der aktuellen Sprache. Als Ref, damit ein
+  // Sprachwechsel bei offener Karte beim nächsten Zeichnen greift.
+  const numFmt = (n) => n.toLocaleString(lang === 'de' ? 'de-DE' : 'en-US');
+  const sq = (n) => `${numFmt(n)} ${n === 1 ? t('map.canvas.square') : t('map.canvas.squares')}`;
+  const canvasTexts = {
+    leer: t('map.canvas.empty'),
+    distanz: (felder, wert, einheit) => `${sq(felder)} · ${numFmt(wert)}${einheit}`,
+    radius: (felder, wert, einheit) => `${t('map.canvas.radius')} ${sq(felder)} · ${numFmt(wert)}${einheit}`,
+    flaeche: (b, h) => `${numFmt(b)} × ${numFmt(h)} ${t('map.canvas.squares')}`,
+  };
+  const canvasTextsRef = useRef(canvasTexts);
+  useEffect(() => { canvasTextsRef.current = canvasTexts; });
   const pushTimer = useRef(null);
   const saveTimer = useRef(null);
   // Wardensicht: mehrere Karten. Die aktive liegt in der BattleMap-Instanz,
@@ -131,6 +143,12 @@ export default function MapPanel({ mp }) {
       einheit: 1,
       einheitName: 'm',
       bestaetigungNoetig: false,
+      texte: {
+        leer: () => canvasTextsRef.current.leer,
+        distanz: (...a) => canvasTextsRef.current.distanz(...a),
+        radius: (...a) => canvasTextsRef.current.radius(...a),
+        flaeche: (...a) => canvasTextsRef.current.flaeche(...a),
+      },
       onChange: () => { if (isGmRef.current) { pushMap(); refreshFog(); persist(); } },
       onLokaleFigur: (f) => { if (!isGmRef.current) sendMapMove(f.id, f.x, f.y, false); },
       onZugVorschlag: (f) => { if (!isGmRef.current) sendMapMove(f.id, f.geplantX, f.geplantY, true); },

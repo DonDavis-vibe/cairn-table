@@ -128,6 +128,20 @@ export const BattleMap = (() => {
         let nurEigene = null;                      // Besitzer-Kennung für Spieler
         const onChange = optionen.onChange || (() => {});
         const onLokaleFigur = optionen.onLokaleFigur || (() => {});
+        // Beschriftungen auf der Leinwand kommen vom Aufrufer (Sprache!). Alles
+        // Funktionen, damit ein Sprachwechsel beim nächsten Zeichnen greift. Die
+        // Vorgaben hier sind nur ein Rückfall für Nutzung ohne MapPanel.
+        const texte = {
+            leer: () => 'Noch keine Karte geladen',
+            distanz: (felder, wert, einheit) => `${felder} Felder · ${wert}${einheit}`,
+            radius: (felder, wert, einheit) => `Radius ${felder} Felder · ${wert}${einheit}`,
+            flaeche: (breite, hoehe) => `${breite} × ${hoehe} Felder`,
+            ...optionen.texte,
+        };
+        const fmtDistanz = (felder) => {
+            const r = zustand.raster;
+            return texte.distanz(felder, felder * r.einheit, r.einheitName);
+        };
 
         // --- Umrechnungen ---------------------------------------------------
 
@@ -201,7 +215,7 @@ export const BattleMap = (() => {
                 ctx.fillStyle = farbe.schleier;
                 ctx.font = '14px "Segoe UI", sans-serif';
                 ctx.textAlign = 'center';
-                ctx.fillText('Noch keine Karte geladen', breite / 2, hoehe / 2);
+                ctx.fillText(texte.leer(), breite / 2, hoehe / 2);
                 ctx.textAlign = 'left';
             }
 
@@ -240,7 +254,7 @@ export const BattleMap = (() => {
                 ctx.fill();
                 ctx.stroke();
                 beschrifte(mitte.x, mitte.y - radius - 12,
-                    `Radius ${felder.toFixed(1).replace('.', ',')} Felder · ${(felder * r.einheit).toFixed(1).replace('.', ',')}${r.einheitName}`,
+                    texte.radius(Math.round(felder * 10) / 10, Math.round(felder * r.einheit * 10) / 10, r.einheitName),
                     form.farbe || malFarbe);
             } else if (form.art === 'rechteck' && p.length >= 2) {
                 const a = s(p[0]), b = s(p[1]);
@@ -250,7 +264,7 @@ export const BattleMap = (() => {
                 ctx.stroke();
                 const bf = Math.abs(p[1].x - p[0].x), hf = Math.abs(p[1].y - p[0].y);
                 beschrifte((a.x + b.x) / 2, Math.min(a.y, b.y) - 12,
-                    `${bf.toFixed(1).replace('.', ',')} × ${hf.toFixed(1).replace('.', ',')} Felder`,
+                    texte.flaeche(Math.round(bf * 10) / 10, Math.round(hf * 10) / 10),
                     form.farbe || malFarbe);
             } else {
                 ctx.beginPath();
@@ -262,8 +276,7 @@ export const BattleMap = (() => {
                 if (form.art === 'linie' && p.length >= 2) {
                     const felder = entfernungInFeldern(p[0].x, p[0].y, p[1].x, p[1].y);
                     const m = s({ x: (p[0].x + p[1].x) / 2, y: (p[0].y + p[1].y) / 2 });
-                    beschrifte(m.x, m.y - 12, `${felder} Felder · ${(felder * r.einheit).toLocaleString('de-DE')}${r.einheitName}`,
-                        form.farbe || malFarbe);
+                    beschrifte(m.x, m.y - 12, fmtDistanz(felder), form.farbe || malFarbe);
                 }
             }
             ctx.restore();
@@ -363,7 +376,6 @@ export const BattleMap = (() => {
             const zu = feldZuBildschirm(f.geplantX, f.geplantY);
             const radius = FIGUR_RADIUS * (f.groesse || 1) * zustand.raster.rasterGroesse * ansicht.zoom;
             const felder = entfernungInFeldern(f.x, f.y, f.geplantX, f.geplantY);
-            const r = zustand.raster;
 
             ctx.save();
             ctx.strokeStyle = f.farbe || farbe.tinte;
@@ -386,7 +398,7 @@ export const BattleMap = (() => {
             ctx.setLineDash([]);
 
             if (radius > 6) {
-                const text = `${felder} Feld${felder === 1 ? '' : 'er'} · ${(felder * r.einheit).toLocaleString('de-DE')}${r.einheitName}`;
+                const text = fmtDistanz(felder);
                 ctx.font = 'bold 12px "Segoe UI", sans-serif';
                 const tb = ctx.measureText(text).width;
                 ctx.fillStyle = farbe.beschriftung;
@@ -486,7 +498,6 @@ export const BattleMap = (() => {
             const von = feldZuBildschirm(messung.vonX, messung.vonY);
             const zu = feldZuBildschirm(messung.zuX, messung.zuY);
             const felder = entfernungInFeldern(messung.vonX, messung.vonY, messung.zuX, messung.zuY);
-            const r = zustand.raster;
 
             ctx.save();
             ctx.strokeStyle = farbe.stempel;
@@ -498,7 +509,7 @@ export const BattleMap = (() => {
             ctx.stroke();
             ctx.setLineDash([]);
 
-            const text = `${felder} Felder · ${(felder * r.einheit).toLocaleString('de-DE')}${r.einheitName}`;
+            const text = fmtDistanz(felder);
             ctx.font = 'bold 13px "Segoe UI", sans-serif';
             const tb = ctx.measureText(text).width;
             const mx = (von.x + zu.x) / 2, my = (von.y + zu.y) / 2;
