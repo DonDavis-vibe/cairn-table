@@ -7,6 +7,9 @@ import { viteSingleFile } from 'vite-plugin-singlefile';
 export default defineConfig({
   base: './',
   plugins: [react(), viteSingleFile()],
+  // PORT respektieren, damit ein Launcher einen freien Port zuweisen kann.
+  server: { port: Number(process.env.PORT) || 5173 },
+  preview: { port: Number(process.env.PORT) || 4173 },
   build: {
     cssCodeSplit: false,
     assetsInlineLimit: 100000000,
