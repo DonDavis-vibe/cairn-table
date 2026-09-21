@@ -765,6 +765,19 @@ textarea.notes {
 .wizard-nav-right { display: flex; gap: 8px; }
 
 /* ---------- Hilfe ---------- */
+/* Willkommensseite (einmalig) */
+.welcome { display: flex; flex-direction: column; gap: 14px; }
+.welcome-art { align-self: center; width: 150px; max-width: 40%; border-radius: 2px; opacity: .92; }
+.welcome-intro { margin: 0; text-align: center; color: var(--ink-soft); font-size: 1.05rem; line-height: 1.55; }
+.welcome-features { list-style: none; margin: 4px 0 0; padding: 0; display: flex; flex-direction: column; gap: 10px; }
+.welcome-features li { display: flex; gap: 12px; align-items: flex-start; padding: 10px 12px; border: 1px solid var(--rule); border-radius: 2px; background: var(--inset); }
+.welcome-icon { flex: 0 0 auto; margin-top: 2px; color: var(--forest-bright); }
+.welcome-features strong { font-family: var(--font-sc); font-size: 1.05rem; color: var(--ink); }
+.welcome-features p { margin: 3px 0 0; font-size: .9rem; line-height: 1.55; color: var(--ink-soft); }
+.welcome-storage { margin: 0; font-size: .86rem; color: var(--ink-faint); text-align: center; }
+.welcome-actions { display: flex; flex-wrap: wrap; gap: 8px; justify-content: center; margin-top: 4px; }
+.welcome-foot { margin: 0; font-size: .78rem; color: var(--ink-faint); text-align: center; }
+
 .help-intro { margin: 0 0 16px; color: var(--ink-soft); font-size: 1.02rem; }
 .help-section { border-top: 1px solid var(--rule); padding: 11px 0; }
 .help-section summary { cursor: pointer; font-family: var(--font-sc); font-size: 1.1rem; color: var(--ink); }

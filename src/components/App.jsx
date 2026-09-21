@@ -16,10 +16,12 @@ import GmDashboard from './GmDashboard.jsx';
 import MultiplayerModal from './MultiplayerModal.jsx';
 import ConnectionBadge from './ConnectionBadge.jsx';
 import HelpModal from './HelpModal.jsx';
+import WelcomeModal from './WelcomeModal.jsx';
 import Footer from './Footer.jsx';
 import Mark from './Mark.jsx';
 
 const STORAGE_KEY = 'cairn-table-character-v1';
+const WELCOME_KEY = 'cairn-table-welcomed';
 
 export default function App() {
   const { t, lang, setLang } = useLang();
@@ -31,9 +33,18 @@ export default function App() {
     return saved ? normalizeCharacter(saved) : blankCharacter();
   });
   const [toast, setToast] = useState(null);
-  const [showWizard, setShowWizard] = useState(() => isBlank(readJSON(STORAGE_KEY)));
+  // Der Wizard drängt sich nicht auf (Yochai Gal): Er öffnet nur über die
+  // Willkommensseite oder "Neu". Die Willkommensseite selbst nur beim ersten
+  // Besuch — wer schon einen Bogen hat, bekommt sie nicht nachgereicht.
+  const [showWizard, setShowWizard] = useState(false);
+  const [showWelcome, setShowWelcome] = useState(() => {
+    if (readJSON(WELCOME_KEY)) return false;
+    if (!isBlank(readJSON(STORAGE_KEY))) { writeJSON(WELCOME_KEY, true); return false; }
+    return true;
+  });
   const [showMp, setShowMp] = useState(false);
   const [showHelp, setShowHelp] = useState(false);
+  const dismissWelcome = () => { writeJSON(WELCOME_KEY, true); setShowWelcome(false); };
   const toastTimer = useRef(null);
   const fileInput = useRef(null);
 
@@ -143,6 +154,13 @@ export default function App() {
 
       {showMp ? <MultiplayerModal mp={mp} onClose={() => setShowMp(false)} /> : null}
       {showHelp ? <HelpModal onClose={() => setShowHelp(false)} /> : null}
+      {showWelcome ? (
+        <WelcomeModal
+          onClose={dismissWelcome}
+          onPlayer={() => { dismissWelcome(); setShowWizard(true); }}
+          onWarden={() => { dismissWelcome(); setShowMp(true); }}
+        />
+      ) : null}
 
       {showWizard && !isGm ? (
         <CharacterWizard
