@@ -176,7 +176,18 @@ export default function CharacterSheet({ character, setCharacter, mp = null, not
     if (!res.ok) { pushLog({ kind: 'warn', text: t('inv.noRoom') }); return; }
     setCharacter(res.character);
   };
-  const onRemove = (itemId) => setCharacter((c) => removeItem(c, itemId));
+  // Erschoepfung hinzufuegen wird geloggt (Add-Fatigue-Knopf) — das
+  // Entfernen einzelner Erschoepfungskarten (der X-Knopf im Inventar,
+  // ausserhalb einer Rast) sonst nicht. Symmetrisch nachziehen.
+  const onRemove = (itemId) => {
+    const it = character.items[itemId];
+    const wasFatigue = it?.type === 'condition' && it?.key === 'fatigue';
+    setCharacter((c) => removeItem(c, itemId));
+    if (wasFatigue) {
+      pushLog({ kind: 'ok', text: t('inv.fatigueRemoved') });
+      onEvent?.({ kind: 'note', text: t('inv.fatigueRemoved') });
+    }
+  };
   const onToggleUsage = (itemId, i) => setCharacter((c) => {
     const it = c.items[itemId];
     if (!it?.usage) return c;

@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { useDraggable, useDroppable } from '@dnd-kit/core';
 import { Plus, GripVertical } from 'lucide-react';
 import { IconTriangleAlert } from './icons.jsx';
+import { InfoHint } from './ui.jsx';
 import { useLang } from '../i18n/index.jsx';
 import { WORN_SLOTS, PACK_SLOTS, SLOT_PAIR_FIRST } from '../rules/character.js';
 import ItemCard from './ItemCard.jsx';
@@ -69,7 +70,7 @@ export default function InventoryGrid({ character, onAddAt, onRemove, onToggleUs
   return (
     <div className="inv">
       <div className="inv-group">
-        <h3 className="inv-h">{t('inv.worn')}</h3>
+        <h3 className="inv-h">{t('inv.worn')} <InfoHint text={t('inv.slotsHint')} /></h3>
         <div className="slot-grid slot-grid-4">
           {WORN_SLOTS.map((s) => <SlotCell key={s} slot={s} {...cellProps} />)}
         </div>
