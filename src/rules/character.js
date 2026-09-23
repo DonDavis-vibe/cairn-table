@@ -50,7 +50,7 @@ export function blankCharacter() {
 
     hp: { max: 4, current: 4 },   // Hit Protection
     gp: 0,                        // Gold (Beutel < 100 gp = petty, kein Slot)
-    goldSlotThreshold: 0,        // 0 = aus. Auf 100 gesetzt: je 100 gp ein zusaetzlicher Slot.
+    goldSlotThreshold: 100,       // RAW (Character Creation -> Inventory): ab 100 gp 1 Slot. 0 = aus.
     deprived: false,             // blockt jede Erholung
     panicked: false,             // Panik (Procedures): TP 0, keine Handlung in Runde 1, Angriffe beeintraechtigt
 
@@ -86,7 +86,7 @@ export function normalizeCharacter(raw) {
   merged.items = raw.items && typeof raw.items === 'object' ? raw.items : {};
   merged.scars = Array.isArray(raw.scars) ? raw.scars : [];
   merged.gp = Number.isFinite(raw.gp) ? raw.gp : 0;
-  merged.goldSlotThreshold = Number.isFinite(raw.goldSlotThreshold) ? raw.goldSlotThreshold : 0;
+  merged.goldSlotThreshold = Number.isFinite(raw.goldSlotThreshold) ? raw.goldSlotThreshold : base.goldSlotThreshold;
   merged.deprived = !!raw.deprived;
   merged.critical = !!raw.critical;
   merged.panicked = !!raw.panicked;
@@ -104,13 +104,16 @@ export function itemSlotCost(item) {
   return item.size === 2 ? 2 : 1;
 }
 
-// Gold ab der Schwelle zaehlt als Slot (Character Creation -> Inventory: "a bag
-// of coins worth less than 100gp is petty"). threshold 0 = Hausregel aus.
-// Kein physisches Feld im Raster - nur Teil der Slot-SUMME (wie im offiziellen
-// Foundry-System: dort gibt es dafuer auch kein Rasterfeld, nur einen Zaehler).
+// Gold-Beutel ab der Schwelle ist nicht mehr petty und zaehlt als 1 normaler
+// Slot (Character Creation -> Inventory: "a bag of coins worth less than
+// 100gp is petty and does not occupy a slot" — kein Skalieren je Schwelle,
+// das waere Hausregel). threshold 0 = Regel ganz aus (fuer wer das gar nicht
+// mitfuehren will). Kein physisches Feld im Raster - nur Teil der Slot-SUMME
+// (wie im offiziellen Foundry-System: dort auch kein Rasterfeld, nur ein Zaehler).
 export function goldSlots(character) {
   const threshold = character.goldSlotThreshold || 0;
-  return threshold > 0 ? Math.floor((character.gp || 0) / threshold) : 0;
+  if (threshold <= 0) return 0;
+  return (character.gp || 0) >= threshold ? 1 : 0;
 }
 
 // Belegte Felder gesamt (Gegenstaende + Fatigue-Karten + ggf. Gold-Slots).

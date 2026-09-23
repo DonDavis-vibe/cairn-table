@@ -81,17 +81,22 @@ describe('usedSlots / freeSlots / effectiveMaxHp', () => {
     expect(effectiveMaxHp(withItems())).toBe(6);
   });
 
-  it('goldSlots: 0 ohne Schwelle, sonst je Schwelle ein Slot', () => {
-    const c = { ...blankCharacter(), gp: 250 };
+  it('goldSlots: 0 ohne Schwelle (Regel aus), sonst binaer ab der Schwelle', () => {
+    const c = { ...blankCharacter(), gp: 250, goldSlotThreshold: 0 };
     expect(goldSlots(c)).toBe(0);
-    expect(goldSlots({ ...c, goldSlotThreshold: 100 })).toBe(2);
-    expect(goldSlots({ ...c, gp: 99, goldSlotThreshold: 100 })).toBe(0);
+    expect(goldSlots({ ...c, goldSlotThreshold: 100 })).toBe(1); // 1 Slot, egal wie viel drueber
+    expect(goldSlots({ ...c, gp: 99, goldSlotThreshold: 100 })).toBe(0); // unter der Schwelle: petty
+    expect(goldSlots({ ...c, gp: 100, goldSlotThreshold: 100 })).toBe(1); // genau an der Schwelle
   });
 
-  it('Gold-Slots zaehlen bei usedSlots/freeSlots mit', () => {
+  it('blankCharacter: Gold-Slot-Regel ist per RAW an (Schwelle 100)', () => {
+    expect(blankCharacter().goldSlotThreshold).toBe(100);
+  });
+
+  it('Gold-Slot zaehlt bei usedSlots/freeSlots mit', () => {
     const c = { ...withItems(), gp: 300, goldSlotThreshold: 100 };
-    expect(usedSlots(c)).toBe(6); // 3 Gegenstaende + 3 Gold-Slots
-    expect(freeSlots(c)).toBe(4);
+    expect(usedSlots(c)).toBe(4); // 3 Gegenstaende + 1 Gold-Slot
+    expect(freeSlots(c)).toBe(6);
   });
 
   it('Panik drueckt die HP-Obergrenze auf 0, unabhaengig vom Inventar', () => {
