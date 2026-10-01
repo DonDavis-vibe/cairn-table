@@ -1,19 +1,29 @@
-import { useMemo, useState } from 'react';
-import { Dices, ArrowLeftRight, Wand2 } from 'lucide-react';
+import { useMemo, useRef, useState } from 'react';
+import {
+  Dices, ArrowLeftRight, Wand2, Upload, Trash2,
+} from 'lucide-react';
 import { useLang, loc } from '../i18n/index.jsx';
-import { Modal, Field, TextInput } from './ui.jsx';
+import { Modal, Field, TextInput, InfoHint } from './ui.jsx';
 import { rollDie } from '../rules/dice.js';
 import { blankCharacter, ATTR_KEYS } from '../rules/character.js';
 import { addItem } from '../rules/inventory.js';
 import { makeItem } from '../data/items.js';
 import { BACKGROUNDS, backgroundByRoll } from '../data/backgrounds.js';
 import {
+  loadCustomPacks, saveCustomPack, removeCustomPack, flattenCustomPacks, parsePack,
+} from '../data/customBackgrounds.js';
+import {
   TRAIT_TABLES, TRAIT_KEYS, BONDS, OMENS, rollAge, rollD20,
 } from '../data/tables.js';
+
+const OFFICIAL_IDS = new Set(BACKGROUNDS.map((b) => b.id));
 
 const STEPS = 6;
 const d6 = () => rollDie(6);
 const roll3d6 = () => { const d = [d6(), d6(), d6()]; return { dice: d, value: d[0] + d[1] + d[2] }; };
+// Ausgelagert (statt Math.random() inline neben useMemo-Werten), weil der
+// React-Purity-Linter sonst den Lazy-useState-Initializer anmeckert.
+const pickRandomName = (names) => (names?.length ? names[Math.floor(Math.random() * names.length)] : '');
 
 function gearToItem(entry) {
   if (entry.key) return makeItem(entry.key);
@@ -32,8 +42,17 @@ export default function CharacterWizard({ onDone, onCancel }) {
   const { t, lang } = useLang();
   const [step, setStep] = useState(1);
 
+  // Community-Hintergruende (lokal importiert) stehen neben den offiziellen zur Wahl,
+  // bleiben aber aussen vor bei "W20 wuerfeln" / "Beispiel wuerfeln" — das ist die
+  // offizielle SRD-Tabelle mit 20 fixen Eintraegen.
+  const [customPacks, setCustomPacks] = useState(() => loadCustomPacks());
+  const customBackgrounds = useMemo(() => flattenCustomPacks(customPacks), [customPacks]);
+  const allBackgrounds = useMemo(() => [...BACKGROUNDS, ...customBackgrounds], [customBackgrounds]);
+  const [importMsg, setImportMsg] = useState(null); // { kind: 'ok'|'err', text }
+  const fileInput = useRef(null);
+
   const [bgId, setBgId] = useState(BACKGROUNDS[0].id);
-  const bg = useMemo(() => BACKGROUNDS.find((b) => b.id === bgId), [bgId]);
+  const bg = useMemo(() => allBackgrounds.find((b) => b.id === bgId) || BACKGROUNDS[0], [allBackgrounds, bgId]);
 
   const [subRolls, setSubRolls] = useState([0, 0]); // Index in bg.tables[i].rolls
 
@@ -51,19 +70,48 @@ export default function CharacterWizard({ onDone, onCancel }) {
   const [isYoungest, setIsYoungest] = useState(false);
   const [omenIdx, setOmenIdx] = useState(() => rollD20() - 1);
 
-  const [name, setName] = useState(() => bg.names[Math.floor(Math.random() * bg.names.length)]);
+  const [name, setName] = useState(() => pickRandomName(bg.names));
 
   const wantsOmen = isYoungest || bg.extra?.omenAlways;
   const wantsBond2 = bg.extra?.bondTwice === true || (bg.extra?.bondTwice === 'onSix' && subRolls[0] === 5);
 
   const pickBackground = (id) => {
     setBgId(id);
-    const nb = BACKGROUNDS.find((b) => b.id === id);
-    setName(nb.names[Math.floor(Math.random() * nb.names.length)]);
-    setSubRolls([0, 0]);
+    const nb = allBackgrounds.find((b) => b.id === id);
+    if (!nb) return;
+    setName(pickRandomName(nb.names));
+    setSubRolls(nb.tables.map(() => 0));
   };
   const rollBackground = () => pickBackground(backgroundByRoll(rollD20()).id);
-  const rollSub = (i) => setSubRolls((s) => s.map((v, j) => (j === i ? Math.floor(Math.random() * 6) : v)));
+  const rollSub = (i) => setSubRolls((s) => s.map((v, j) => (j === i ? Math.floor(Math.random() * (bg.tables[i]?.rolls.length || 6)) : v)));
+
+  // Datei lesen -> validieren -> speichern. Einzelne kaputte Hintergruende in
+  // derselben Datei fliegen raus, der Rest wird trotzdem importiert.
+  const importFile = async (file) => {
+    if (!file) return;
+    try {
+      const text = await file.text();
+      const raw = JSON.parse(text);
+      const existingIds = new Set(customBackgrounds.map((b) => b.id));
+      const { accepted, rejected, packName } = parsePack(raw, OFFICIAL_IDS, existingIds);
+      if (accepted.length) setCustomPacks(saveCustomPack(accepted, packName));
+      if (rejected.length) {
+        const detail = rejected.map((r) => `${r.label}: ${r.errors[0]}`).join(' · ');
+        setImportMsg({
+          kind: accepted.length ? 'ok' : 'err',
+          text: `${t('wizard.importResult', { ok: accepted.length, fail: rejected.length })} — ${detail}`,
+        });
+      } else {
+        setImportMsg({ kind: 'ok', text: t('wizard.importOk', { n: accepted.length }) });
+      }
+    } catch {
+      setImportMsg({ kind: 'err', text: t('wizard.importBadFile') });
+    }
+  };
+  const removePack = (id) => {
+    setCustomPacks(removeCustomPack(id));
+    if (bg._packId === id) pickBackground(BACKGROUNDS[0].id);
+  };
 
   const doSwap = () => {
     if (swapA === swapB) return;
@@ -81,7 +129,7 @@ export default function CharacterWizard({ onDone, onCancel }) {
     const youngest = Math.random() < 0.5;
 
     let c = blankCharacter();
-    c.name = eb.names[Math.floor(Math.random() * eb.names.length)];
+    c.name = pickRandomName(eb.names);
     for (const k of ATTR_KEYS) c[k] = { max: ea[k].value, current: ea[k].value };
     c.hp = { max: eHp, current: eHp };
     c.gp = eGp;
@@ -154,7 +202,16 @@ export default function CharacterWizard({ onDone, onCancel }) {
           <h3 className="sub-h">{t('wizard.background')}</h3>
           <div className="dice-row">
             <select className="text-input" value={bgId} onChange={(e) => pickBackground(e.target.value)}>
-              {BACKGROUNDS.map((b, i) => <option key={b.id} value={b.id}>{i + 1}. {loc(b.name, lang)}</option>)}
+              <optgroup label={t('wizard.officialBackgrounds')}>
+                {BACKGROUNDS.map((b, i) => <option key={b.id} value={b.id}>{i + 1}. {loc(b.name, lang)}</option>)}
+              </optgroup>
+              {customBackgrounds.length ? (
+                <optgroup label={t('wizard.customBackgrounds')}>
+                  {customBackgrounds.map((b) => (
+                    <option key={b.id} value={b.id}>{loc(b.name, lang)}{b._packName ? ` — ${b._packName}` : ''}</option>
+                  ))}
+                </optgroup>
+              ) : null}
             </select>
             <button type="button" className="btn" onClick={rollBackground}><Dices size={15} /> {t('wizard.rollD20')}</button>
           </div>
@@ -165,6 +222,31 @@ export default function CharacterWizard({ onDone, onCancel }) {
               <li>{t('wizard.gold3d6')}</li>
               {bg.gear.map((e, i) => <li key={i}>{loc(gearToItem(e).name, lang)}</li>)}
             </ul>
+          </div>
+
+          <div className="wizard-custom-bg">
+            <button type="button" className="btn btn-ghost btn-sm" onClick={() => fileInput.current?.click()}>
+              <Upload size={13} /> {t('wizard.importBackgrounds')}
+            </button>
+            <InfoHint text={t('wizard.importBackgroundsHint')} />
+            <input
+              ref={fileInput}
+              type="file"
+              accept="application/json,.json"
+              hidden
+              onChange={(e) => { importFile(e.target.files?.[0]); e.target.value = ''; }}
+            />
+            {importMsg ? <p className={`wizard-import-msg wizard-import-${importMsg.kind}`}>{importMsg.text}</p> : null}
+            {customPacks.length ? (
+              <ul className="wizard-pack-list">
+                {customPacks.map((p) => (
+                  <li key={p.id}>
+                    <span>{p.name || t('wizard.unnamedPack')} · {p.backgrounds.length}</span>
+                    <button type="button" className="item-x" onClick={() => removePack(p.id)} aria-label={t('common.remove')}><Trash2 size={12} /></button>
+                  </li>
+                ))}
+              </ul>
+            ) : null}
           </div>
         </div>
       ) : null}
@@ -284,7 +366,7 @@ export default function CharacterWizard({ onDone, onCancel }) {
           <Field label={t('sheet.name')}>
             <div className="inline-roll">
               <TextInput value={name} onChange={setName} />
-              <button type="button" className="icon-btn" onClick={() => setName(bg.names[Math.floor(Math.random() * bg.names.length)])} aria-label={t('wizard.roll')}><Dices size={16} /></button>
+              <button type="button" className="icon-btn" onClick={() => setName(pickRandomName(bg.names))} aria-label={t('wizard.roll')}><Dices size={16} /></button>
             </div>
           </Field>
           <ul className="review-list">

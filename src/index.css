@@ -756,6 +756,13 @@ textarea.notes {
 .grants-label { font-family: var(--font-sc); font-size: 1rem; color: var(--ink-soft); display: block; margin-bottom: 6px; }
 .grants ul { margin: 0; padding-left: 20px; font-size: .9rem; }
 .grants li { margin: 2px 0; }
+.wizard-custom-bg { display: flex; flex-direction: column; gap: 6px; margin-top: 4px; }
+.wizard-import-msg { margin: 0; font-size: .82rem; }
+.wizard-import-ok { color: var(--forest); }
+.wizard-import-err { color: var(--rust); }
+.wizard-pack-list { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 4px; }
+.wizard-pack-list li { display: flex; align-items: center; justify-content: space-between; gap: 8px; font-size: .84rem; padding: 4px 9px; border: 1px solid var(--rule); border-radius: 2px; background: var(--inset); }
+
 .wizard-sub-result { margin: 4px 0 8px; font-size: .92rem; }
 .wizard-sub-result strong { font-family: var(--font-display); color: var(--rust); }
 .roll-row { display: flex; flex-wrap: wrap; gap: 10px; }

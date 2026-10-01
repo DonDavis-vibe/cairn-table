@@ -33,7 +33,9 @@ room and shares a link — the connection runs directly between browsers
   scars, age, traits, bond, omen. Everything saves automatically in the browser.
 - **Character creation** following Cairn 2e — all **20 backgrounds** with fixed
   starting gear and d6 sub-tables, 3d6 per attribute (two swappable),
-  HP 1d6, gold 3d6, 8 trait tables, bond & omen.
+  HP 1d6, gold 3d6, 8 trait tables, bond & omen. Homebrew backgrounds can be
+  imported as a `.json` file — format and a worked example in
+  [`docs/custom-backgrounds.md`](docs/custom-backgrounds.md).
 - **10-slot inventory via drag & drop** — four worn/in hand, six in the backpack;
   1- and 2-slot items, petty (no slot), usage points, Fatigue as a slot card.
 - **Dice** — saves (d20 ≤ attribute, 1 always passes, 20 always fails), damage

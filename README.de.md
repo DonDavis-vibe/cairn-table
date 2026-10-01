@@ -33,7 +33,9 @@ zwischen den Browsern (WebRTC), ohne dass Spieldaten über einen Server laufen.
   Narben, Alter, Merkmale, Bande, Omen. Alles wird automatisch im Browser gesichert.
 - **Charaktererschaffung** nach Cairn 2e — alle **20 Hintergründe** mit fester
   Startausrüstung und W6-Untertabellen, 3W6 je Attribut (zwei tauschbar),
-  TP 1W6, Gold 3W6, 8 Merkmalstabellen, Bande & Omen.
+  TP 1W6, Gold 3W6, 8 Merkmalstabellen, Bande & Omen. Eigene Hintergründe
+  lassen sich als `.json`-Datei importieren — Format und ein durchgerechnetes
+  Beispiel in [`docs/custom-backgrounds.md`](docs/custom-backgrounds.md).
 - **10-Slot-Inventar per Drag & Drop** — vier am Körper, sechs im Rucksack; 1- und
   2-Platz-Gegenstände, petty (kein Slot), Nutzungspunkte, Erschöpfung als Slot-Karte.
 - **Würfeln** — Rettungswurf (W20 ≤ Attribut, 1 gelingt immer, 20 misslingt
