@@ -13,7 +13,7 @@ import {
 import { toW } from '../rules/dice.js';
 import Portrait from './Portrait.jsx';
 import {
-  GM_DAMAGE, GM_HEAL, GM_GOLD, GM_SAVE, GM_FATIGUE, GM_DEPRIVED, GM_PANICKED, GM_REST, GM_WHISPER, GM_DOWNTIME,
+  GM_DAMAGE, GM_HEAL, GM_GOLD, GM_SAVE, GM_FATIGUE, GM_DEPRIVED, GM_PANICKED, GM_DANGER, GM_REST, GM_WHISPER, GM_DOWNTIME,
 } from '../multiplayer/protocol.js';
 import { shareEvent } from '../utils/discord.js';
 
@@ -70,6 +70,7 @@ export default function GmPlayerCard({ peerId, character: c, mp }) {
         </div>
         {c.critical ? <span className="badge badge-dmg">{t('res.critical')}</span> : null}
         {c.panicked ? <span className="badge badge-dmg">{t('res.panicked')}</span> : null}
+        {c.inDanger ? <span className="badge badge-dmg">{t('res.inDanger')}</span> : null}
         {c.deprived ? <span className="badge">{t('res.deprived')}</span> : null}
         {c.fatigueOwed > 0 ? <span className="badge badge-dmg" title={t('inv.fatigueDropHint')}>{t('inv.fatigueOwedBadge', { n: c.fatigueOwed })}</span> : null}
         {c.dex?.current === 0 ? <span className="badge badge-dmg">{t('res.paralyzed')}</span> : null}
@@ -142,6 +143,9 @@ export default function GmPlayerCard({ peerId, character: c, mp }) {
         </button>
         <button type="button" className="btn btn-sm" onClick={() => { send(GM_PANICKED, { on: !c.panicked }); logg(c.panicked ? t('gm.panickedOff') : t('gm.panickedOn'), c.panicked ? 'ok' : 'bad'); }}>
           {c.panicked ? t('gm.panickedOff') : t('gm.panickedOn')}
+        </button>
+        <button type="button" className="btn btn-sm" onClick={() => { send(GM_DANGER, { on: !c.inDanger }); logg(c.inDanger ? t('gm.dangerOff') : t('gm.dangerOn'), c.inDanger ? 'ok' : 'warn'); }}>
+          {c.inDanger ? t('gm.dangerOff') : t('gm.dangerOn')}
         </button>
         <button type="button" className="btn btn-sm" onClick={() => { send(GM_REST, { kind: 'short' }); logg(t('rest.short'), 'ok', true); }}>
           <Moon size={13} /> {t('rest.short')}

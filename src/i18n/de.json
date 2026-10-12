@@ -665,5 +665,21 @@
   "inv.fatigueRoomNow": "Jetzt ist Platz — nimm die Erschöpfung auf.",
   "inv.fatigueTake": "Erschöpfung aufnehmen",
   "inv.fatigueDropped": "{name} abgelegt, um Platz für Erschöpfung zu schaffen.",
-  "inv.fatigueOwedBadge": "Erschöpfung offen ×{n}"
+  "inv.fatigueOwedBadge": "Erschöpfung offen ×{n}",
+  "res.inDanger": "In Gefahr",
+  "res.inDangerInfo": "Unter Bedrohung (z. B. im Kampf). Zaubern kann jetzt einen WIL-Rettungswurf gegen üble Folgen verlangen. Rasten beendet es.",
+  "gm.dangerOn": "In Gefahr",
+  "gm.dangerOff": "Außer Gefahr",
+  "inv.castRisk.deprived": "entbehrend",
+  "inv.castRisk.danger": "in Gefahr",
+  "inv.castSave": "Zaubern ({why}): WIL-Rettungswurf gegen üble Folgen",
+  "inv.castMishap.title": "„{name}“ geht schief",
+  "inv.castMishap.hint": "Die Folge steht im Verhältnis zum Zauber — der Warden wählt.",
+  "inv.castMishap.opt.fatigue": "Eine Erschöpfung mehr",
+  "inv.castMishap.opt.destroy": "Zauberbuch zerstört",
+  "inv.castMishap.opt.injury": "Verletzung (W6 STÄ)",
+  "inv.castMishap.none": "Warden entscheidet anders",
+  "inv.castMishap.fatigue": "Der Zauber geht schief — eine zusätzliche Erschöpfung.",
+  "inv.castMishap.destroyed": "Der Zauber geht schief — {name} ist zerstört.",
+  "inv.castMishap.injury": "Der Zauber geht schief — {n} Schaden auf STÄ (jetzt {str})."
 }

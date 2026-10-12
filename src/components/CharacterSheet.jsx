@@ -15,7 +15,7 @@ import { applyRest } from '../rules/rest.js';
 import { resolveDamage, resolveAttributeDamage, heal } from '../rules/combat.js';
 import {
   GM_DAMAGE, GM_HEAL, GM_GOLD, GM_SAVE, GM_FATIGUE, GM_CONDITION, GM_DEPRIVED, GM_PANICKED, GM_REST,
-  GM_GIVE, GM_WHISPER, GM_BROADCAST, GM_WEBHOOK, GM_DOWNTIME, GM_CAMP,
+  GM_GIVE, GM_WHISPER, GM_BROADCAST, GM_WEBHOOK, GM_DOWNTIME, GM_CAMP, GM_DANGER,
 } from '../multiplayer/protocol.js';
 import { setWebhook, shareSave, shareEvent } from '../utils/discord.js';
 import { TRAIT_KEYS, TRAIT_TABLES, traitSummary } from '../data/tables.js';
@@ -25,6 +25,8 @@ import DamagePanel from './DamagePanel.jsx';
 import CombatPrompt from './CombatPrompt.jsx';
 import Downtime from './Downtime.jsx';
 import FatigueDrop from './FatigueDrop.jsx';
+import CastMishap from './CastMishap.jsx';
+import { castRisks, castSave } from '../rules/casting.js';
 import { giveFatigue } from '../rules/fatigue.js';
 import { scarNoteText } from '../utils/scarNotes.js';
 import { sanitizeGoal } from '../rules/downtime.js';
@@ -43,6 +45,7 @@ export default function CharacterSheet({ character, setCharacter, mp = null, not
   const { t, lang } = useLang();
   const [log, setLog] = useState([]);
   const [dragId, setDragId] = useState(null);
+  const [castMishap, setCastMishap] = useState(null); // null | { itemId, kind, name }
   const [combatPrompt, setCombatPrompt] = useState(null); // null | {kind:'scar',hpLost} | {kind:'save',target}
   const lastCmdRef = useRef(null);
 
@@ -133,6 +136,9 @@ export default function CharacterSheet({ character, setCharacter, mp = null, not
     } else if (cmd === GM_DEPRIVED) {
       setCharacter((c) => ({ ...c, deprived: !!gmCommand.on }));
       say(gmCommand.on ? t('res.deprived') : `${t('res.deprived')} ✓`, gmCommand.on ? 'warn' : 'ok');
+    } else if (cmd === GM_DANGER) {
+      setCharacter((c) => ({ ...c, inDanger: !!gmCommand.on }));
+      say(gmCommand.on ? t('res.inDanger') : `${t('res.inDanger')} ✓`, gmCommand.on ? 'warn' : 'ok');
     } else if (cmd === GM_PANICKED) {
       setCharacter((c) => ({ ...c, panicked: !!gmCommand.on }));
       say(gmCommand.on ? t('res.panicked') : `${t('res.panicked')} ✓`, gmCommand.on ? 'bad' : 'ok');
@@ -239,23 +245,8 @@ export default function CharacterSheet({ character, setCharacter, mp = null, not
       pushLog({ kind: 'roll', text });
       onEvent?.({ kind: 'note', text });
 
-      let next = cast.character;
-      // Entbehrt (oder in Gefahr): WIL-Rettungswurf gegen üble Nebenwirkungen.
-      // Bei Misserfolg als mildeste Folge eine zusätzliche Erschöpfung.
-      if (c.deprived) {
-        const s = rollSave(c.wil.current);
-        pushLog({
-          kind: s.ok ? 'ok' : 'bad',
-          text: `${t('inv.castDeprived')} — ${t('dice.die')}20 ${s.d} ${s.ok ? '≤' : '>'} ${s.target} · ${s.ok ? t('dice.success') : t('dice.fail')}`,
-        });
-        onEvent?.({ kind: 'save', attr: 'wil', roll: s.d, target: s.target, ok: s.ok, reason: t('inv.castDeprived') });
-        if (!s.ok) {
-          const mishap = giveFatigue(next);
-          pushLog({ kind: 'bad', text: mishap.placed ? t('inv.castMishap') : t('inv.fatigueOwed') });
-          next = mishap.character;
-        }
-      }
-      setCharacter(next);
+      setCharacter(cast.character);
+      castRiskSave(c, 'spellbook', sbName ? loc(sbName, lang) : loc(it.name, lang), itemId);
       return;
     }
 
@@ -265,7 +256,21 @@ export default function CharacterSheet({ character, setCharacter, mp = null, not
       pushLog({ kind: 'roll', text });
       onEvent?.({ kind: 'note', text });
       setCharacter(removeItem(c, itemId));
+      castRiskSave(c, 'scroll', spellName ? loc(spellName, lang) : loc(it.name, lang), itemId);
     }
+  };
+
+  // Entbehrt oder in Gefahr: WIL-Rettungswurf gegen uebele Folgen des Zauberns;
+  // bei Misserfolg waehlt der Warden die Folge (Erschoepfung, Buch zerstoert, Verletzung).
+  const castRiskSave = (c, kind, name, itemId) => {
+    const risks = castRisks(c);
+    if (!risks.length) return;
+    const why = risks.map((r) => t(`inv.castRisk.${r}`)).join(' + ');
+    const s = castSave(c);
+    const text = `${t('inv.castSave', { why })} — ${t('dice.die')}20 ${s.d} ${s.ok ? '≤' : '>'} ${s.target} · ${s.ok ? t('dice.success') : t('dice.fail')}`;
+    pushLog({ kind: s.ok ? 'ok' : 'bad', text });
+    onEvent?.({ kind: 'save', attr: 'wil', roll: s.d, target: s.target, ok: s.ok, reason: why });
+    if (!s.ok) setCastMishap({ itemId, kind, name });
   };
 
   const rest = (kind) => {
@@ -348,6 +353,16 @@ export default function CharacterSheet({ character, setCharacter, mp = null, not
         </Panel>
 
         <Panel title={t('sheet.inventory')}>
+          {castMishap ? (
+            <CastMishap
+              mishap={castMishap}
+              character={character}
+              setCharacter={setCharacter}
+              pushLog={pushLog}
+              onEvent={onEvent}
+              onClose={() => setCastMishap(null)}
+            />
+          ) : null}
           <FatigueDrop character={character} setCharacter={setCharacter} pushLog={pushLog} onEvent={onEvent} />
           <DndContext
             sensors={sensors}

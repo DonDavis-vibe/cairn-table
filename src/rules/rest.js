@@ -19,6 +19,9 @@ export function applyRest(character, kind) {
     return { character, blocked: true, msg: { key: 'rest.log.deprived', vars: {} } };
   }
 
+  // Rasten heisst: die akute Gefahr ist vorbei.
+  character = { ...character, inDanger: false };
+
   if (kind === 'short') {
     return {
       character: { ...character, hp: { ...character.hp, current: character.hp.max } },

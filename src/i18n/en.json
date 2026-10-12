@@ -665,5 +665,21 @@
   "inv.fatigueRoomNow": "There is room now — take the Fatigue.",
   "inv.fatigueTake": "Take the Fatigue",
   "inv.fatigueDropped": "Dropped {name} to make room for Fatigue.",
-  "inv.fatigueOwedBadge": "Fatigue owed ×{n}"
+  "inv.fatigueOwedBadge": "Fatigue owed ×{n}",
+  "res.inDanger": "In danger",
+  "res.inDangerInfo": "Under threat (e.g. in combat). Casting a spell now may require a WIL save against ill effects. Resting clears it.",
+  "gm.dangerOn": "In danger",
+  "gm.dangerOff": "Out of danger",
+  "inv.castRisk.deprived": "Deprived",
+  "inv.castRisk.danger": "in danger",
+  "inv.castSave": "Casting while {why}: WIL save against ill effects",
+  "inv.castMishap.title": "“{name}” backfires",
+  "inv.castMishap.hint": "The consequence is on par with the spell — the Warden chooses.",
+  "inv.castMishap.opt.fatigue": "One more Fatigue",
+  "inv.castMishap.opt.destroy": "Spellbook destroyed",
+  "inv.castMishap.opt.injury": "Injury (d6 STR)",
+  "inv.castMishap.none": "Warden decides otherwise",
+  "inv.castMishap.fatigue": "The spell backfires — one extra Fatigue.",
+  "inv.castMishap.destroyed": "The spell backfires — {name} is destroyed.",
+  "inv.castMishap.injury": "The spell backfires — {n} damage to STR (now {str})."
 }

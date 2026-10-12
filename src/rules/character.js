@@ -52,6 +52,7 @@ export function blankCharacter() {
     gp: 0,                        // Gold (Beutel < 100 gp = petty, kein Slot)
     goldSlotThreshold: 100,       // RAW (Character Creation -> Inventory): ab 100 gp 1 Slot. 0 = aus.
     deprived: false,             // blockt jede Erholung
+    inDanger: false,             // in Gefahr (z. B. im Kampf): Zaubern kann einen WIL-Rettungswurf verlangen
     panicked: false,             // Panik (Procedures): TP 0, keine Handlung in Runde 1, Angriffe beeintraechtigt
 
     scars: [],                   // [{ hpLost, name, at }]
@@ -95,6 +96,7 @@ export function normalizeCharacter(raw) {
   merged.deprived = !!raw.deprived;
   merged.critical = !!raw.critical;
   merged.panicked = !!raw.panicked;
+  merged.inDanger = !!raw.inDanger;
   merged.doomed = !!raw.doomed;
   merged.pendingScarFx = Array.isArray(raw.pendingScarFx) ? raw.pendingScarFx : [];
   merged.downtime = Array.isArray(raw.downtime) ? raw.downtime : [];

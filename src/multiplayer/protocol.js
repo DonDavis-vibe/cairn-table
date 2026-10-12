@@ -47,6 +47,7 @@ export const GM_FATIGUE = 'fatigue'; // {} eine Erschoepfung ins Inventar
 export const GM_CONDITION = 'condition'; // { key } Zustand zuweisen
 export const GM_DEPRIVED = 'deprived'; // { on }
 export const GM_PANICKED = 'panicked'; // { on }
+export const GM_DANGER = 'danger'; //   { on } in Gefahr: Zaubern verlangt einen WIL-Rettungswurf
 export const GM_REST = 'rest'; //       { kind: 'short'|'night'|'week' }
 export const GM_CAMP = 'camp'; //       {} Lager: Ration essen + Nachtruhe
 export const GM_GIVE = 'give'; //       { item }

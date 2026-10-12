@@ -1,6 +1,6 @@
 import { Zap, Brain } from 'lucide-react';
 import {
-  IconShield, IconCoins, IconTriangleAlert, IconHeartCrack, IconGhost,
+  IconShield, IconCoins, IconTriangleAlert, IconHeartCrack, IconGhost, IconSwords,
 } from './icons.jsx';
 import { useLang } from '../i18n/index.jsx';
 import { Stepper, InfoHint } from './ui.jsx';
@@ -78,6 +78,11 @@ export default function ResourceBar({ character, onChange }) {
                 {t('res.stabilize')}
               </button>
             ) : null}
+          </label>
+          <label className={`flag${character.inDanger ? ' flag-bad' : ''}`}>
+            <input type="checkbox" checked={!!character.inDanger} onChange={(e) => onChange({ inDanger: e.target.checked })} />
+            <IconSwords size={14} /> {t('res.inDanger')}
+            <InfoHint text={t('res.inDangerInfo')} />
           </label>
           <label className={`flag${character.panicked ? ' flag-bad' : ''}`}>
             <input type="checkbox" checked={!!character.panicked} onChange={(e) => onChange({ panicked: e.target.checked })} />

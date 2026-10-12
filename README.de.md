@@ -45,6 +45,10 @@ zwischen den Browsern (WebRTC), ohne dass Spieldaten über einen Server laufen.
   Rüstung → TP → STÄ → Rettungswurf → Narbe/Tod. Narbeneffekte (max. TP,
   Attribute, Entbehrung, „Verdammt“) werden gewürfelt und angewendet; Effekte
   „nach der Genesung“ greifen bei der Wochenrast.
+- **Zaubern** — ein Zauberbuch kostet eine Erschöpfung; Schriftrollen sind
+  Kleinkram und verbrauchen sich. Entbehrend oder in Gefahr verlangt der Zauber
+  einen WIL-Rettungswurf; bei Misserfolg stehen die Folgen aus den Regeln zur
+  Wahl: zusätzliche Erschöpfung, zerstörtes Zauberbuch, Verletzung.
 - **Downtime** — Ziele mit 1–5 Meilensteinen (Recherche, Training, Bindungen
   stärken), eine Downtime-Aktion pro Phase, Goldkosten werden beim Abschluss
   bezahlt, WIL-Rettungswurf zum Senken der Kosten; gesperrt bei Genesung,

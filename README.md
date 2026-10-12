@@ -44,6 +44,9 @@ room and shares a link — the connection runs directly between browsers
   die of fate. Automatic damage chain: armor → HP → STR → save → scar/death.
   Scar effects (max HP, attributes, Deprived, Doomed) are rolled and applied;
   "after recovery" effects land on the week's rest.
+- **Casting** — a spellbook costs a Fatigue; scrolls are petty and used up. While
+  Deprived or In danger the cast needs a WIL save, and a failure offers the
+  consequences the rules name: an extra Fatigue, a destroyed spellbook, an injury.
 - **Downtime** — goals with 1–5 Milestones (research, training, strengthening
   ties), one Downtime Action per phase, gold costs paid on completion, a WIL
   save to reduce costs; blocked while recovering, Deprived or critical. The
