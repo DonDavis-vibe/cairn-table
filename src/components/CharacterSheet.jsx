@@ -15,7 +15,7 @@ import { applyRest } from '../rules/rest.js';
 import { resolveDamage, resolveAttributeDamage, heal } from '../rules/combat.js';
 import {
   GM_DAMAGE, GM_HEAL, GM_GOLD, GM_SAVE, GM_FATIGUE, GM_CONDITION, GM_DEPRIVED, GM_PANICKED, GM_REST,
-  GM_GIVE, GM_WHISPER, GM_BROADCAST, GM_WEBHOOK,
+  GM_GIVE, GM_WHISPER, GM_BROADCAST, GM_WEBHOOK, GM_DOWNTIME,
 } from '../multiplayer/protocol.js';
 import { setWebhook, shareSave, shareEvent } from '../utils/discord.js';
 import { TRAIT_KEYS, TRAIT_TABLES, traitSummary } from '../data/tables.js';
@@ -23,7 +23,9 @@ import AttributeBox from './AttributeBox.jsx';
 import ResourceBar from './ResourceBar.jsx';
 import DamagePanel from './DamagePanel.jsx';
 import CombatPrompt from './CombatPrompt.jsx';
+import Downtime from './Downtime.jsx';
 import { scarNoteText } from '../utils/scarNotes.js';
+import { sanitizeGoal } from '../rules/downtime.js';
 import Portrait from './Portrait.jsx';
 import Stash from './Stash.jsx';
 import PartyView from './PartyView.jsx';
@@ -139,6 +141,10 @@ export default function CharacterSheet({ character, setCharacter, mp = null, not
       say(`${t(`rest.${gmCommand.kind}`)} — ${t(r.msg.key, r.msg.vars)}`, r.blocked ? 'warn' : 'ok');
       onEvent?.({ kind: 'rest', restKind: gmCommand.kind, text: t(r.msg.key, r.msg.vars) });
       (r.notes || []).forEach((n) => say(scarNoteText(n, t, lang), 'warn'));
+    } else if (cmd === GM_DOWNTIME && gmCommand.goal) {
+      const goal = sanitizeGoal(gmCommand.goal);
+      setCharacter((c) => ({ ...c, downtime: [...(c.downtime || []), goal] }));
+      say(t('dt.log.assigned', { title: goal.title, n: goal.milestones.length }), 'ok');
     } else if (cmd === GM_GIVE && gmCommand.item) {
       setCharacter((c) => {
         const it = gmCommand.item.itemId ? gmCommand.item : makeItem(gmCommand.item.key || null, gmCommand.item);
@@ -404,6 +410,10 @@ export default function CharacterSheet({ character, setCharacter, mp = null, not
             {character.pendingScarFx?.length ? <p className="res-slots">{t('scar.badge.pending', { n: character.pendingScarFx.length })}</p> : null}
           </Panel>
         ) : null}
+
+        <Panel title={t('dt.title')}>
+          <Downtime character={character} setCharacter={setCharacter} pushLog={pushLog} onEvent={onEvent} />
+        </Panel>
 
         <Panel title={t('sheet.notes')}>
           <textarea className="notes" value={character.notes} onChange={(e) => patch({ notes: e.target.value })} rows={5} />

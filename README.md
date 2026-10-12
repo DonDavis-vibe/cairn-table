@@ -43,6 +43,10 @@ room and shares a link — the connection runs directly between browsers
   die of fate. Automatic damage chain: armor → HP → STR → save → scar/death.
   Scar effects (max HP, attributes, Deprived, Doomed) are rolled and applied;
   "after recovery" effects land on the week's rest.
+- **Downtime** — goals with 1–5 Milestones (research, training, strengthening
+  ties), one Downtime Action per phase, gold costs paid on completion, a WIL
+  save to reduce costs; blocked while recovering, Deprived or critical. The
+  Warden can assign goals to a player.
 - **Rest** — a short rest restores HP fully; a night's rest also clears all
   Fatigue; a week's rest restores attributes and the critical condition too.
 

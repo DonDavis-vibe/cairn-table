@@ -4,6 +4,7 @@ import {
 } from 'lucide-react';
 import { IconSwords, IconCoins, IconTriangleAlert } from './icons.jsx';
 import { useLang, loc } from '../i18n/index.jsx';
+import { DOWNTIME_KINDS, newGoal, goalProgress } from '../rules/downtime.js';
 import { readJSON, writeJSON } from '../utils/storage.js';
 import {
   ATTR_KEYS, ALL_SLOTS, itemSlotCost, armorOf,
@@ -11,7 +12,7 @@ import {
 import { toW } from '../rules/dice.js';
 import Portrait from './Portrait.jsx';
 import {
-  GM_DAMAGE, GM_HEAL, GM_GOLD, GM_SAVE, GM_FATIGUE, GM_DEPRIVED, GM_PANICKED, GM_REST, GM_WHISPER,
+  GM_DAMAGE, GM_HEAL, GM_GOLD, GM_SAVE, GM_FATIGUE, GM_DEPRIVED, GM_PANICKED, GM_REST, GM_WHISPER, GM_DOWNTIME,
 } from '../multiplayer/protocol.js';
 import { shareEvent } from '../utils/discord.js';
 
@@ -34,6 +35,7 @@ export default function GmPlayerCard({ peerId, character: c, mp }) {
   const [subArmor, setSubArmor] = useState(true); // Rüstung des Ziels vom TP-Schaden abziehen
   const [saveAttr, setSaveAttr] = useState('str');
   const [whisper, setWhisper] = useState('');
+  const [dtDraft, setDtDraft] = useState({ kind: 'research', title: '', link: '', milestones: '' });
   const [note, setNote] = useState(() => readJSON(NOTE_KEY(c.id), '') || '');
 
   const amt = Math.max(0, Number(amount) || 0);
@@ -172,6 +174,36 @@ export default function GmPlayerCard({ peerId, character: c, mp }) {
             {Object.values(c.items || {}).filter((i) => i.petty).map((i) => <li key={i.itemId} className="petty">{loc(i.name, lang)}</li>)}
           </ul>
           {c.notes ? <p className="gm-player-notes">{c.notes}</p> : null}
+          <div className="gm-downtime">
+            <span className="field-label">{t('dt.title')}</span>
+            {(c.downtime || []).length === 0 ? <p className="gm-gen-empty">{t('dt.empty')}</p> : (
+              <ul className="gm-inv">
+                {c.downtime.map((g) => {
+                  const p = goalProgress(g);
+                  return <li key={g.id}>{t(`dt.kind.${g.kind}`)}: {g.title} — {p.done}/{p.total}{p.complete ? ' ✓' : ''}</li>;
+                })}
+              </ul>
+            )}
+            <div className="custom-row">
+              <select className="text-input" value={dtDraft.kind} onChange={(e) => setDtDraft((d) => ({ ...d, kind: e.target.value }))} aria-label={t('dt.kindLabel')}>
+                {DOWNTIME_KINDS.map((k) => <option key={k} value={k}>{t(`dt.kind.${k}`)}</option>)}
+              </select>
+              <input className="text-input" value={dtDraft.title} onChange={(e) => setDtDraft((d) => ({ ...d, title: e.target.value }))} placeholder={t('dt.titlePlaceholder')} />
+              <input className="text-input" value={dtDraft.link} onChange={(e) => setDtDraft((d) => ({ ...d, link: e.target.value }))} placeholder={t(`dt.link.${dtDraft.kind}`)} />
+            </div>
+            <textarea className="notes" rows={3} value={dtDraft.milestones} onChange={(e) => setDtDraft((d) => ({ ...d, milestones: e.target.value }))} placeholder={t('dt.milestonesHint')} />
+            <button
+              type="button"
+              className="btn btn-sm"
+              disabled={!dtDraft.title.trim()}
+              onClick={() => {
+                const goal = newGoal(dtDraft);
+                send(GM_DOWNTIME, { goal });
+                logg(t('dt.log.assigned', { title: goal.title, n: goal.milestones.length }), 'gm');
+                setDtDraft({ kind: dtDraft.kind, title: '', link: '', milestones: '' });
+              }}
+            >{t('dt.assign')}</button>
+          </div>
           <label className="field">
             <span className="field-label">{t('gm.secretNote')}</span>
             <textarea className="notes" rows={2} value={note} onChange={(e) => saveNote(e.target.value)} />

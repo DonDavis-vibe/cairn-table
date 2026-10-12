@@ -58,6 +58,8 @@ export function blankCharacter() {
     critical: false,             // kritisch verletzt: kann nur kriechen, stirbt in 1 h ohne Hilfe
     doomed: false,               // Narbe #12: misslingt der naechste Save gegen kritischen Schaden, stirbt man
     pendingScarFx: [],           // Narbeneffekte, die erst bei der Wochenrast greifen (rules/scars.js)
+    downtime: [],                // Downtime-Ziele mit Meilensteinen (rules/downtime.js)
+    downtimeUsed: false,         // Downtime-Aktion dieser Phase verbraucht
 
     slots: Object.fromEntries(ALL_SLOTS.map((s) => [s, null])),
     items: {},                   // itemId -> Item
@@ -94,6 +96,8 @@ export function normalizeCharacter(raw) {
   merged.panicked = !!raw.panicked;
   merged.doomed = !!raw.doomed;
   merged.pendingScarFx = Array.isArray(raw.pendingScarFx) ? raw.pendingScarFx : [];
+  merged.downtime = Array.isArray(raw.downtime) ? raw.downtime : [];
+  merged.downtimeUsed = !!raw.downtimeUsed;
   merged.portrait = typeof raw.portrait === 'string' ? raw.portrait : '';
   merged.schemaVersion = SCHEMA_VERSION;
   return merged;

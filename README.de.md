@@ -44,6 +44,10 @@ zwischen den Browsern (WebRTC), ohne dass Spieldaten über einen Server laufen.
   Rüstung → TP → STÄ → Rettungswurf → Narbe/Tod. Narbeneffekte (max. TP,
   Attribute, Entbehrung, „Verdammt“) werden gewürfelt und angewendet; Effekte
   „nach der Genesung“ greifen bei der Wochenrast.
+- **Downtime** — Ziele mit 1–5 Meilensteinen (Recherche, Training, Bindungen
+  stärken), eine Downtime-Aktion pro Phase, Goldkosten werden beim Abschluss
+  bezahlt, WIL-Rettungswurf zum Senken der Kosten; gesperrt bei Genesung,
+  Entbehrung oder kritischer Verletzung. Der Warden kann Ziele vergeben.
 - **Rast** — kurze Rast stellt die TP voll her; Nachtruhe entfernt zusätzlich
   alle Erschöpfung; Wochenrast stellt auch Attribute und den kritischen
   Zustand wieder her.

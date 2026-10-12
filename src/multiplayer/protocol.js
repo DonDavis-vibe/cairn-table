@@ -49,6 +49,7 @@ export const GM_DEPRIVED = 'deprived'; // { on }
 export const GM_PANICKED = 'panicked'; // { on }
 export const GM_REST = 'rest'; //       { kind: 'short'|'night'|'week' }
 export const GM_GIVE = 'give'; //       { item }
+export const GM_DOWNTIME = 'downtime'; // { goal } Downtime-Ziel mit Meilensteinen vergeben
 export const GM_WHISPER = 'whisper'; // { text }
 export const GM_BROADCAST = 'broadcast'; // { text }
 export const GM_WEBHOOK = 'webhook'; // { url } Warden teilt seinen Discord-Webhook mit allen
