@@ -37,7 +37,8 @@ room and shares a link — the connection runs directly between browsers
   imported as a `.json` file — format and a worked example in
   [`docs/custom-backgrounds.md`](docs/custom-backgrounds.md).
 - **10-slot inventory via drag & drop** — four worn/in hand, six in the backpack;
-  1- and 2-slot items, petty (no slot), usage points, Fatigue as a slot card.
+  1- and 2-slot items, petty (no slot), usage points, Fatigue as a slot card —
+  with no free slot you drop an item to take it.
 - **Dice** — saves (d20 ≤ attribute, 1 always passes, 20 always fails), damage
   rolls (die choice, impaired/enhanced, multiple attackers, armor deduction),
   die of fate. Automatic damage chain: armor → HP → STR → save → scar/death.

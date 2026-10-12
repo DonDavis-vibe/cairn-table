@@ -60,6 +60,7 @@ export function blankCharacter() {
     pendingScarFx: [],           // Narbeneffekte, die erst bei der Wochenrast greifen (rules/scars.js)
     downtime: [],                // Downtime-Ziele mit Meilensteinen (rules/downtime.js)
     downtimeUsed: false,         // Downtime-Aktion dieser Phase verbraucht
+    fatigueOwed: 0,              // Erschoepfung ohne freien Slot: erst einen Gegenstand ablegen (rules/fatigue.js)
 
     slots: Object.fromEntries(ALL_SLOTS.map((s) => [s, null])),
     items: {},                   // itemId -> Item
@@ -98,6 +99,7 @@ export function normalizeCharacter(raw) {
   merged.pendingScarFx = Array.isArray(raw.pendingScarFx) ? raw.pendingScarFx : [];
   merged.downtime = Array.isArray(raw.downtime) ? raw.downtime : [];
   merged.downtimeUsed = !!raw.downtimeUsed;
+  merged.fatigueOwed = Number.isFinite(raw.fatigueOwed) && raw.fatigueOwed > 0 ? Math.floor(raw.fatigueOwed) : 0;
   merged.portrait = typeof raw.portrait === 'string' ? raw.portrait : '';
   merged.schemaVersion = SCHEMA_VERSION;
   return merged;

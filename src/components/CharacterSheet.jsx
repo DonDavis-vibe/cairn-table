@@ -8,7 +8,7 @@ import { Panel, Field, TextInput } from './ui.jsx';
 import { ATTR_KEYS, armorOf } from '../rules/character.js';
 import { addItemAt, removeItem, pettyItems, tryMove, firstFreeFit } from '../rules/inventory.js';
 import AddItemMenu from './AddItemMenu.jsx';
-import { makeFatigue, makeCondition, makeItem } from '../data/items.js';
+import { makeCondition, makeItem } from '../data/items.js';
 import { SPELL_BY_ID } from '../data/spells.js';
 import { rollSave } from '../rules/dice.js';
 import { applyRest } from '../rules/rest.js';
@@ -24,6 +24,8 @@ import ResourceBar from './ResourceBar.jsx';
 import DamagePanel from './DamagePanel.jsx';
 import CombatPrompt from './CombatPrompt.jsx';
 import Downtime from './Downtime.jsx';
+import FatigueDrop from './FatigueDrop.jsx';
+import { giveFatigue } from '../rules/fatigue.js';
 import { scarNoteText } from '../utils/scarNotes.js';
 import { sanitizeGoal } from '../rules/downtime.js';
 import { makeCamp } from '../rules/rations.js';
@@ -118,11 +120,9 @@ export default function CharacterSheet({ character, setCharacter, mp = null, not
       shareSave(cn, t('dice.saveVs', { attr: t(`attr.${gmCommand.attr}`) }), s.d, s.target, s.ok);
       onEvent?.({ kind: 'save', attr: gmCommand.attr, roll: s.d, target: s.target, ok: s.ok, reason: t('gm.warden') });
     } else if (cmd === GM_FATIGUE) {
-      setCharacter((c) => {
-        if (!firstFreeFit(c.slots, 1)) { notify(t('inv.noRoomFatigue'), 'warn'); return c; }
-        return addItemAt(c, makeFatigue(), 'pack_6').character || c;
-      });
-      say(t('inv.fatigueAdded'), 'bad');
+      const f = giveFatigue(character);
+      setCharacter(f.character);
+      say(f.placed ? t('inv.fatigueAdded') : t('inv.fatigueOwed'), 'bad');
       onEvent?.({ kind: 'fatigue' });
     } else if (cmd === GM_CONDITION && gmCommand.key) {
       setCharacter((c) => {
@@ -218,10 +218,9 @@ export default function CharacterSheet({ character, setCharacter, mp = null, not
     return { ...c, items: { ...c.items, [itemId]: { ...it, cleared: !it.cleared } } };
   });
   const onAddFatigue = () => {
-    const res = addItemAt(character, makeFatigue(), 'pack_6');
-    if (!res.ok) { pushLog({ kind: 'warn', text: t('inv.noRoomFatigue') }); return; }
-    pushLog({ kind: 'bad', text: t('inv.fatigueAdded') });
-    setCharacter(res.character);
+    const f = giveFatigue(character);
+    pushLog({ kind: f.placed ? 'bad' : 'warn', text: f.placed ? t('inv.fatigueAdded') : t('inv.fatigueOwed') });
+    setCharacter(f.character);
   };
   // Bewusst OHNE setCharacter-Updater: die Log-/Event-Nebenwirkungen sollen
   // nicht doppelt laufen (React StrictMode ruft Updater doppelt auf).
@@ -231,15 +230,16 @@ export default function CharacterSheet({ character, setCharacter, mp = null, not
     if (!it) return;
 
     if (it.type === 'spellbook') {
-      if (!firstFreeFit(c.slots, 1)) { pushLog({ kind: 'warn', text: t('inv.castNoRoom') }); return; }
-      const res = addItemAt(c, makeFatigue(), 'pack_6');
-      if (!res.ok) { pushLog({ kind: 'warn', text: t('inv.castNoRoom') }); return; }
+      // Zaubern kostet immer eine Erschoepfung; ist kein Slot frei, wird sie offen
+      // vermerkt (erst einen Gegenstand ablegen).
+      const cast = giveFatigue(c);
+      if (!cast.placed) pushLog({ kind: 'warn', text: t('inv.fatigueOwed') });
       const sbName = SPELL_BY_ID[it.spellId]?.name;
       const text = t('inv.cast', { name: sbName ? loc(sbName, lang) : loc(it.name, lang) });
       pushLog({ kind: 'roll', text });
       onEvent?.({ kind: 'note', text });
 
-      let next = res.character;
+      let next = cast.character;
       // Entbehrt (oder in Gefahr): WIL-Rettungswurf gegen üble Nebenwirkungen.
       // Bei Misserfolg als mildeste Folge eine zusätzliche Erschöpfung.
       if (c.deprived) {
@@ -250,8 +250,9 @@ export default function CharacterSheet({ character, setCharacter, mp = null, not
         });
         onEvent?.({ kind: 'save', attr: 'wil', roll: s.d, target: s.target, ok: s.ok, reason: t('inv.castDeprived') });
         if (!s.ok) {
-          const res2 = addItemAt(next, makeFatigue(), 'pack_6');
-          if (res2.ok) { pushLog({ kind: 'bad', text: t('inv.castMishap') }); next = res2.character; }
+          const mishap = giveFatigue(next);
+          pushLog({ kind: 'bad', text: mishap.placed ? t('inv.castMishap') : t('inv.fatigueOwed') });
+          next = mishap.character;
         }
       }
       setCharacter(next);
@@ -347,6 +348,7 @@ export default function CharacterSheet({ character, setCharacter, mp = null, not
         </Panel>
 
         <Panel title={t('sheet.inventory')}>
+          <FatigueDrop character={character} setCharacter={setCharacter} pushLog={pushLog} onEvent={onEvent} />
           <DndContext
             sensors={sensors}
             collisionDetection={closestCenter}

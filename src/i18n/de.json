@@ -658,5 +658,12 @@
   "camp.rationsTitle": "Verbleibende Ration-Nutzungen",
   "proc.toStash": "In die Tischmitte",
   "proc.stashed": "In der Tischmitte",
-  "proc.stashedLog": "{n} Rationen in die Tischmitte gelegt."
+  "proc.stashedLog": "{n} Rationen in die Tischmitte gelegt.",
+  "inv.fatigueOwed": "Erschöpfung, aber kein freier Slot — lege einen Gegenstand ab, um sie aufzunehmen.",
+  "inv.fatigueDropTitle": "Erschöpfung ohne Platz ({n})",
+  "inv.fatigueDropHint": "Du musst einen Gegenstand aus deinem Inventar ablegen, damit die Erschöpfung Platz hat. Welchen?",
+  "inv.fatigueRoomNow": "Jetzt ist Platz — nimm die Erschöpfung auf.",
+  "inv.fatigueTake": "Erschöpfung aufnehmen",
+  "inv.fatigueDropped": "{name} abgelegt, um Platz für Erschöpfung zu schaffen.",
+  "inv.fatigueOwedBadge": "Erschöpfung offen ×{n}"
 }

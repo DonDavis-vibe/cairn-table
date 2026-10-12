@@ -71,6 +71,7 @@ export default function GmPlayerCard({ peerId, character: c, mp }) {
         {c.critical ? <span className="badge badge-dmg">{t('res.critical')}</span> : null}
         {c.panicked ? <span className="badge badge-dmg">{t('res.panicked')}</span> : null}
         {c.deprived ? <span className="badge">{t('res.deprived')}</span> : null}
+        {c.fatigueOwed > 0 ? <span className="badge badge-dmg" title={t('inv.fatigueDropHint')}>{t('inv.fatigueOwedBadge', { n: c.fatigueOwed })}</span> : null}
         {c.dex?.current === 0 ? <span className="badge badge-dmg">{t('res.paralyzed')}</span> : null}
         {c.wil?.current === 0 ? <span className="badge badge-dmg">{t('res.delirious')}</span> : null}
       </div>

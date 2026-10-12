@@ -37,7 +37,8 @@ zwischen den Browsern (WebRTC), ohne dass Spieldaten über einen Server laufen.
   lassen sich als `.json`-Datei importieren — Format und ein durchgerechnetes
   Beispiel in [`docs/custom-backgrounds.md`](docs/custom-backgrounds.md).
 - **10-Slot-Inventar per Drag & Drop** — vier am Körper, sechs im Rucksack; 1- und
-  2-Platz-Gegenstände, petty (kein Slot), Nutzungspunkte, Erschöpfung als Slot-Karte.
+  2-Platz-Gegenstände, petty (kein Slot), Nutzungspunkte, Erschöpfung als Slot-Karte — ohne freien Slot legst du einen
+  Gegenstand ab, um sie aufzunehmen.
 - **Würfeln** — Rettungswurf (W20 ≤ Attribut, 1 gelingt immer, 20 misslingt
   immer), Schadenswurf (Würfelwahl, beeinträchtigt / verstärkt, mehrere
   Angreifer, Rüstungsabzug), Schicksalswürfel. Automatische Schadenskette

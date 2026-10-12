@@ -132,13 +132,13 @@ export function removeItem(character, itemId) {
   return { ...character, items, slots: withItemRemoved(character.slots, itemId) };
 }
 
-// Alle Erschoepfungs-Karten entfernen (volle Nachtruhe / Wochenrast).
+// Alle Erschoepfungs-Karten entfernen (volle Nachtruhe / Wochenrast) — auch die noch offene.
 export function removeAllFatigue(character) {
   let c = character;
   for (const it of Object.values(character.items)) {
     if (it.type === 'condition' && it.key === 'fatigue') c = removeItem(c, it.itemId);
   }
-  return c;
+  return { ...c, fatigueOwed: 0 };
 }
 
 export function pettyItems(character) {

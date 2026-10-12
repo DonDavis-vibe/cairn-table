@@ -658,5 +658,12 @@
   "camp.rationsTitle": "Ration uses left",
   "proc.toStash": "Put in the stash",
   "proc.stashed": "In the stash",
-  "proc.stashedLog": "{n} Rations put in the stash."
+  "proc.stashedLog": "{n} Rations put in the stash.",
+  "inv.fatigueOwed": "Fatigue, but no free slot — drop an item to take it.",
+  "inv.fatigueDropTitle": "Fatigue without room ({n})",
+  "inv.fatigueDropHint": "You must drop an item from your inventory to make room for the Fatigue. Which one?",
+  "inv.fatigueRoomNow": "There is room now — take the Fatigue.",
+  "inv.fatigueTake": "Take the Fatigue",
+  "inv.fatigueDropped": "Dropped {name} to make room for Fatigue.",
+  "inv.fatigueOwedBadge": "Fatigue owed ×{n}"
 }
