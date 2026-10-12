@@ -69,7 +69,9 @@ zwischen den Browsern (WebRTC), ohne dass Spieldaten über einen Server laufen.
 - **Reise & Erkundung** — Dungeon-Züge und -Ereignisse, Wachen, Wetter nach
   Jahreszeit, Reiseplaner (Pfad, Entfernung, Gelände, Wetter), Verirren,
   Vorräte, Lager aufschlagen bzw. überspringen für die ganze Gruppe
-  (Kapitel „Procedures“).
+  (Kapitel „Procedures“). Das Lager verbraucht eine Ration je Figur (ohne
+  Ration: Entbehrung, keine Erholung); gefundene Rationen gehen direkt in die
+  Tischmitte.
 - **Karte** — Bild laden, Figuren setzen (verbundene Spieler:innen per Klick,
   dazu Marker und aufgedeckte Gegner), Distanzen messen, Zauberradien
   einzeichnen und Nebel des Krieges steuern. Mehrere benannte Karten;

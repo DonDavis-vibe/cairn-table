@@ -6,7 +6,8 @@ import {
   SEASONS, WATCHES, PATHS, DISTANCES, TERRAINS, rollEvent, rollWeather, weatherEffect,
   travelPlan, rollLost, rollSupply, advanceWatch,
 } from '../rules/procedures.js';
-import { GM_REST, GM_FATIGUE, GM_DEPRIVED } from '../multiplayer/protocol.js';
+import { GM_CAMP, GM_FATIGUE, GM_DEPRIVED } from '../multiplayer/protocol.js';
+import { makeItem } from '../data/items.js';
 
 const SELECT = 'text-input';
 
@@ -39,6 +40,7 @@ export default function GmProcedures({ mp }) {
   const [supplyPeople, setSupplyPeople] = useState(1);
   const [supplyBonus, setSupplyBonus] = useState(0);
   const [supplyResult, setSupplyResult] = useState(null);
+  const [supplyStashed, setSupplyStashed] = useState(false);
 
   const log = (text, tone = 'gm') => mp.logGmAction({ text: `${t('gm.warden')}: ${text}`, tone, cmd: 'gm' });
   const die = t('dice.die');
@@ -100,12 +102,20 @@ export default function GmProcedures({ mp }) {
   const doRollSupply = () => {
     const r = rollSupply(Number(supplyPeople) || 1, Number(supplyBonus) || 0);
     setSupplyResult(r);
+    setSupplyStashed(false);
     log(t('proc.supplyLog', { die: `${die}${r.sides}`, n: r.rations }), 'ok');
+  };
+
+  // Gefundene Rationen in die Tischmitte legen (je eine Ration = 3 Nutzungen).
+  const stashSupply = () => {
+    for (let i = 0; i < supplyResult.rations; i += 1) mp.stashAdd(makeItem('rations'));
+    setSupplyStashed(true);
+    log(t('proc.stashedLog', { n: supplyResult.rations }), 'ok');
   };
 
   // --- Lager ---
   const makeCamp = () => {
-    mp.sendGmCommand(null, { cmd: GM_REST, kind: 'night' });
+    mp.sendGmCommand(null, { cmd: GM_CAMP });
     log(t('proc.campLog'), 'ok');
     setP({ sleepDeprived: false });
   };
@@ -234,6 +244,11 @@ export default function GmProcedures({ mp }) {
             </label>
             <button type="button" className="btn btn-sm" onClick={doRollSupply}><Dices size={13} /> {t('proc.rollSupply')}</button>
             {supplyResult ? <strong>{die}{supplyResult.sides}: {t('proc.rations', { n: supplyResult.rations })}</strong> : null}
+            {supplyResult ? (
+              <button type="button" className="btn btn-sm btn-ghost" onClick={stashSupply} disabled={supplyStashed}>
+                {supplyStashed ? t('proc.stashed') : t('proc.toStash')}
+              </button>
+            ) : null}
           </div>
 
           <div className="combat-bar">

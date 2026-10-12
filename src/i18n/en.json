@@ -608,8 +608,8 @@
   "proc.camp": "Camp",
   "proc.makeCamp": "Make camp",
   "proc.skipCamp": "Move on without sleep",
-  "proc.campHint": "Make camp: everyone (and every mount) consumes a Ration, a lookout rotation keeps the party safe, and a night's rest clears all Fatigue. Tick the Rations off on each sheet. Skipping camp adds a Fatigue and makes everyone Deprived; traveling sleep-deprived makes the terrain one step harder.",
-  "proc.campLog": "Camp: night's rest for everyone — each consumes a Ration.",
+  "proc.campHint": "Make camp: everyone eats a Ration (the sheet ticks it off), a lookout rotation keeps the party safe, and a night's rest clears all Fatigue. Without a Ration a character becomes Deprived and recovers nothing; mounts need feed too. Skipping camp adds a Fatigue and makes everyone Deprived; traveling sleep-deprived makes the terrain one step harder.",
+  "proc.campLog": "Camp: everyone eats a Ration and rests the night.",
   "proc.skipLog": "No camp: everyone adds a Fatigue and is Deprived.",
   "dt.title": "Downtime",
   "dt.rules": "Between sessions, pursue goals. The Warden sets 1–5 Milestones per goal; each costs one Downtime Action plus its Cost (gold, resources, reputation, or a loss). Only one action at a time, and not in unsafe conditions or while recovering.",
@@ -649,5 +649,14 @@
   "dt.log.complete": "Goal reached: {title}",
   "dt.log.reduced": "Downtime — cost of “{milestone}” reduced: WIL save {roll}",
   "dt.log.notReduced": "Downtime — cost of “{milestone}” stays: WIL save {roll}",
-  "dt.log.phase": "New downtime begins."
+  "dt.log.phase": "New downtime begins.",
+  "rest.camp": "Camp",
+  "rest.campHint": "Eat a Ration, then a night's rest. No Ration: you become Deprived and recover nothing.",
+  "camp.log.fed": "ate a Ration ({left} uses left), rested — HP and Fatigue restored.",
+  "camp.log.hungry": "no Ration — Deprived, no rest.",
+  "camp.rations": "Rations",
+  "camp.rationsTitle": "Ration uses left",
+  "proc.toStash": "Put in the stash",
+  "proc.stashed": "In the stash",
+  "proc.stashedLog": "{n} Rations put in the stash."
 }

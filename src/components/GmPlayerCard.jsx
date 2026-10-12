@@ -5,6 +5,7 @@ import {
 import { IconSwords, IconCoins, IconTriangleAlert } from './icons.jsx';
 import { useLang, loc } from '../i18n/index.jsx';
 import { DOWNTIME_KINDS, newGoal, goalProgress } from '../rules/downtime.js';
+import { rationsLeft } from '../rules/rations.js';
 import { readJSON, writeJSON } from '../utils/storage.js';
 import {
   ATTR_KEYS, ALL_SLOTS, itemSlotCost, armorOf,
@@ -88,6 +89,7 @@ export default function GmPlayerCard({ peerId, character: c, mp }) {
         ))}
         <span className="gm-attr"><IconCoins size={12} /> <b>{c.gp ?? 0}</b></span>
         <span className="gm-attr">{t('item.armor')} <b>{armorOf(c)}</b></span>
+        <span className={`gm-attr${rationsLeft(c) === 0 ? ' zero' : ''}`} title={t('camp.rationsTitle')}>{t('camp.rations')} <b>{rationsLeft(c)}</b></span>
         <span className="gm-attr">{used}/10</span>
       </div>
 

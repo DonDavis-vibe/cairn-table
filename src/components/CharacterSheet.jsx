@@ -15,7 +15,7 @@ import { applyRest } from '../rules/rest.js';
 import { resolveDamage, resolveAttributeDamage, heal } from '../rules/combat.js';
 import {
   GM_DAMAGE, GM_HEAL, GM_GOLD, GM_SAVE, GM_FATIGUE, GM_CONDITION, GM_DEPRIVED, GM_PANICKED, GM_REST,
-  GM_GIVE, GM_WHISPER, GM_BROADCAST, GM_WEBHOOK, GM_DOWNTIME,
+  GM_GIVE, GM_WHISPER, GM_BROADCAST, GM_WEBHOOK, GM_DOWNTIME, GM_CAMP,
 } from '../multiplayer/protocol.js';
 import { setWebhook, shareSave, shareEvent } from '../utils/discord.js';
 import { TRAIT_KEYS, TRAIT_TABLES, traitSummary } from '../data/tables.js';
@@ -26,6 +26,7 @@ import CombatPrompt from './CombatPrompt.jsx';
 import Downtime from './Downtime.jsx';
 import { scarNoteText } from '../utils/scarNotes.js';
 import { sanitizeGoal } from '../rules/downtime.js';
+import { makeCamp } from '../rules/rations.js';
 import Portrait from './Portrait.jsx';
 import Stash from './Stash.jsx';
 import PartyView from './PartyView.jsx';
@@ -141,6 +142,12 @@ export default function CharacterSheet({ character, setCharacter, mp = null, not
       say(`${t(`rest.${gmCommand.kind}`)} — ${t(r.msg.key, r.msg.vars)}`, r.blocked ? 'warn' : 'ok');
       onEvent?.({ kind: 'rest', restKind: gmCommand.kind, text: t(r.msg.key, r.msg.vars) });
       (r.notes || []).forEach((n) => say(scarNoteText(n, t, lang), 'warn'));
+    } else if (cmd === GM_CAMP) {
+      const r = makeCamp(character);
+      setCharacter(r.character);
+      const text = t(r.msg.key, r.msg.vars);
+      say(`${t('rest.camp')} — ${text}`, r.fed ? 'ok' : 'bad');
+      onEvent?.({ kind: 'rest', restKind: 'night', text });
     } else if (cmd === GM_DOWNTIME && gmCommand.goal) {
       const goal = sanitizeGoal(gmCommand.goal);
       setCharacter((c) => ({ ...c, downtime: [...(c.downtime || []), goal] }));
@@ -268,6 +275,15 @@ export default function CharacterSheet({ character, setCharacter, mp = null, not
     (r.notes || []).forEach((n) => pushLog({ kind: 'warn', text: scarNoteText(n, t, lang) }));
   };
 
+  // Lager: eine Ration essen + Nachtruhe (ohne Ration: Entbehrung, keine Erholung).
+  const camp = () => {
+    const r = makeCamp(character);
+    setCharacter(r.character);
+    const text = t(r.msg.key, r.msg.vars);
+    pushLog({ kind: r.fed ? 'ok' : 'bad', text: `${t('rest.camp')} — ${text}` });
+    onEvent?.({ kind: 'rest', restKind: 'night', text });
+  };
+
   const petty = pettyItems(character);
   const [pettyMenu, setPettyMenu] = useState(false);
   const partyNpcs = mp?.role === 'player' ? (mp.partyNpcs || []) : [];
@@ -326,6 +342,7 @@ export default function CharacterSheet({ character, setCharacter, mp = null, not
             <button type="button" className="btn btn-ghost" onClick={() => rest('short')}>{t('rest.short')}</button>
             <button type="button" className="btn btn-ghost" onClick={() => rest('night')}>{t('rest.night')}</button>
             <button type="button" className="btn btn-ghost" onClick={() => rest('week')}>{t('rest.week')}</button>
+            <button type="button" className="btn btn-ghost" onClick={camp} title={t('rest.campHint')}>{t('rest.camp')}</button>
           </div>
         </Panel>
 

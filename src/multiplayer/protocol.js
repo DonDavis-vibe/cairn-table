@@ -48,6 +48,7 @@ export const GM_CONDITION = 'condition'; // { key } Zustand zuweisen
 export const GM_DEPRIVED = 'deprived'; // { on }
 export const GM_PANICKED = 'panicked'; // { on }
 export const GM_REST = 'rest'; //       { kind: 'short'|'night'|'week' }
+export const GM_CAMP = 'camp'; //       {} Lager: Ration essen + Nachtruhe
 export const GM_GIVE = 'give'; //       { item }
 export const GM_DOWNTIME = 'downtime'; // { goal } Downtime-Ziel mit Meilensteinen vergeben
 export const GM_WHISPER = 'whisper'; // { text }

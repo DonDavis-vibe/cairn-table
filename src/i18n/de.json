@@ -608,8 +608,8 @@
   "proc.camp": "Lager",
   "proc.makeCamp": "Lager aufschlagen",
   "proc.skipCamp": "Ohne Schlaf weiter",
-  "proc.campHint": "Lager: Alle (und alle Reittiere) verbrauchen eine Ration, eine Wachrotation sichert die Gruppe, und eine Nachtruhe entfernt alle Erschöpfung. Die Rationen auf den Bögen abhaken. Wer das Lager überspringt, erhält Erschöpfung und Entbehrung; Reisen ohne Schlaf macht das Gelände eine Stufe schwerer.",
-  "proc.campLog": "Lager: Nachtruhe für alle — jede:r verbraucht eine Ration.",
+  "proc.campHint": "Lager: Alle essen eine Ration (der Bogen hakt sie ab), eine Wachrotation sichert die Gruppe, und die Nachtruhe entfernt alle Erschöpfung. Ohne Ration droht Entbehrung ohne Erholung; Reittiere brauchen Futter. Wer das Lager überspringt, erhält Erschöpfung und Entbehrung; Reisen ohne Schlaf macht das Gelände eine Stufe schwerer.",
+  "proc.campLog": "Lager: alle essen eine Ration und ruhen die Nacht.",
   "proc.skipLog": "Kein Lager: alle erhalten 1 Erschöpfung und Entbehrung.",
   "dt.title": "Downtime",
   "dt.rules": "Zwischen den Sitzungen verfolgst du Ziele. Der Warden legt je Ziel 1–5 Meilensteine fest; jeder kostet eine Downtime-Aktion plus Kosten (Gold, Ressourcen, Ruf oder einen Verlust). Nur eine Aktion auf einmal, nicht unter unsicheren Bedingungen und nicht während der Genesung.",
@@ -649,5 +649,14 @@
   "dt.log.complete": "Ziel erreicht: {title}",
   "dt.log.reduced": "Downtime — Kosten von „{milestone}“ gesenkt: WIL-Rettungswurf {roll}",
   "dt.log.notReduced": "Downtime — Kosten von „{milestone}“ bleiben: WIL-Rettungswurf {roll}",
-  "dt.log.phase": "Eine neue Downtime beginnt."
+  "dt.log.phase": "Eine neue Downtime beginnt.",
+  "rest.camp": "Lager",
+  "rest.campHint": "Eine Ration essen, dann Nachtruhe. Ohne Ration: Entbehrung, keine Erholung.",
+  "camp.log.fed": "hat eine Ration gegessen ({left} Nutzungen übrig) und geruht — TP und Erschöpfung hergestellt.",
+  "camp.log.hungry": "keine Ration — Entbehrung, keine Erholung.",
+  "camp.rations": "Rationen",
+  "camp.rationsTitle": "Verbleibende Ration-Nutzungen",
+  "proc.toStash": "In die Tischmitte",
+  "proc.stashed": "In der Tischmitte",
+  "proc.stashedLog": "{n} Rationen in die Tischmitte gelegt."
 }
