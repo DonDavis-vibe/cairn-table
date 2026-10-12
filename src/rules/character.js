@@ -56,6 +56,8 @@ export function blankCharacter() {
 
     scars: [],                   // [{ hpLost, name, at }]
     critical: false,             // kritisch verletzt: kann nur kriechen, stirbt in 1 h ohne Hilfe
+    doomed: false,               // Narbe #12: misslingt der naechste Save gegen kritischen Schaden, stirbt man
+    pendingScarFx: [],           // Narbeneffekte, die erst bei der Wochenrast greifen (rules/scars.js)
 
     slots: Object.fromEntries(ALL_SLOTS.map((s) => [s, null])),
     items: {},                   // itemId -> Item
@@ -90,6 +92,8 @@ export function normalizeCharacter(raw) {
   merged.deprived = !!raw.deprived;
   merged.critical = !!raw.critical;
   merged.panicked = !!raw.panicked;
+  merged.doomed = !!raw.doomed;
+  merged.pendingScarFx = Array.isArray(raw.pendingScarFx) ? raw.pendingScarFx : [];
   merged.portrait = typeof raw.portrait === 'string' ? raw.portrait : '';
   merged.schemaVersion = SCHEMA_VERSION;
   return merged;

@@ -39,7 +39,7 @@ export const T_MAP_MOVE = 'mapMove'; //     { id, x, y, propose? }  eigene Figur
 // Warden -> Spieler:in
 export const T_MAP_MOVEFREE = 'mapMoveFree'; // { free }  Zuege ohne Bestaetigung erlaubt?
 
-export const GM_DAMAGE = 'damage'; //   { amount, target: 'hp'|'str'|'dex'|'wil' }
+export const GM_DAMAGE = 'damage'; //   { amount, target: 'hp'|'str'|'dex'|'wil', armor?: bool }  armor: Ruestung des Ziels vom TP-Schaden abziehen
 export const GM_HEAL = 'heal'; //       { amount, target: 'hp'|'str'|'dex'|'wil' }
 export const GM_GOLD = 'gold'; //       { amount }
 export const GM_SAVE = 'save'; //       { attr, reason }

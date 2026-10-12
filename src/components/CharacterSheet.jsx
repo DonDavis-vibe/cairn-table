@@ -5,7 +5,7 @@ import {
 } from '@dnd-kit/core';
 import { useLang, loc } from '../i18n/index.jsx';
 import { Panel, Field, TextInput } from './ui.jsx';
-import { ATTR_KEYS } from '../rules/character.js';
+import { ATTR_KEYS, armorOf } from '../rules/character.js';
 import { addItemAt, removeItem, pettyItems, tryMove, firstFreeFit } from '../rules/inventory.js';
 import AddItemMenu from './AddItemMenu.jsx';
 import { makeFatigue, makeCondition, makeItem } from '../data/items.js';
@@ -23,6 +23,7 @@ import AttributeBox from './AttributeBox.jsx';
 import ResourceBar from './ResourceBar.jsx';
 import DamagePanel from './DamagePanel.jsx';
 import CombatPrompt from './CombatPrompt.jsx';
+import { scarNoteText } from '../utils/scarNotes.js';
 import Portrait from './Portrait.jsx';
 import Stash from './Stash.jsx';
 import PartyView from './PartyView.jsx';
@@ -83,14 +84,18 @@ export default function CharacterSheet({ character, setCharacter, mp = null, not
     }
     if (cmd === GM_DAMAGE) {
       if (gmCommand.target === 'hp') {
-        const r = resolveDamage(character, gmCommand.amount);
+        // Warden schickt den Wurf vor Ruestung: hier mit der aktuellen Ruestung abziehen.
+        const armor = gmCommand.armor ? armorOf(character) : 0;
+        const hit = Math.max(0, gmCommand.amount - armor);
+        const r = resolveDamage(character, hit);
         setCharacter(r.character);
         let note = '';
         if (r.death) note = t('combat.dead');
         else if (r.scar) { note = t('combat.scarPending'); setCombatPrompt({ kind: 'scar', hpLost: r.scar.hpLost }); }
         else if (r.strSave) { note = t('combat.savePending'); setCombatPrompt({ kind: 'save', target: r.strSave.target }); }
-        say(`−${gmCommand.amount} ${t('res.hp')}${note ? ` · ${note}` : ''}`, 'bad');
-        onEvent?.({ kind: 'damage', amount: gmCommand.amount, target: 'hp', note });
+        const armorNote = armor > 0 ? ` (${gmCommand.amount} − ${armor} ${t('dice.armor')})` : '';
+        say(`−${hit} ${t('res.hp')}${armorNote}${note ? ` · ${note}` : ''}`, 'bad');
+        onEvent?.({ kind: 'damage', amount: hit, target: 'hp', note });
       } else {
         const r = resolveAttributeDamage(character, gmCommand.target, gmCommand.amount);
         setCharacter(r.character);
@@ -133,6 +138,7 @@ export default function CharacterSheet({ character, setCharacter, mp = null, not
       setCharacter(r.character);
       say(`${t(`rest.${gmCommand.kind}`)} — ${t(r.msg.key, r.msg.vars)}`, r.blocked ? 'warn' : 'ok');
       onEvent?.({ kind: 'rest', restKind: gmCommand.kind, text: t(r.msg.key, r.msg.vars) });
+      (r.notes || []).forEach((n) => say(scarNoteText(n, t, lang), 'warn'));
     } else if (cmd === GM_GIVE && gmCommand.item) {
       setCharacter((c) => {
         const it = gmCommand.item.itemId ? gmCommand.item : makeItem(gmCommand.item.key || null, gmCommand.item);
@@ -253,6 +259,7 @@ export default function CharacterSheet({ character, setCharacter, mp = null, not
     setCharacter(r.character);
     pushLog({ kind: r.blocked ? 'warn' : 'ok', text: `${t(`rest.${kind}`)} — ${t(r.msg.key, r.msg.vars)}` });
     onEvent?.({ kind: 'rest', restKind: kind, text: t(r.msg.key, r.msg.vars) });
+    (r.notes || []).forEach((n) => pushLog({ kind: 'warn', text: scarNoteText(n, t, lang) }));
   };
 
   const petty = pettyItems(character);
@@ -393,6 +400,8 @@ export default function CharacterSheet({ character, setCharacter, mp = null, not
                 </li>
               ))}
             </ul>
+            {character.doomed ? <p className="res-warn">{t('scar.badge.doomed')}</p> : null}
+            {character.pendingScarFx?.length ? <p className="res-slots">{t('scar.badge.pending', { n: character.pendingScarFx.length })}</p> : null}
           </Panel>
         ) : null}
 
@@ -413,6 +422,7 @@ export default function CharacterSheet({ character, setCharacter, mp = null, not
           {combatPrompt ? (
             <CombatPrompt
               prompt={combatPrompt}
+              character={character}
               setCharacter={setCharacter}
               pushLog={pushLog}
               onEvent={onEvent}

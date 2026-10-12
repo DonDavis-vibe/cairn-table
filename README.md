@@ -41,6 +41,8 @@ room and shares a link — the connection runs directly between browsers
 - **Dice** — saves (d20 ≤ attribute, 1 always passes, 20 always fails), damage
   rolls (die choice, impaired/enhanced, multiple attackers, armor deduction),
   die of fate. Automatic damage chain: armor → HP → STR → save → scar/death.
+  Scar effects (max HP, attributes, Deprived, Doomed) are rolled and applied;
+  "after recovery" effects land on the week's rest.
 - **Rest** — a short rest restores HP fully; a night's rest also clears all
   Fatigue; a week's rest restores attributes and the critical condition too.
 
@@ -54,7 +56,8 @@ room and shares a link — the connection runs directly between browsers
 - **Shared round log**, announcements, and an animated dice tray (d20, d6,
   reaction, die of fate) mirrored to the whole table.
 - **Combat tracker** — foes from the **2e bestiary (84 creatures)** or your
-  own saved monsters, HP tracking, attack rolls, morale (WIL save),
+  own saved monsters, hits with armor → HP → STR → save, attack rolls, morale
+  (WIL save, with a hint on the first casualty and at half the group),
   detachments, round counter with a "first round: DEX save" hint.
 - **Map** — load an image, place tokens (connected players at a click, plus
   markers and revealed foes), measure distances, paint radii for spell

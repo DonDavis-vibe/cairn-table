@@ -41,7 +41,9 @@ zwischen den Browsern (WebRTC), ohne dass Spieldaten über einen Server laufen.
 - **Würfeln** — Rettungswurf (W20 ≤ Attribut, 1 gelingt immer, 20 misslingt
   immer), Schadenswurf (Würfelwahl, beeinträchtigt / verstärkt, mehrere
   Angreifer, Rüstungsabzug), Schicksalswürfel. Automatische Schadenskette
-  Rüstung → TP → STÄ → Rettungswurf → Narbe/Tod.
+  Rüstung → TP → STÄ → Rettungswurf → Narbe/Tod. Narbeneffekte (max. TP,
+  Attribute, Entbehrung, „Verdammt“) werden gewürfelt und angewendet; Effekte
+  „nach der Genesung“ greifen bei der Wochenrast.
 - **Rast** — kurze Rast stellt die TP voll her; Nachtruhe entfernt zusätzlich
   alle Erschöpfung; Wochenrast stellt auch Attribute und den kritischen
   Zustand wieder her.
@@ -57,7 +59,8 @@ zwischen den Browsern (WebRTC), ohne dass Spieldaten über einen Server laufen.
 - **Geteiltes Runden-Log**, Ansagen und ein animierter Würfelteller (W20,
   W6, Reaktion, Schicksalswürfel) für den ganzen Tisch.
 - **Kampf-Tracker** — Gegner aus dem **2e-Bestiarium (84 Kreaturen)** oder
-  eigene gespeicherte Monster, TP-Verwaltung, Angriffswurf, Moral (WIL-RW),
+  eigene gespeicherte Monster, Treffer mit Rüstungsabzug → TP → STÄ → Rettungswurf,
+  Angriffswurf, Moral (WIL-RW, mit Hinweis beim ersten Ausfall und bei halber Gruppe),
   Abteilungen, Rundenzähler mit „Erste Runde: GES-Rettungswurf"-Hinweis.
 - **Karte** — Bild laden, Figuren setzen (verbundene Spieler:innen per Klick,
   dazu Marker und aufgedeckte Gegner), Distanzen messen, Zauberradien

@@ -6,6 +6,7 @@ import { IconSwords } from './icons.jsx';
 import { useLang, loc } from '../i18n/index.jsx';
 import { Field, TextInput } from './ui.jsx';
 import { rollDie, rollSave } from '../rules/dice.js';
+import { hitFoe, moraleTrigger } from '../rules/combat.js';
 import { CREATURES } from '../data/creatures.js';
 import { readJSON, writeJSON } from '../utils/storage.js';
 
@@ -39,6 +40,9 @@ export default function GmCombatTracker({ mp, onRoll = null }) {
   const [round, setRound] = useState(0);
   const [foes, setFoes] = useState([]);
   const [q, setQ] = useState('');
+  const [hitAmt, setHitAmt] = useState({}); // foeId -> Schaden vor dem Treffer
+  const [subArmor, setSubArmor] = useState(true); // Gegner-Ruestung vom Treffer abziehen
+  const [moraleHint, setMoraleHint] = useState(null); // null | 'first' | 'half'
   const [custom, setCustom] = useState({
     name: '', hp: 4, armor: 0, dmg: 6, wil: 8, detachment: false,
   });
@@ -72,7 +76,7 @@ export default function GmCombatTracker({ mp, onRoll = null }) {
 
   const add = (foe) => setFoes((f) => [...f, foe]);
   const remove = (id) => setFoes((f) => f.filter((x) => x.id !== id));
-  const setHp = (id, hp) => setFoes((f) => f.map((x) => (x.id === id ? { ...x, hp } : x)));
+  const setHp = (id, hp) => setFoes((f) => f.map((x) => (x.id === id ? { ...x, hp, ...(hp > 0 ? { dead: false } : {}) } : x)));
   const toggleVisible = (id) => setFoes((f) => f.map((x) => (x.id === id ? { ...x, visible: !x.visible } : x)));
   const toggleDetach = (id) => setFoes((f) => f.map((x) => (x.id === id ? { ...x, detachment: !x.detachment } : x)));
 
@@ -102,12 +106,46 @@ export default function GmCombatTracker({ mp, onRoll = null }) {
     onRoll?.({ label: `${name} · ${t('gm.morale')}`, value: d, max: 20, tone: ok ? 'ok' : 'bad', verdict });
   };
 
+  // Treffer auf einen Gegner: Schadenskette wie bei den Spieler:innen
+  // (Ruestung -> TP -> Ueberschuss auf STAE -> STAE-Save). Der Save wird gleich gewuerfelt.
+  const hit = (foe) => {
+    const raw = Math.max(0, Number(hitAmt[foe.id]) || 0);
+    const r = hitFoe(foe, raw, { subtractArmor: subArmor });
+    const name = loc(foe.name, lang);
+    const armorPart = r.armor > 0 ? ` (${raw} − ${r.armor} ${t('dice.armor')})` : '';
+    let next = r.foe;
+    const lines = [t('gm.foe.hit', { name, dmg: r.dmg, armor: armorPart, hp: next.hp })];
+    if (r.dead) {
+      lines.push(t('gm.foe.dead', { name }));
+    } else if (r.strSave) {
+      const s = rollSave(r.strSave.target);
+      if (!s.ok) next = { ...next, critical: true };
+      const verdict = s.ok ? t('gm.foe.saveOk') : t(foe.detachment ? 'gm.foe.routed' : 'gm.foe.critical');
+      lines.push(t('gm.foe.strSave', {
+        overflow: r.overflow, str: r.strSave.target, die: `${t('dice.die')}20`, roll: s.d, cmp: s.ok ? '≤' : '>', verdict,
+      }));
+    } else if (r.down) {
+      lines.push(t('gm.foe.down', { name }));
+    }
+    const nextFoes = foes.map((f) => (f.id === foe.id ? next : f));
+    setFoes(nextFoes);
+    setHitAmt((h) => ({ ...h, [foe.id]: '' }));
+    log(lines.join(' · '), r.dead || r.down ? 'bad' : 'gm');
+    const trig = moraleTrigger(foes, nextFoes);
+    if (trig) setMoraleHint(trig);
+  };
+  const moraleAll = () => {
+    foes.filter((x) => x.hp > 0 && !x.dead).forEach(morale);
+    setMoraleHint(null);
+  };
+
   const nextRound = () => {
     const n = round + 1;
     setRound(n);
+    setMoraleHint(null);
     log(n === 1 ? t('gm.round1') : t('gm.roundN', { n }), 'gm');
   };
-  const reset = () => { setRound(0); setFoes([]); };
+  const reset = () => { setRound(0); setFoes([]); setMoraleHint(null); setHitAmt({}); };
 
   return (
     <div className="combat">
@@ -116,12 +154,25 @@ export default function GmCombatTracker({ mp, onRoll = null }) {
           <ChevronRight size={14} /> {round === 0 ? t('gm.startCombat') : t('gm.nextRound')}
         </button>
         {round > 0 ? <span className="combat-round">{t('gm.roundLabel', { n: round })}</span> : null}
+        {foes.length ? (
+          <label className="radio-line" title={t('gm.foeSubArmorHint')}>
+            <input type="checkbox" checked={subArmor} onChange={(e) => setSubArmor(e.target.checked)} />
+            {t('gm.foeSubArmor')}
+          </label>
+        ) : null}
         {round > 0 || foes.length ? (
           <button type="button" className="btn btn-sm btn-ghost" onClick={reset}><RotateCcw size={13} /> {t('common.reset')}</button>
         ) : null}
       </div>
 
       {round === 1 ? <p className="combat-hint">{t('gm.round1Hint')}</p> : null}
+      {moraleHint ? (
+        <p className="combat-hint combat-morale-hint">
+          {t(`gm.moraleHint.${moraleHint}`)}{' '}
+          <button type="button" className="btn btn-sm" onClick={moraleAll}>{t('gm.moraleAll')}</button>{' '}
+          <button type="button" className="btn btn-sm btn-ghost" onClick={() => setMoraleHint(null)}>{t('common.dismiss')}</button>
+        </p>
+      ) : null}
 
       {foes.length === 0 ? <p className="combat-empty">{t('gm.noFoes')}</p> : null}
       <ul className="combat-list">
@@ -130,6 +181,7 @@ export default function GmCombatTracker({ mp, onRoll = null }) {
             <div className="combat-foe-head">
               {foe.hp <= 0 ? <Skull size={14} /> : null}
               <strong>{loc(foe.name, lang)}</strong>
+              {foe.dead ? <span className="badge badge-dmg">{t('gm.foeDead')}</span> : foe.critical ? <span className="badge badge-dmg">{t('gm.foeCritical')}</span> : null}
               <button
                 type="button"
                 className={`badge combat-detach${foe.detachment ? ' on' : ''}`}
@@ -161,6 +213,14 @@ export default function GmCombatTracker({ mp, onRoll = null }) {
               {loc(foe.attack, lang) !== '—' ? <span className="combat-atk">{loc(foe.attack, lang)}</span> : null}
             </div>
             <div className="combat-foe-actions">
+              <label className="mini-num">{t('gm.hitDamage')}
+                <input
+                  type="number" min="0" value={hitAmt[foe.id] ?? ''}
+                  onChange={(e) => setHitAmt((h) => ({ ...h, [foe.id]: e.target.value }))}
+                  onKeyDown={(e) => { if (e.key === 'Enter') hit(foe); }}
+                />
+              </label>
+              <button type="button" className="btn btn-sm" disabled={!(Number(hitAmt[foe.id]) > 0)} onClick={() => hit(foe)}>{t('gm.hit')}</button>
               {foe.dmg ? <button type="button" className="btn btn-bad btn-sm" onClick={() => attack(foe)}><IconSwords size={12} /> {t('gm.rollAttack')}</button> : null}
               <button type="button" className="btn btn-sm" onClick={() => morale(foe)}>{t('gm.morale')}</button>
             </div>

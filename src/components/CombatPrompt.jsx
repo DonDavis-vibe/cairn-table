@@ -2,11 +2,13 @@ import { Dices } from 'lucide-react';
 import { useLang, loc } from '../i18n/index.jsx';
 import { rollSave } from '../rules/dice.js';
 import { scarFor } from '../data/scars.js';
+import { applyScar, resolveDoomedSave } from '../rules/scars.js';
+import { scarNoteText } from '../utils/scarNotes.js';
 
 // Faelliger Wurf nach Schaden: STÄ-Rettungswurf gegen kritischen Schaden oder
 // Wurf auf der Narbentabelle. Wird sowohl vom eigenen Schadensblock als auch von
 // einem Warden-Schadensbefehl gefuellt.
-export default function CombatPrompt({ prompt, setCharacter, pushLog, onEvent, onClose }) {
+export default function CombatPrompt({ prompt, character, setCharacter, pushLog, onEvent, onClose }) {
   const { t, lang } = useLang();
 
   if (prompt.kind === 'save') {
@@ -17,6 +19,12 @@ export default function CombatPrompt({ prompt, setCharacter, pushLog, onEvent, o
       } else {
         setCharacter((c) => ({ ...c, critical: true }));
         pushLog({ kind: 'bad', text: `${t('combat.strSave')} ${t('dice.die')}20 ${s.d} > ${prompt.target} · ${t('dice.fail')} — ${t('res.critical')}` });
+      }
+      // Narbe #12 "Verdammt": dieser Save entscheidet ueber Leben und Tod.
+      if (character.doomed) {
+        const d = resolveDoomedSave(character, s.ok);
+        setCharacter(d.character);
+        d.notes.forEach((n) => pushLog({ kind: d.death ? 'bad' : 'ok', text: scarNoteText(n, t, lang) }));
       }
       onEvent?.({ kind: 'save', attr: 'str', roll: s.d, target: prompt.target, ok: s.ok, reason: t('combat.criticalShort') });
       onClose();
@@ -36,8 +44,13 @@ export default function CombatPrompt({ prompt, setCharacter, pushLog, onEvent, o
   // kind === 'scar'
   const scar = scarFor(prompt.hpLost);
   const record = () => {
-    setCharacter((c) => ({ ...c, scars: [...c.scars, { index: scar.index, name: loc(scar.name, lang), at: Date.now() }] }));
-    onEvent?.({ kind: 'scar', index: scar.index, name: loc(scar.name, lang) });
+    // Wuerfe laufen hier (nicht im State-Updater), damit sie nur einmal fallen.
+    const fx = applyScar(character, scar.index);
+    const entry = { index: scar.index, name: loc(scar.name, lang), at: Date.now() };
+    setCharacter({ ...fx.character, scars: [...fx.character.scars, entry] });
+    pushLog({ kind: 'bad', text: `#${scar.index} ${entry.name}` });
+    fx.notes.forEach((n) => pushLog({ kind: 'warn', text: scarNoteText(n, t, lang) }));
+    onEvent?.({ kind: 'scar', index: scar.index, name: entry.name });
     onClose();
   };
   return (

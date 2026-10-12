@@ -31,6 +31,7 @@ export default function GmPlayerCard({ peerId, character: c, mp }) {
   const [open, setOpen] = useState(false);
   const [amount, setAmount] = useState(1);
   const [dmgTarget, setDmgTarget] = useState('hp');
+  const [subArmor, setSubArmor] = useState(true); // Rüstung des Ziels vom TP-Schaden abziehen
   const [saveAttr, setSaveAttr] = useState('str');
   const [whisper, setWhisper] = useState('');
   const [note, setNote] = useState(() => readJSON(NOTE_KEY(c.id), '') || '');
@@ -101,9 +102,15 @@ export default function GmPlayerCard({ peerId, character: c, mp }) {
           <option value="hp">{t('res.hp')}</option>
           {ATTR_KEYS.map((k) => <option key={k} value={k}>{t(`attr.${k}`)}</option>)}
         </select>
-        <button type="button" className="btn btn-bad btn-sm" onClick={() => { send(GM_DAMAGE, { amount: amt, target: dmgTarget }); logg(`−${amt} ${tLabel(dmgTarget)}`, 'bad', true); }}>
+        <button type="button" className="btn btn-bad btn-sm" onClick={() => { send(GM_DAMAGE, { amount: amt, target: dmgTarget, armor: dmgTarget === 'hp' && subArmor }); logg(`−${amt} ${tLabel(dmgTarget)}`, 'bad', true); }}>
           <IconSwords size={13} /> {t('gm.damage')}
         </button>
+        {dmgTarget === 'hp' ? (
+          <label className="radio-line" title={t('gm.subArmorHint')}>
+            <input type="checkbox" checked={subArmor} onChange={(e) => setSubArmor(e.target.checked)} />
+            {t('gm.subArmor', { n: armorOf(c) })}
+          </label>
+        ) : null}
         <button type="button" className="btn btn-ok btn-sm" onClick={() => { send(GM_HEAL, { amount: amt, target: dmgTarget }); logg(`+${amt} ${tLabel(dmgTarget)}`, 'ok', true); }}>
           <HeartPulse size={13} /> {t('gm.heal')}
         </button>

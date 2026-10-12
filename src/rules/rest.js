@@ -10,6 +10,7 @@
 
 import { ATTR_KEYS } from './character.js';
 import { removeAllFatigue } from './inventory.js';
+import { applyPendingScarFx } from './scars.js';
 
 export const REST_KINDS = ['short', 'night', 'week'];
 
@@ -34,5 +35,7 @@ export function applyRest(character, kind) {
   let next = removeAllFatigue({ ...character, hp: { ...character.hp, current: character.hp.max } });
   next = { ...next, critical: false };
   for (const k of ATTR_KEYS) next[k] = { ...next[k], current: next[k].max };
-  return { character: next, msg: { key: 'rest.log.week', vars: {} } };
+  // Genesung abgeschlossen: verzoegerte Narbeneffekte (neue max. TP / GES) greifen jetzt.
+  const fx = applyPendingScarFx(next);
+  return { character: fx.character, msg: { key: 'rest.log.week', vars: {} }, notes: fx.notes };
 }

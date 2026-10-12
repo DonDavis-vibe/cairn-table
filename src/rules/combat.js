@@ -93,3 +93,43 @@ export function heal(character, target, amount) {
   }
   return character;
 }
+
+// Treffer auf einen Gegner (Bestiarium-Statblock: hp, armor, str). Dieselbe
+// Kette wie bei Spieler:innen, nur ohne Narben:
+//   Schaden - Ruestung -> TP; Ueberschuss unter 0 -> STAE; danach STAE-Save
+//   gegen kritischen Schaden (wuerfelt der Aufrufer); STAE 0 = vernichtet.
+// raw = Schaden VOR Ruestung; subtractArmor=false, wenn der Wurf schon netto ist.
+export function hitFoe(foe, raw, { subtractArmor = true } = {}) {
+  const armor = subtractArmor ? Math.max(0, foe.armor || 0) : 0;
+  const dmg = Math.max(0, Math.round(raw) - armor);
+  const hp0 = Math.max(0, foe.hp);
+  const after = hp0 - dmg;
+  const next = { ...foe, hp: Math.max(0, after) };
+  const result = {
+    foe: next, dmg, armor, hpLost: Math.min(hp0, dmg), overflow: 0,
+    down: hp0 > 0 && next.hp === 0, // gerade ausgefallen (TP auf 0)
+    strSave: null, dead: false,
+  };
+  if (after >= 0) return result;
+  result.overflow = -after;
+  const str = Math.max(0, (foe.str ?? 10) - result.overflow);
+  next.str = str;
+  if (str === 0) { next.dead = true; result.dead = true; result.down = true; return result; }
+  result.strSave = { target: str };
+  return result;
+}
+
+// Wie viele Gegner sind ausgefallen (TP 0 oder tot)?
+export const foesDown = (foes) => foes.filter((f) => f.hp <= 0 || f.dead).length;
+
+// Moral-Hinweis nach einem Ausfall: beim ersten Ausfall und wenn mindestens
+// die Haelfte der Gruppe ausgefallen ist (Warden entscheidet, ob es gilt).
+export function moraleTrigger(foesBefore, foesAfter) {
+  const before = foesDown(foesBefore);
+  const after = foesDown(foesAfter);
+  const total = foesAfter.length;
+  if (after <= before || after >= total) return null; // niemand neu ausgefallen / alle weg
+  if (before === 0) return 'first';
+  if (after * 2 >= total && before * 2 < total) return 'half';
+  return null;
+}
