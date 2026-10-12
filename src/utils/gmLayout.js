@@ -5,7 +5,7 @@ import { readJSON, writeJSON } from './storage.js';
 const KEY = 'cairn-table-gm-layout';
 
 export const DEFAULT_GM_LAYOUT = {
-  left: ['combat', 'map', 'stash', 'containers', 'generators', 'party'],
+  left: ['combat', 'procedures', 'map', 'stash', 'containers', 'generators', 'party'],
   right: ['warden', 'log'],
 };
 

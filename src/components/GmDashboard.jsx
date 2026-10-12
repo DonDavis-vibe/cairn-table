@@ -17,6 +17,7 @@ import { loadGmLayout, saveGmLayout, resetGmLayout } from '../utils/gmLayout.js'
 import GmPlayerCard from './GmPlayerCard.jsx';
 import GmPartyOverview from './GmPartyOverview.jsx';
 import GmCombatTracker from './GmCombatTracker.jsx';
+import GmProcedures from './GmProcedures.jsx';
 import GmGenerators from './GmGenerators.jsx';
 import Stash from './Stash.jsx';
 import Containers from './Containers.jsx';
@@ -203,6 +204,7 @@ export default function GmDashboard({ mp }) {
       ),
     },
     combat: { title: t('gm.combat'), node: <GmCombatTracker mp={mp} onRoll={stageRoll} /> },
+    procedures: { title: t('proc.title'), node: <GmProcedures mp={mp} /> },
     map: { title: t('map.title'), node: <MapPanel mp={mp} /> },
     stash: { title: t('stash.title'), node: <Stash mp={mp} /> },
     containers: { title: t('container.title'), node: <Containers mp={mp} /> },

@@ -42,7 +42,7 @@ export const BACKGROUNDS = [
     name: { de: 'Bader-Chirurg', en: 'Barber-Surgeon' },
     blurb: { de: 'Zwischen Heiler und Schinder – du kennst die Gebrechlichkeit des Fleisches.', en: 'Between healer and harrower – you know the frailty of flesh.' },
     names: ['Wilmot', 'Patch', 'Lancet', 'Sawbones', 'Theo', 'Cutwell', 'Humor', 'Landsford', 'Goodeye', 'Johanna'],
-    gear: [G('rations'), G('torch'), C({ de: 'Knochensäge (W6)', en: 'Bonesaw (d6)', damage: 'd6' }), G('bandages'), C({ de: 'Blutegel (heilt 1 STÄ, 3×)', en: 'Leech (restores 1 STR, 3 uses)', usage: 3 }), C({ de: 'Fleckige Arztkleidung', en: 'Stained medical finery', petty: true })],
+    gear: [G('rations'), G('torch'), C({ de: 'Amputationsmesser (W6)', en: 'Amputation knife (d6)', damage: 'd6' }), G('bandages'), C({ de: 'Blutegel (heilt 1 STÄ, 3×)', en: 'Leech (restores 1 STR, 3 uses)', usage: 3 }), C({ de: 'Fleckige Arztkleidung', en: 'Stained medical finery', petty: true })],
     tables: [
       { q: { de: 'Wie hast du dich „verbessert"?', en: 'How have you "improved" yourself?' }, rolls: [
         S('Ersatzauge: vergrößert, Fernrohr, Nachtsicht. Kein Metall am Kopf, Magnete = Entbehrung.', 'Replacement eye: magnifies, telescope, night vision. No metal on head; magnets deprive you.'),
@@ -91,7 +91,7 @@ export const BACKGROUNDS = [
     id: 'bonekeeper',
     name: { de: 'Knochenhüter', en: 'Bonekeeper' },
     blurb: { de: 'Hirte der Verstorbenen – du hörst das letzte Flüstern der Toten.', en: 'A shepherd to the departed; you hear the final whispers of the dead.' },
-    names: ['Rook', 'Ebon', 'Moro', 'Yew', 'Pall', 'Leth', 'Bea', 'Barnaby', 'Vesper', 'Leder'],
+    names: ['Rook', 'Ebon', 'Moro', 'Yew', 'Pall', 'Leth', 'Lenore', 'Barnaby', 'Vesper', 'Leder'],
     gear: [G('rations'), G('lantern'), G('oil_can'), C({ de: 'Pflock (W6)', en: 'Stake (d6)', damage: 'd6' }), C({ de: 'Ketten (3 m)', en: 'Chains (10ft)' })],
     tables: [
       { q: { de: 'Was hast du den Toten genommen?', en: 'What did you take from the dead?' }, rolls: [

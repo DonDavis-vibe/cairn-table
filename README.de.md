@@ -62,6 +62,10 @@ zwischen den Browsern (WebRTC), ohne dass Spieldaten über einen Server laufen.
   eigene gespeicherte Monster, Treffer mit Rüstungsabzug → TP → STÄ → Rettungswurf,
   Angriffswurf, Moral (WIL-RW, mit Hinweis beim ersten Ausfall und bei halber Gruppe),
   Abteilungen, Rundenzähler mit „Erste Runde: GES-Rettungswurf"-Hinweis.
+- **Reise & Erkundung** — Dungeon-Züge und -Ereignisse, Wachen, Wetter nach
+  Jahreszeit, Reiseplaner (Pfad, Entfernung, Gelände, Wetter), Verirren,
+  Vorräte, Lager aufschlagen bzw. überspringen für die ganze Gruppe
+  (Kapitel „Procedures“).
 - **Karte** — Bild laden, Figuren setzen (verbundene Spieler:innen per Klick,
   dazu Marker und aufgedeckte Gegner), Distanzen messen, Zauberradien
   einzeichnen und Nebel des Krieges steuern. Mehrere benannte Karten;

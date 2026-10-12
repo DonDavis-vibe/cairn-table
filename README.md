@@ -59,6 +59,9 @@ room and shares a link — the connection runs directly between browsers
   own saved monsters, hits with armor → HP → STR → save, attack rolls, morale
   (WIL save, with a hint on the first casualty and at half the group),
   detachments, round counter with a "first round: DEX save" hint.
+- **Travel & exploration** — dungeon turns and events, watches, weather by season,
+  travel planner (path, distance, terrain, weather), getting lost, supply rolls,
+  make camp / skip camp for the whole party (Procedures chapter).
 - **Map** — load an image, place tokens (connected players at a click, plus
   markers and revealed foes), measure distances, paint radii for spell
   effects, and run the fog of war. Several named maps; everything stays in
