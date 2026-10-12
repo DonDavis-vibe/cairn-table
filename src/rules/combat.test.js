@@ -196,6 +196,9 @@ describe('moraleTrigger', () => {
     expect(moraleTrigger([f(0), f(0), f(0), f(3), f(3)], [f(0), f(0), f(0), f(0), f(3)])).toBeNull();
     expect(moraleTrigger([f(0), f(3)], [f(0), f(0)])).toBeNull();
   });
+  it('einzelner Gegner bei 0 TP: Moral', () => {
+    expect(moraleTrigger([f(2)], [f(0)])).toBe('lone');
+  });
   it('kein neuer Ausfall: kein Hinweis', () => {
     expect(moraleTrigger([f(3), f(3)], [f(2), f(3)])).toBeNull();
   });

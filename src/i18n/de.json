@@ -533,5 +533,6 @@
   "gm.foe.routed": "kritischer Schaden — die Abteilung ist zersprengt",
   "gm.moraleHint.first": "Erster Ausfall — Moral prüfen (WIL-Rettungswurf)?",
   "gm.moraleHint.half": "Die Hälfte der Gruppe ist ausgefallen — Moral prüfen (WIL-Rettungswurf)?",
-  "gm.moraleAll": "Moral für alle würfeln"
+  "gm.moraleAll": "Moral für alle würfeln",
+  "gm.moraleHint.lone": "Ein einzelner Gegner ist auf 0 TP gefallen — Moral prüfen (WIL-Rettungswurf)?"
 }

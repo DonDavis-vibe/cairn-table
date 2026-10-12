@@ -122,13 +122,16 @@ export function hitFoe(foe, raw, { subtractArmor = true } = {}) {
 // Wie viele Gegner sind ausgefallen (TP 0 oder tot)?
 export const foesDown = (foes) => foes.filter((f) => f.hp <= 0 || f.dead).length;
 
-// Moral-Hinweis nach einem Ausfall: beim ersten Ausfall und wenn mindestens
-// die Haelfte der Gruppe ausgefallen ist (Warden entscheidet, ob es gilt).
+// Moral-Hinweis nach einem Ausfall (Regeltext, NPCs -> Morale): Gegner muessen
+// bei ihrem ersten Ausfall und nochmals bei Verlust der Haelfte ihrer Zahl einen
+// WIL-Save bestehen; einzelne Gegner, wenn sie auf 0 TP fallen.
 export function moraleTrigger(foesBefore, foesAfter) {
   const before = foesDown(foesBefore);
   const after = foesDown(foesAfter);
   const total = foesAfter.length;
-  if (after <= before || after >= total) return null; // niemand neu ausgefallen / alle weg
+  if (after <= before) return null; // niemand neu ausgefallen
+  if (total === 1) return 'lone';
+  if (after >= total) return null; // alle weg — nichts mehr zu pruefen
   if (before === 0) return 'first';
   if (after * 2 >= total && before * 2 < total) return 'half';
   return null;

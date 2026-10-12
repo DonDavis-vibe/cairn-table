@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import {
   blankCharacter, isBlank, normalizeCharacter, itemSlotCost, usedSlots, freeSlots,
-  effectiveMaxHp, goldSlots, ALL_SLOTS,
+  effectiveMaxHp, goldSlots, armorOf, ALL_SLOTS,
 } from './character.js';
 
 describe('blankCharacter / isBlank', () => {
@@ -102,5 +102,26 @@ describe('usedSlots / freeSlots / effectiveMaxHp', () => {
   it('Panik drueckt die HP-Obergrenze auf 0, unabhaengig vom Inventar', () => {
     const c = { ...withItems(), panicked: true };
     expect(effectiveMaxHp(c)).toBe(0);
+  });
+});
+
+describe('armorOf', () => {
+  const armorItem = (id, armor, size = 1) => ({ itemId: id, type: 'armor', armor, size });
+
+  it('zählt nur getragene Rüstung, nicht die im Rucksack', () => {
+    const c = blankCharacter();
+    c.items = { a: armorItem('a', 1), b: armorItem('b', 1) };
+    c.slots.worn_1 = { itemId: 'a' };
+    c.slots.pack_1 = { itemId: 'b' };
+    expect(armorOf(c)).toBe(1);
+  });
+
+  it('deckelt bei 3', () => {
+    const c = blankCharacter();
+    c.items = { a: armorItem('a', 3, 2), b: armorItem('b', 1) };
+    c.slots.worn_1 = { itemId: 'a' };
+    c.slots.worn_2 = { itemId: 'a', cont: true };
+    c.slots.worn_3 = { itemId: 'b' };
+    expect(armorOf(c)).toBe(3);
   });
 });

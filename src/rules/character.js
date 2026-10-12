@@ -134,10 +134,12 @@ export function freeSlots(character) {
   return Math.max(0, MAX_SLOTS - usedSlots(character));
 }
 
-// Ruestung aus angelegten Gegenstaenden, gedeckelt bei 3 (Cairn 2e).
+// Ruestung aus angelegten Gegenstaenden, gedeckelt bei 3. Regeltext: Schilde,
+// Helme usw. geben Schutz "only while the item is held or worn" — Ruestung im
+// Rucksack zaehlt also nicht.
 export function armorOf(character) {
   let a = 0;
-  for (const s of ALL_SLOTS) {
+  for (const s of WORN_SLOTS) {
     const ref = character.slots?.[s];
     if (ref && !ref.cont) { const it = character.items?.[ref.itemId]; if (it?.armor) a += it.armor; }
   }

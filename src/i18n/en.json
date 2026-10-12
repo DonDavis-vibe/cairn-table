@@ -533,5 +533,6 @@
   "gm.foe.routed": "critical damage — the detachment is routed",
   "gm.moraleHint.first": "First casualty — check morale (WIL save)?",
   "gm.moraleHint.half": "Half the group is down — check morale (WIL save)?",
-  "gm.moraleAll": "Roll morale for all"
+  "gm.moraleAll": "Roll morale for all",
+  "gm.moraleHint.lone": "A lone foe is down to 0 HP — check morale (WIL save)?"
 }
