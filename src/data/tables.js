@@ -7,8 +7,8 @@ export const TRAIT_TABLES = {
   physique: {
     label: { de: 'Statur', en: 'Physique' },
     options: [
-      { de: 'Athletisch', en: 'Athletic' }, { de: 'Kraeftig', en: 'Brawny' }, { de: 'Schwabbelig', en: 'Flabby' },
-      { de: 'Hager', en: 'Lanky' }, { de: 'Wettergegerbt', en: 'Rugged' }, { de: 'Duerr', en: 'Scrawny' },
+      { de: 'Athletisch', en: 'Athletic' }, { de: 'Kräftig', en: 'Brawny' }, { de: 'Schwabbelig', en: 'Flabby' },
+      { de: 'Hager', en: 'Lanky' }, { de: 'Wettergegerbt', en: 'Rugged' }, { de: 'Dürr', en: 'Scrawny' },
       { de: 'Klein', en: 'Short' }, { de: 'Stattlich', en: 'Statuesque' }, { de: 'Stämmig', en: 'Stout' }, { de: 'Hochgewachsen', en: 'Towering' },
     ],
   },

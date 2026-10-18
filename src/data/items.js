@@ -119,7 +119,7 @@ export const CONDITION_CATALOG = {
   },
   blinded: {
     name: { de: 'Geblendet', en: 'Blinded' },
-    effect: { de: 'Kann nicht sehen. Angriffe sind beeintraechtigt.', en: 'Cannot see. Attacks are impaired.' },
+    effect: { de: 'Kann nicht sehen. Angriffe sind beeinträchtigt.', en: 'Cannot see. Attacks are impaired.' },
     clear: { de: 'Nach Behandlung / wenn es vergeht', en: 'After treatment / when it passes' },
   },
   poisoned: {
