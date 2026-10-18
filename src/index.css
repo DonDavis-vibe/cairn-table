@@ -466,6 +466,7 @@ textarea.notes {
 .hireling-tools { display: flex; gap: 8px; }
 
 .container-new .field { flex: 1; min-width: 140px; }
+.container-new .container-preset { flex: 1 1 100%; }
 
 /* ---------- Generatoren: Fremde:r + Kleinkram ---------- */
 .gm-gen { display: grid; grid-template-columns: 1fr; gap: 16px; }

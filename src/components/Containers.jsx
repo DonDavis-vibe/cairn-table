@@ -6,6 +6,7 @@ import { useLang, loc } from '../i18n/index.jsx';
 import { itemSlotCost, ATTR_KEYS } from '../rules/character.js';
 import { toW, rollAttribute, rollDie, rollSave } from '../rules/dice.js';
 import { readJSON, writeJSON } from '../utils/storage.js';
+import { TRANSPORT, HIRELINGS } from '../data/marketplace.js';
 import { GM_GIVE } from '../multiplayer/protocol.js';
 import { Field, TextInput, InfoHint } from './ui.jsx';
 import AddItemMenu from './AddItemMenu.jsx';
@@ -115,20 +116,37 @@ export default function Containers({ mp }) {
   const [containers, setContainers] = useState(() => readJSON(KEY, []));
   const [newName, setNewName] = useState('');
   const [newSlots, setNewSlots] = useState(10);
+  const [preset, setPreset] = useState(null); // Marketplace-Vorlage: { kind, id, perDay? }
   const [addingTo, setAddingTo] = useState(null);
 
   const persist = (next) => { setContainers(next); writeJSON(KEY, next); };
   const updateContainer = (updated) => persist(containers.map((c) => (c.id === updated.id ? updated : c)));
   const log = (text, tone) => mp.logGmAction({ text: `${t('gm.warden')}: ${text}`, tone, cmd: 'gm' });
 
+  // Vorlage waehlen fuellt Name und Slots vor (beides bleibt editierbar). Ein
+  // Mietling wuerfelt seine Werte beim Anlegen sofort aus (3W6/1W6, wie im SRD).
+  const choosePreset = (value) => {
+    if (!value) { setPreset(null); return; }
+    const [kind, id] = value.split(':');
+    const entry = (kind === 'transport' ? TRANSPORT : HIRELINGS).find((e) => e.id === id);
+    if (!entry) return;
+    setPreset({ kind, id, perDay: entry.perDay });
+    setNewName(loc(entry.name, lang));
+    setNewSlots(kind === 'transport' ? entry.slots : 10);
+  };
   const create = () => {
     const name = newName.trim();
     if (!name) return;
+    const hireling = preset?.kind === 'hireling';
+    const stats = hireling ? rollHirelingStats() : null;
     persist([...containers, {
-      id: nid(), name, slotsMax: Math.max(1, Number(newSlots) || 10), items: [], stats: null,
+      id: nid(), name, slotsMax: Math.max(1, Number(newSlots) || 10), items: [], stats,
+      ...(hireling ? { perDay: preset.perDay } : {}),
     }]);
+    if (stats) log(t('container.log.rolled', { name, str: stats.str.max, dex: stats.dex.max, wil: stats.wil.max, hp: stats.hp.max }), 'gm');
     setNewName('');
     setNewSlots(10);
+    setPreset(null);
   };
   const removeContainer = (id) => {
     if (!window.confirm(t('container.deleteConfirm'))) return;
@@ -169,6 +187,7 @@ export default function Containers({ mp }) {
             <li key={c.id} className="container-card">
               <div className="container-head">
                 <strong>{c.name}</strong>
+                {c.perDay ? <span className="badge">{t('container.perDay', { n: c.perDay })}</span> : null}
                 <span className={`badge${full ? ' badge-dmg' : ''}`}>{used}/{c.slotsMax}</span>
                 <button type="button" className="item-x" onClick={() => removeContainer(c.id)} aria-label={t('common.remove')}>
                   <Trash2 size={13} />
@@ -227,6 +246,28 @@ export default function Containers({ mp }) {
       </ul>
 
       <div className="container-new">
+        <label className="field container-preset">
+          <span className="field-label">{t('container.preset')}</span>
+          <select
+            className="text-input"
+            value={preset ? `${preset.kind}:${preset.id}` : ''}
+            onChange={(e) => choosePreset(e.target.value)}
+          >
+            <option value="">{t('container.presetNone')}</option>
+            <optgroup label={t('container.presetTransport')}>
+              {TRANSPORT.map((e) => (
+                <option key={e.id} value={`transport:${e.id}`}>
+                  {loc(e.name, lang)} — {e.slots} {t('container.slots')}{e.slow ? `, ${t('container.slow')}` : ''}{e.bulky ? `, ${t('item.bulky')}` : ''} · {e.cost} gp
+                </option>
+              ))}
+            </optgroup>
+            <optgroup label={t('container.presetHirelings')}>
+              {HIRELINGS.map((e) => (
+                <option key={e.id} value={`hireling:${e.id}`}>{loc(e.name, lang)} · {t('container.perDay', { n: e.perDay })}</option>
+              ))}
+            </optgroup>
+          </select>
+        </label>
         <Field label={t('container.newName')}>
           <TextInput value={newName} onChange={setNewName} placeholder={t('container.newNamePlaceholder')} />
         </Field>
