@@ -2,26 +2,34 @@ import { useState } from 'react';
 import { Dices, HandCoins } from 'lucide-react';
 import { useLang, loc } from '../i18n/index.jsx';
 import { rollDie, rollAttribute } from '../rules/dice.js';
-import { BACKGROUNDS } from '../data/backgrounds.js';
-import { TRAIT_TABLES, TRAIT_KEYS } from '../data/tables.js';
-import { NPC_QUIRKS, NPC_MOTIVATIONS } from '../data/npcFlavor.js';
+import { TRAIT_TABLES } from '../data/tables.js';
+import {
+  NPC_NAMES, NPC_QUIRKS, NPC_BACKGROUNDS, NPC_GOALS, NPC_VIRTUES, NPC_VICES,
+} from '../data/npcTables.js';
 import { randomTrinket, makeTrinket } from '../data/items.js';
 
 const pick = (arr) => arr[Math.floor(Math.random() * arr.length)];
 
+// Aussehen aus den Merkmalstabellen der Charaktererschaffung; Tugend und Laster
+// kommen aus den NSC-Tabellen (Warden's Guide), nicht aus den SC-Merkmalen.
+const LOOK_KEYS = ['physique', 'skin', 'hair', 'face', 'speech', 'clothing'];
+
 function rollStranger() {
-  const bg = pick(BACKGROUNDS);
-  const name = pick(bg.names);
+  const name = pick(NPC_NAMES);
   const age = rollDie(20) + rollDie(20) + 10;
   const str = rollAttribute().value;
   const dex = rollAttribute().value;
   const wil = rollAttribute().value;
   const hp = rollDie(6);
-  const traits = TRAIT_KEYS.map((k) => ({ key: k, label: TRAIT_TABLES[k].label, value: pick(TRAIT_TABLES[k].options) }));
+  const traits = [
+    ...LOOK_KEYS.map((k) => ({ key: k, label: TRAIT_TABLES[k].label, value: pick(TRAIT_TABLES[k].options) })),
+    { key: 'virtue', label: TRAIT_TABLES.virtue.label, value: pick(NPC_VIRTUES) },
+    { key: 'vice', label: TRAIT_TABLES.vice.label, value: pick(NPC_VICES) },
+  ];
   return {
     id: Date.now(),
     name,
-    background: bg.name,
+    background: pick(NPC_BACKGROUNDS),
     age,
     str,
     dex,
@@ -29,7 +37,7 @@ function rollStranger() {
     hp,
     traits,
     quirk: pick(NPC_QUIRKS),
-    motivation: pick(NPC_MOTIVATIONS),
+    goal: pick(NPC_GOALS),
   };
 }
 
@@ -61,8 +69,8 @@ export default function GmGenerators({ mp }) {
             <p className="gm-gen-traits">
               {npc.traits.map((tr) => `${loc(tr.label, lang)}: ${loc(tr.value, lang)}`).join(' · ')}
             </p>
-            <p className="gm-gen-quirk">{loc(npc.quirk, lang)}</p>
-            <p className="gm-gen-motivation">{loc(npc.motivation, lang)}</p>
+            <p className="gm-gen-quirk">{t('gen.quirk')}: {loc(npc.quirk, lang)}</p>
+            <p className="gm-gen-motivation">{t('gen.goal')}: {loc(npc.goal, lang)}</p>
           </div>
         ) : <p className="gm-gen-empty">{t('gen.npcEmpty')}</p>}
       </div>

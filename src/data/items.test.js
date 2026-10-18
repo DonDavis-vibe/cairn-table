@@ -6,7 +6,9 @@ import {
 import { SPELLS } from './spells.js';
 import { RELICS } from './relics.js';
 import { TRINKETS } from './trinkets.js';
-import { NPC_QUIRKS, NPC_MOTIVATIONS } from './npcFlavor.js';
+import {
+  NPC_NAMES, NPC_QUIRKS, NPC_BACKGROUNDS, NPC_GOALS, NPC_VIRTUES, NPC_VICES,
+} from './npcTables.js';
 
 describe('makeItem', () => {
   it('baut einen Katalog-Gegenstand mit Wuerfel und Groesse', () => {
@@ -120,10 +122,14 @@ describe('Datenintegritaet', () => {
     for (const tr of TRINKETS) expect(tr.de && tr.en).toBeTruthy();
   });
 
-  it('NSC-Auffaelligkeiten und -Motivationen sind bilingual und eindeutig', () => {
-    for (const list of [NPC_QUIRKS, NPC_MOTIVATIONS]) {
+  it('NSC-Tabellen: Groessen wie im SRD (3 x d20 Namen, 5 x d20), bilingual und eindeutig', () => {
+    expect(NPC_NAMES).toHaveLength(60);
+    expect(new Set(NPC_NAMES).size).toBe(60);
+    for (const list of [NPC_QUIRKS, NPC_BACKGROUNDS, NPC_GOALS, NPC_VIRTUES, NPC_VICES]) {
+      expect(list).toHaveLength(20);
       for (const e of list) expect(e.de && e.en).toBeTruthy();
-      expect(new Set(list.map((e) => e.de)).size).toBe(list.length);
+      expect(new Set(list.map((e) => e.en)).size).toBe(20);
+      expect(new Set(list.map((e) => e.de)).size).toBe(20);
     }
   });
 });

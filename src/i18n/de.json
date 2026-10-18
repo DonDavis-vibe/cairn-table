@@ -414,6 +414,8 @@
 
   "gen.title": "Generatoren",
   "gen.npc": "Fremde:r",
+  "gen.quirk": "Auffälligkeit",
+  "gen.goal": "Ziel",
   "gen.item": "Kleinkram",
   "gen.roll": "Würfeln",
   "gen.npcEmpty": "Noch niemand gewürfelt.",

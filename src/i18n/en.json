@@ -414,6 +414,8 @@
 
   "gen.title": "Generators",
   "gen.npc": "Stranger",
+  "gen.quirk": "Quirk",
+  "gen.goal": "Goal",
   "gen.item": "Trinket",
   "gen.roll": "Roll",
   "gen.npcEmpty": "No one rolled yet.",
